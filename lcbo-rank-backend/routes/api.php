@@ -19,7 +19,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::controller(AlcoholController::class)->group(function () {
-    Route::get('/beers', 'beers');
-    Route::get('/beers/{alcohol}', 'show');
+Route::prefix('alcohol')->group(function () {
+    Route::controller(AlcoholController::class)->group(function () {
+        Route::get('/{alcohol}', 'show');
+        Route::prefix('beer')->group(function () {
+            Route::get('/', 'beers');
+        });
+
+        Route::prefix('wine')->group(function () {
+            Route::get('/', 'wines');
+        });
+
+        Route::prefix('spirits')->group(function () {
+            Route::get('/', 'spirits');
+        });
+    });
 });

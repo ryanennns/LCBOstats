@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        (new AlcoholSeeder())->run();
+        (new BeerSeeder())->run();
+        (new SpiritSeeder())->run();
     }
 }

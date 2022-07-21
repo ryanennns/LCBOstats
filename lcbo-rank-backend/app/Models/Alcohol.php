@@ -10,6 +10,8 @@ class Alcohol extends Model
 {
     public const BEER = "Beer & Cider";
     public const CIDER = "Beer & Cider";
+    public const WINE = "Wine";
+    public const SPIRITS = "Spirits";
 
     use HasFactory;
 }

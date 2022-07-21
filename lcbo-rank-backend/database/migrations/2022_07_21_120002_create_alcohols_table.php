@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('alcohols', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('title');            /*title*/
             $table->string('brand')->nullable();            /*ec_brand*/
             $table->string('category')->nullable();         /*ec_category_filter[1]*/
