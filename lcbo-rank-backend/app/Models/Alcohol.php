@@ -14,4 +14,10 @@ class Alcohol extends Model
     public const SPIRITS = "Spirits";
 
     use HasFactory;
+
+    public static function getByCategory(String $category, $numOfResults)
+    {
+        return Alcohol::get()->where('category', '===', $category)
+            ->take($numOfResults);
+    }
 }

@@ -97,14 +97,6 @@ class AlcoholController extends Controller
         return $a;
     }
 
-    public function wines(Request $request)
-    {
-        $numOfResults = min($request->input('numOfResults', 10), 30);
-        $a = Alcohol::get()->where('category', '===', Alcohol::WINE)
-            ->take($numOfResults);
-        return $a;
-    }
-
     public function spirits(Request $request)
     {
         $numOfResults = min($request->input('numOfResults', 10), 30);
