@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -22,6 +21,7 @@ return new class extends Migration
             $table->double('price');         /*ec_price*/
             $table->double('volume');/*lcbo_unit_volume*/
             $table->double('alcohol_content');  /*lcbo_alcohol_percent*/
+            $table->double('price_index')->default(0.00);
             $table->string('country')->nullable();          /*country_of_manufacture*/
             $table->longText('url')->nullable();              /*clickableuri*/
         });
