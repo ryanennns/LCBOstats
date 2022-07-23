@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Alcohol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function MongoDB\BSON\toJSON;
 
 class SpiritsController extends Controller
 {
