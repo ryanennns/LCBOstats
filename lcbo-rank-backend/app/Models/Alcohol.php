@@ -15,6 +15,7 @@ class Alcohol extends Model
     public const GIN = "Gin";
     public const VODKA = "Vodka";
     public const TEQUILA = "Tequila";
+    public const COOLER = "Coolers";
 
     use HasFactory;
 

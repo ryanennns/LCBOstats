@@ -64,9 +64,6 @@ class CoolerSeeder extends Seeder
             "title" => "Collective Arts Lemon Squeezy","brand" => "Collective Arts","category" => "Coolers","subcategory" => "Seltzers & Sodas","price" => "2.95","volume" => "355","alcohol_content" => "4.0","price_index" => "0.20774647887323944","country" => "Canada","url" => "https://www.lcbo.com/en/collective-arts-lemon-squeezy-24401"
         ]);
         DB::table('alcohols')->insert([
-            "title" => "Smirnoff Flavoured Vodkas & Coolers + FREE Smash Ball set","brand" => "Smirnoff","category" => "Coolers","subcategory" => "Coolers & Cocktails","price" => "126.45","volume" => "7926","alcohol_content" => "30.0","price_index" => "0.053179409538228625","country" => "Canada","url" => "https://www.lcbo.com/en/smirnoff-smash-ball-set-27049"
-        ]);
-        DB::table('alcohols')->insert([
             "title" => "Smirnoff Ice","brand" => "Smirnoff","category" => "Coolers","subcategory" => "Coolers & Cocktails","price" => "57.7","volume" => "7920","alcohol_content" => "5.0","price_index" => "0.1457070707070707","country" => "Canada","url" => "https://www.lcbo.com/en/smirnoff-ice-321794"
         ]);
         DB::table('alcohols')->insert([
@@ -767,9 +764,6 @@ class CoolerSeeder extends Seeder
         ]);
         DB::table('alcohols')->insert([
             "title" => "Canadian Club & Ginger Ale","brand" => "Canadian Club Rtd","category" => "Coolers","subcategory" => "Coolers & Cocktails","price" => "3.05","volume" => "473","alcohol_content" => "6.0","price_index" => "0.10747004933051445","country" => "Canada","url" => "https://www.lcbo.com/en/canadian-club-ginger-ale-273110"
-        ]);
-        DB::table('alcohols')->insert([
-            "title" => "Georgian Bay Gin, Coolers + FREE sunglasses & limited release glasses","brand" => "GEORGIAN BAY","category" => "Coolers","subcategory" => "Coolers & Cocktails","price" => "47.35","volume" => "2642","alcohol_content" => "40.0","price_index" => "0.04480507191521575","country" => "Canada","url" => "https://www.lcbo.com/en/georgian-bay-gin-coolers-free-sunglasses-limited-release-glasses-28009"
         ]);
         DB::table('alcohols')->insert([
             "title" => "Jaw Drop Gushing Grapes","brand" => "Jaw Drop","category" => "Coolers","subcategory" => "Coolers & Cocktails","price" => "2.6","volume" => "473","alcohol_content" => "7.0","price_index" => "0.07852612503775293","country" => "Canada","url" => "https://www.lcbo.com/en/jaw-drop-gushing-grapes-554386"
