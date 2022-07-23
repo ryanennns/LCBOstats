@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Alcohol;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,5 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         (new BeerSeeder())->run();
         (new SpiritSeeder())->run();
+        (new CoolerSeeder())->run();
+        (new WineSeeder())->run();
     }
 }
