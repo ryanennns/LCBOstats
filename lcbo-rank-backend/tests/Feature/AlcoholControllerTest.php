@@ -30,4 +30,22 @@ class AlcoholControllerTest extends TestCase
         $response = $this->get('/api/alcohol/spirits');
         $response->assertSuccessful();
     }
+
+    public function test_it_can_get_all_gin()
+    {
+        $response = $this->get('/api/alcohol/spirits/gin')
+            ->assertSuccessful();
+    }
+
+    public function test_it_can_get_all_vodka()
+    {
+        $response = $this->get('/api/alcohol/spirits/vodka')
+            ->assertSuccessful();
+    }
+
+    public function test_it_can_get_all_tequila()
+    {
+        $response = $this->get('/api/alcohol/spirits/tequila')
+            ->assertSuccessful();
+    }
 }
