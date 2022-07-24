@@ -17,15 +17,26 @@ class Alcohol extends Model
     public const TEQUILA = "Tequila";
     public const COOLER = "Coolers";
 
+    public const CATEGORIES = [
+        self::BEER,
+        self::CIDER,
+        self::WINE,
+        self::SPIRITS,
+        self::GIN,
+        self::VODKA,
+        self::TEQUILA,
+        self::COOLER
+    ];
+
     use HasFactory;
 
-    public static function getByCategory(String $category, $numOfResults)
+    public static function getByCategory(string $category, $numOfResults)
     {
         return array_values(Alcohol::get()->where('category', '=', $category)
             ->take($numOfResults)->toArray());
     }
 
-    public static function getBySubCategory(String $subcategory, $numOfResults)
+    public static function getBySubCategory(string $subcategory, $numOfResults)
     {
         return array_values(Alcohol::get()->where('subcategory', '=', $subcategory)
             ->take($numOfResults)->toArray());

@@ -11,7 +11,8 @@ class BeerController extends Controller
     public function getDefault(Request $request)
     {
         $numOfResults = min($request->input('numOfResults', 10), 30);
-        return Alcohol::getByCategory(Alcohol::BEER, $numOfResults);
+        $results = Alcohol::getByCategory(Alcohol::BEER, $numOfResults);
+        return response()->json($results);
     }
 
     public function getEfficient(Request $request)

@@ -2,10 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\Alcohol;
+use Database\Factories\BeerFactory;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /**
      * A basic feature test example.
      *
@@ -13,8 +18,18 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_get_all_beers()
     {
+        // fucky
+        $beer = Alcohol::factory([
+            'category' => 'Beer & Cider',
+            'subcategory' => 'Lager'
+        ])->create();
+
         $response = $this->get('/api/alcohol/beer');
-        $response->assertSuccessful();
+        $response
+            ->assertSuccessful()
+            ->assertJson(
+                $beer->first()
+            );
     }
 
     public function test_it_can_request_all_wine()
