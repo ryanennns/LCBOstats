@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
@@ -47,5 +45,16 @@ class AlcoholControllerTest extends TestCase
     {
         $response = $this->get('/api/alcohol/spirits/tequila')
             ->assertSuccessful();
+    }
+
+    public function test_it_can_get_all_coolers()
+    {
+        $response = $this->get('/api/alcohol/coolers')
+            ->assertSuccessful();
+    }
+
+    public function test_it_can_get_efficient_alcohols()
+    {
+        $this->markTestSkipped();
     }
 }

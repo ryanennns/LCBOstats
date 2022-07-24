@@ -21,14 +21,17 @@ Route::prefix('alcohol')->group(function () {
             Route::get('/', 'getDefault');
 
             Route::group(['prefix' => 'gin'], function () {
+                Route::get('/efficient', 'getEfficientGin');
                 Route::get('/', 'getGin');
             });
 
             Route::group(['prefix' => 'vodka'], function () {
+                Route::get('/efficient', 'getEfficientVodka');
                 Route::get('/', 'getVodka');
             });
 
             Route::group(['prefix' => 'tequila'], function () {
+                Route::get('/efficient', 'getEfficientTequila');
                 Route::get('/', 'getTequila');
             });
         });
@@ -48,7 +51,6 @@ Route::prefix('alcohol')->group(function () {
         });
 
     Route::get('/efficient', 'App\Http\Controllers\AlcoholController@getEfficient');
-    Route::get('/', function () {
-        return 'hit me with some data ;)';
-    });
+    Route::get('/', 'App\Http\Controllers\AlcoholController@name');
+//    Route::get('/{alcohol}', 'App\Http\Controllers\AlcoholController@show');
 });
