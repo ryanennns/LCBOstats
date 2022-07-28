@@ -18,54 +18,138 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_get_all_beers()
     {
-        // fucky
         $beer = Alcohol::factory([
             'category' => 'Beer & Cider',
-            'subcategory' => 'Lager'
-        ])->create();
+            'subcategory' => 'Lager',
+            'price_index' => 0.08
+        ])->count(1)->create();
 
         $response = $this->get('/api/alcohol/beer');
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->first()
+                $beer->toArray()
             );
+    }
+
+    public function test_it_can_get_beers_by_price_index()
+    {
+        $middleEfficientBeer = Alcohol::factory([
+            'category'=>'Beer & Cider',
+            'subcategory'=>'Lager',
+            'price_index' => 0.08
+        ])->create();
+        $leastEfficientBeer = Alcohol::factory([
+            'category'=>'Beer & Cider',
+            'subcategory'=>'Lager',
+            'price_index' => 0.09
+        ])->create();
+        $mostEfficientBeer = Alcohol::factory([
+            'category'=>'Beer & Cider',
+            'subcategory'=>'Lager',
+            'price_index' => 0.07
+        ])->create();
+
+        $response = $this->get('/api/alcohol/beer/efficient');
+//        $this->assertEquals(json_decode($response->getContent())[0], 'meme');
+        $response
+            ->assertSuccessful();
     }
 
     public function test_it_can_request_all_wine()
     {
+        $beer = Alcohol::factory([
+            'category' => 'Wine',
+            'subcategory' => 'Red Wine',
+            'price_index' => 0.08
+        ])->count(1)->create();
+
         $response = $this->get('/api/alcohol/wine');
-        $response->assertSuccessful();
+        $response
+            ->assertSuccessful()
+            ->assertJson(
+                $beer->toArray()
+            );
     }
 
     public function test_it_can_request_all_spirits()
     {
+        $beer = Alcohol::factory([
+            'category' => 'Spirits',
+            'subcategory' => 'Vodka',
+            'price_index' => 0.08
+        ])->count(1)->create();
+
         $response = $this->get('/api/alcohol/spirits');
-        $response->assertSuccessful();
+        $response
+            ->assertSuccessful()
+            ->assertJson(
+                $beer->toArray()
+            );
     }
 
     public function test_it_can_get_all_gin()
     {
-        $response = $this->get('/api/alcohol/spirits/gin')
-            ->assertSuccessful();
+        $beer = Alcohol::factory([
+            'category' => 'Spirits',
+            'subcategory' => 'Gin',
+            'price_index' => 0.08
+        ])->count(1)->create();
+
+        $response = $this->get('/api/alcohol/spirits/gin');
+        $response
+            ->assertSuccessful()
+            ->assertJson(
+                $beer->toArray()
+            );
     }
 
     public function test_it_can_get_all_vodka()
     {
-        $response = $this->get('/api/alcohol/spirits/vodka')
-            ->assertSuccessful();
+        $beer = Alcohol::factory([
+            'category' => 'Spirits',
+            'subcategory' => 'Vodka',
+            'price_index' => 0.08
+        ])->count(1)->create();
+
+        $response = $this->get('/api/alcohol/spirits/vodka');
+        $response
+            ->assertSuccessful()
+            ->assertJson(
+                $beer->toArray()
+            );
     }
 
     public function test_it_can_get_all_tequila()
     {
-        $response = $this->get('/api/alcohol/spirits/tequila')
-            ->assertSuccessful();
+        $beer = Alcohol::factory([
+            'category' => 'Spirits',
+            'subcategory' => 'Tequila',
+            'price_index' => 0.08
+        ])->count(1)->create();
+
+        $response = $this->get('/api/alcohol/spirits/tequila');
+        $response
+            ->assertSuccessful()
+            ->assertJson(
+                $beer->toArray()
+            );
     }
 
     public function test_it_can_get_all_coolers()
     {
-        $response = $this->get('/api/alcohol/coolers')
-            ->assertSuccessful();
+        $beer = Alcohol::factory([
+            'category' => 'Coolers',
+            'subcategory' => 'Flavoured',
+            'price_index' => 0.08
+        ])->count(1)->create();
+
+        $response = $this->get('/api/alcohol/coolers');
+        $response
+            ->assertSuccessful()
+            ->assertJson(
+                $beer->toArray()
+            );
     }
 
     public function test_it_can_get_efficient_alcohols()
