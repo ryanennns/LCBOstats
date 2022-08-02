@@ -23,6 +23,33 @@ class SpiritsController extends Controller
             ->take(30);
     }
 
+    public function getEfficientVodka(Request $request)
+    {
+        return DB::table('alcohols')
+            ->orderBy('price_index')
+            ->where('subcategory', '=', Alcohol::VODKA)
+            ->get()
+            ->take(30);
+    }
+
+    public function getEfficientTequila(Request $request)
+    {
+        return DB::table('alcohols')
+            ->orderBy('price_index')
+            ->where('subcategory', '=', Alcohol::TEQUILA)
+            ->get()
+            ->take(30);
+    }
+
+    public function getEfficientGin(Request $request)
+    {
+        return DB::table('alcohols')
+            ->orderBy('price_index')
+            ->where('subcategory', '=', Alcohol::GIN)
+            ->get()
+            ->take(30);
+    }
+
     public function getGin(Request $request)
     {
         $numOfResults = min($request->input('numOfResults', 10), 30);

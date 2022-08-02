@@ -35,25 +35,32 @@ class AlcoholControllerTest extends TestCase
     public function test_it_can_get_beers_by_price_index()
     {
         $middleEfficientBeer = Alcohol::factory([
-            'category'=>'Beer & Cider',
-            'subcategory'=>'Lager',
+            'category' => 'Beer & Cider',
+            'subcategory' => 'Lager',
             'price_index' => 0.08
         ])->create();
         $leastEfficientBeer = Alcohol::factory([
-            'category'=>'Beer & Cider',
-            'subcategory'=>'Lager',
+            'category' => 'Beer & Cider',
+            'subcategory' => 'Lager',
             'price_index' => 0.09
         ])->create();
         $mostEfficientBeer = Alcohol::factory([
-            'category'=>'Beer & Cider',
-            'subcategory'=>'Lager',
+            'category' => 'Beer & Cider',
+            'subcategory' => 'Lager',
             'price_index' => 0.07
         ])->create();
 
+
         $response = $this->get('/api/alcohol/beer/efficient');
-//        $this->assertEquals(json_decode($response->getContent())[0], 'meme');
-        $response
-            ->assertSuccessful();
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertEquals($responseJson[0], $mostEfficientBeer);
+    }
+
+    public function test_it_can_sort_alcohols_by_field()
+    {
+
     }
 
     public function test_it_can_request_all_wine()

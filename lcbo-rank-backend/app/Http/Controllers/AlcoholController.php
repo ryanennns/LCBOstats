@@ -31,10 +31,18 @@ class AlcoholController extends Controller
 
     public function name(Request $request)
     {
-        if (!$name = $request->input('name', ''))
-            return new Response('', 404);
-        return array_values(Alcohol::get()
-            ->where('title', 'contains', $name)->toArray());
+        $sortCondition = $request->input('sort_by', '');
+        $sortAscendingDescending = $request->input('order', 'asc');
+        if (!$sortCondition)
+            return $this->getEfficient();
+
+        if($sortAscendingDescending != 'asc' && $sortAscendingDescending != 'desc')
+            $sortAscendingDescending = 'desc';
+
+        return DB::table('alcohols')
+            ->orderBy($sortCondition, $sortAscendingDescending)
+            ->get()
+            ->take(30);
     }
 }
 
