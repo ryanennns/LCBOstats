@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
-use Database\Factories\BeerFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -34,17 +33,17 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_can_get_beers_by_price_index()
     {
-        $middleEfficientBeer = Alcohol::factory([
+        Alcohol::factory([
             'category' => 'Beer & Cider',
             'subcategory' => 'Lager',
             'price_index' => 0.08
         ])->create();
-        $leastEfficientBeer = Alcohol::factory([
+        Alcohol::factory([
             'category' => 'Beer & Cider',
             'subcategory' => 'Lager',
             'price_index' => 0.09
         ])->create();
-        $mostEfficientBeer = Alcohol::factory([
+        Alcohol::factory([
             'category' => 'Beer & Cider',
             'subcategory' => 'Lager',
             'price_index' => 0.07
@@ -55,12 +54,13 @@ class AlcoholControllerTest extends TestCase
         $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
-        $this->assertEquals($responseJson[0], $mostEfficientBeer);
+        $this->assertLessThan($responseJson[1]->price_index, $responseJson[0]->price_index);
+        $this->assertLessThan($responseJson[2]->price_index, $responseJson[1]->price_index);
     }
 
     public function test_it_can_sort_alcohols_by_field()
     {
-
+        $this->markTestSkipped();
     }
 
     public function test_it_can_request_all_wine()

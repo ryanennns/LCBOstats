@@ -15,16 +15,16 @@ return new class extends Migration {
         Schema::create('alcohols', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('title');            /*title*/
-            $table->string('brand')->nullable();            /*ec_brand*/
-            $table->string('category')->nullable();         /*ec_category_filter[1]*/
+            $table->string('title');
+            $table->string('brand')->nullable();
+            $table->string('category')->nullable();
             $table->string('subcategory')->nullable();
-            $table->double('price');         /*ec_price*/
-            $table->double('volume');/*lcbo_unit_volume*/
-            $table->double('alcohol_content');  /*lcbo_alcohol_percent*/
+            $table->double('price');
+            $table->double('volume');
+            $table->double('alcohol_content');
             $table->double('price_index')->default(0.00);
-            $table->string('country')->nullable();          /*country_of_manufacture*/
-            $table->longText('url')->nullable();              /*clickableuri*/
+            $table->string('country')->nullable();
+            $table->longText('url')->nullable();
         });
     }
 

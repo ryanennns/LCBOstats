@@ -52,5 +52,4 @@ Route::prefix('alcohol')->group(function () {
 
     Route::get('/efficient', 'App\Http\Controllers\AlcoholController@getEfficient');
     Route::get('/', 'App\Http\Controllers\AlcoholController@name');
-//    Route::get('/{alcohol}', 'App\Http\Controllers\AlcoholController@show');
 });
