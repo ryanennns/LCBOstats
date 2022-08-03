@@ -21,7 +21,7 @@ class AlcoholFactory extends Factory
         $volume = $this->faker->numberBetween(375, 1400);
 
         return [
-            'id' => $this->faker->numberBetween(0,100),
+            'id' => (int)$this->faker->uuid(),
             'created_at' => $this->faker->time(),
             'updated_at' => $this->faker->time(),
             'title' => $this->faker->unique()->words(3, true),

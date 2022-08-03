@@ -19,20 +19,31 @@ class AlcoholController extends Controller
         return $alcohol;
     }
 
-    public function getEfficient()
+    public function getEfficient(Request $request)
     {
+        $maxIndex   = $request->input('maxPriceIndex', '');
+        $order      = $request->input('order', '');
+
+        if(!$maxIndex)
+            return DB::table('alcohols')
+                ->orderBy('price_index')
+                ->get()
+                ->take(30);
+
         return DB::table('alcohols')
-            ->orderBy('price_index')
+            ->where('price_index', '<', $maxIndex)
+            ->orderBy('price_index', $order ? $order : 'asc')
             ->get()
-            ->take(30);
+            ->take(100);
     }
 
-    public function name(Request $request)
+    public function getDefault(Request $request)
     {
-        $sortCondition = $request->input('sort_by', '');
+        $sortCondition = $request->input('sortBy', '');
         $sortAscendingDescending = $request->input('order', 'asc');
+
         if (!$sortCondition)
-            return $this->getEfficient();
+            return $this->getEfficient($request);
 
         if($sortAscendingDescending != 'asc' && $sortAscendingDescending != 'desc')
             $sortAscendingDescending = 'desc';
