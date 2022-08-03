@@ -12,7 +12,7 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_can_get_all_wine()
     {
-        $beer = Alcohol::factory([
+        $wine = Alcohol::factory([
             'category' => 'Wine',
             'subcategory' => 'Red Wine',
             'price_index' => 0.08
@@ -22,13 +22,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $wine->toArray()
             );
     }
 
     public function test_it_can_get_all_spirits()
     {
-        $beer = Alcohol::factory([
+        $spirit = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Vodka',
             'price_index' => 0.08
@@ -38,13 +38,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $spirit->toArray()
             );
     }
 
     public function test_it_can_get_all_gin()
     {
-        $beer = Alcohol::factory([
+        $gin = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Gin',
             'price_index' => 0.08
@@ -54,13 +54,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $gin->toArray()
             );
     }
 
     public function test_it_can_get_all_vodka()
     {
-        $beer = Alcohol::factory([
+        $vodka = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Vodka',
             'price_index' => 0.08
@@ -70,13 +70,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $vodka->toArray()
             );
     }
 
     public function test_it_can_get_all_tequila()
     {
-        $beer = Alcohol::factory([
+        $tequila = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Tequila',
             'price_index' => 0.08
@@ -86,13 +86,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $tequila->toArray()
             );
     }
 
     public function test_it_can_get_all_coolers()
     {
-        $beer = Alcohol::factory([
+        $coolers = Alcohol::factory([
             'category' => 'Coolers',
             'subcategory' => 'Flavoured',
             'price_index' => 0.08
@@ -102,7 +102,7 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $coolers->toArray()
             );
     }
 
@@ -123,7 +123,6 @@ class AlcoholControllerTest extends TestCase
             'subcategory' => 'Gin',
             'price_index' => 0.07
         ])->create();
-
 
         $response = $this->get('/api/alcohol/efficient');
         $responseJson = json_decode($response->getContent());
