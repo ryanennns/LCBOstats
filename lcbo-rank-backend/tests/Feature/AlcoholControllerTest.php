@@ -10,11 +10,6 @@ class AlcoholControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_it_can_get_all_beers()
     {
         $beer = Alcohol::factory([
@@ -31,39 +26,7 @@ class AlcoholControllerTest extends TestCase
             );
     }
 
-    public function test_it_can_get_beers_by_price_index()
-    {
-        Alcohol::factory([
-            'category' => 'Beer & Cider',
-            'subcategory' => 'Lager',
-            'price_index' => 0.08
-        ])->create();
-        Alcohol::factory([
-            'category' => 'Beer & Cider',
-            'subcategory' => 'Lager',
-            'price_index' => 0.09
-        ])->create();
-        Alcohol::factory([
-            'category' => 'Beer & Cider',
-            'subcategory' => 'Lager',
-            'price_index' => 0.07
-        ])->create();
-
-
-        $response = $this->get('/api/alcohol/beer/efficient');
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertLessThan($responseJson[1]->price_index, $responseJson[0]->price_index);
-        $this->assertLessThan($responseJson[2]->price_index, $responseJson[1]->price_index);
-    }
-
-    public function test_it_can_sort_alcohols_by_field()
-    {
-        $this->markTestSkipped();
-    }
-
-    public function test_it_can_request_all_wine()
+    public function test_it_can_get_all_wine()
     {
         $beer = Alcohol::factory([
             'category' => 'Wine',
@@ -79,7 +42,7 @@ class AlcoholControllerTest extends TestCase
             );
     }
 
-    public function test_it_can_request_all_spirits()
+    public function test_it_can_get_all_spirits()
     {
         $beer = Alcohol::factory([
             'category' => 'Spirits',
@@ -159,8 +122,131 @@ class AlcoholControllerTest extends TestCase
             );
     }
 
-    public function test_it_can_get_efficient_alcohols()
+    public function test_it_can_sort_alcohol_by_price_index()
     {
-        $this->markTestSkipped();
+        Alcohol::factory([
+            'category' => 'Beer & Cider',
+            'subcategory' => 'Lager',
+            'price_index' => 0.08
+        ])->create();
+        Alcohol::factory([
+            'category' => 'Wine',
+            'subcategory' => 'Red Wine',
+            'price_index' => 0.09
+        ])->create();
+        Alcohol::factory([
+            'category' => 'Spirits',
+            'subcategory' => 'Gin',
+            'price_index' => 0.07
+        ])->create();
+
+
+        $response = $this->get('/api/alcohol/efficient');
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertLessThan($responseJson[1]->price_index, $responseJson[0]->price_index);
+        $this->assertLessThan($responseJson[2]->price_index, $responseJson[1]->price_index);
+    }
+
+    public function test_it_can_sort_alcohols_by_price()
+    {
+        Alcohol::factory([
+            'id' => 0,
+            'price' => 2
+        ])->create();
+        Alcohol::factory([
+            'id' => 1,
+            'price' => 1
+        ])->create();
+        Alcohol::factory([
+            'id' => 2,
+            'price' => 3
+        ])->create();
+
+        $response = $this->get('/api/alcohol?sortBy=price');
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertLessThan($responseJson[1]->price, $responseJson[0]->price);
+        $this->assertLessThan($responseJson[2]->price, $responseJson[1]->price);
+    }
+
+    public function test_it_can_sort_alcohols_by_price_descending()
+    {
+        Alcohol::factory([
+            'id' => 0,
+            'price' => 2
+        ])->create();
+        Alcohol::factory([
+            'id' => 1,
+            'price' => 1
+        ])->create();
+        Alcohol::factory([
+            'id' => 2,
+            'price' => 3
+        ])->create();
+
+        $response = $this->get('/api/alcohol?sortBy=price&order=desc');
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertLessThan($responseJson[0]->price, $responseJson[1]->price);
+        $this->assertLessThan($responseJson[1]->price, $responseJson[2]->price);
+    }
+
+    public function test_it_can_get_alcohols_by_max_price_index()
+    {
+        $maxPriceIndex = 0.09;
+        // TODO make this reliably fail
+        // also it doesn't test for what it claims it is
+        Alcohol::factory([
+            'id' => 0,
+            'price_index' => 0.079
+        ])->create();
+        Alcohol::factory([
+            'id' => 1,
+            'price_index' => 0.081
+        ])->create();
+        Alcohol::factory([
+            'id' => 2,
+            'price_index' => 0.082
+        ])->create();
+
+        $response = $this->get("/api/alcohol/efficient?maxPriceIndex={$maxPriceIndex}&order=desc");
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThan($maxPriceIndex,$res->price_index);
+    }
+    public function test_it_can_get_alcohols_by_min_price_index()
+    {
+        $maxPriceIndex = 0.09;
+        // TODO make this reliably fail
+        // also it doesn't test for what it claims it is
+        Alcohol::factory([
+            'id' => 0,
+            'price_index' => 0.079
+        ])->create();
+        Alcohol::factory([
+            'id' => 1,
+            'price_index' => 0.081
+        ])->create();
+        Alcohol::factory([
+            'id' => 2,
+            'price_index' => 0.082
+        ])->create();
+
+        $response = $this->get("/api/alcohol/efficient?minPriceIndex={$maxPriceIndex}&order=desc");
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThan($maxPriceIndex,$res->price_index);
     }
 }
