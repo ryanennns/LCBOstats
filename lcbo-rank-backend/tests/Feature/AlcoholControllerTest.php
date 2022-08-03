@@ -10,25 +10,9 @@ class AlcoholControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_can_get_all_beers()
-    {
-        $beer = Alcohol::factory([
-            'category' => 'Beer & Cider',
-            'subcategory' => 'Lager',
-            'price_index' => 0.08
-        ])->count(1)->create();
-
-        $response = $this->get('/api/alcohol/beer');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $beer->toArray()
-            );
-    }
-
     public function test_it_can_get_all_wine()
     {
-        $beer = Alcohol::factory([
+        $wine = Alcohol::factory([
             'category' => 'Wine',
             'subcategory' => 'Red Wine',
             'price_index' => 0.08
@@ -38,13 +22,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $wine->toArray()
             );
     }
 
     public function test_it_can_get_all_spirits()
     {
-        $beer = Alcohol::factory([
+        $spirit = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Vodka',
             'price_index' => 0.08
@@ -54,13 +38,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $spirit->toArray()
             );
     }
 
     public function test_it_can_get_all_gin()
     {
-        $beer = Alcohol::factory([
+        $gin = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Gin',
             'price_index' => 0.08
@@ -70,13 +54,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $gin->toArray()
             );
     }
 
     public function test_it_can_get_all_vodka()
     {
-        $beer = Alcohol::factory([
+        $vodka = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Vodka',
             'price_index' => 0.08
@@ -86,13 +70,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $vodka->toArray()
             );
     }
 
     public function test_it_can_get_all_tequila()
     {
-        $beer = Alcohol::factory([
+        $tequila = Alcohol::factory([
             'category' => 'Spirits',
             'subcategory' => 'Tequila',
             'price_index' => 0.08
@@ -102,13 +86,13 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $tequila->toArray()
             );
     }
 
     public function test_it_can_get_all_coolers()
     {
-        $beer = Alcohol::factory([
+        $coolers = Alcohol::factory([
             'category' => 'Coolers',
             'subcategory' => 'Flavoured',
             'price_index' => 0.08
@@ -118,7 +102,7 @@ class AlcoholControllerTest extends TestCase
         $response
             ->assertSuccessful()
             ->assertJson(
-                $beer->toArray()
+                $coolers->toArray()
             );
     }
 
@@ -139,7 +123,6 @@ class AlcoholControllerTest extends TestCase
             'subcategory' => 'Gin',
             'price_index' => 0.07
         ])->create();
-
 
         $response = $this->get('/api/alcohol/efficient');
         $responseJson = json_decode($response->getContent());
@@ -201,7 +184,6 @@ class AlcoholControllerTest extends TestCase
     {
         $maxPriceIndex = 0.09;
         // TODO make this reliably fail
-        // also it doesn't test for what it claims it is
         Alcohol::factory([
             'id' => 0,
             'price_index' => 0.079
@@ -221,32 +203,74 @@ class AlcoholControllerTest extends TestCase
 
         $response->assertSuccessful();
         foreach ($responseJson as $res)
-            $this->assertLessThan($maxPriceIndex,$res->price_index);
+            $this->assertLessThan($maxPriceIndex, $res->price_index);
     }
+
     public function test_it_can_get_alcohols_by_min_price_index()
     {
-        $maxPriceIndex = 0.09;
-        // TODO make this reliably fail
-        // also it doesn't test for what it claims it is
+        $minPriceIndex = 0.09;
         Alcohol::factory([
             'id' => 0,
             'price_index' => 0.079
         ])->create();
         Alcohol::factory([
             'id' => 1,
-            'price_index' => 0.081
+            'price_index' => 0.091
         ])->create();
         Alcohol::factory([
             'id' => 2,
-            'price_index' => 0.082
+            'price_index' => 0.092
         ])->create();
 
-        $response = $this->get("/api/alcohol/efficient?minPriceIndex={$maxPriceIndex}&order=desc");
+        $response = $this->get("/api/alcohol/efficient?minPriceIndex={$minPriceIndex}&order=desc");
 
         $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
         foreach ($responseJson as $res)
-            $this->assertLessThan($maxPriceIndex,$res->price_index);
+            $this->assertGreaterThan($minPriceIndex, $res->price_index);
+    }
+
+    public function test_it_can_get_alcohols_by_min_and_max_price_index()
+    {
+        $minPriceIndex = 0.08;
+        $maxPriceIndex = 0.10;
+        Alcohol::factory([
+            'price_index' => 0.078
+        ])->create();
+        Alcohol::factory([
+            'price_index' => 0.079
+        ])->create();
+        Alcohol::factory([
+            'price_index' => 0.084
+        ])->create();
+        Alcohol::factory([
+            'price_index' => 0.86
+        ])->create();
+        Alcohol::factory([
+            'price_index' => 0.101
+        ])->create();
+        Alcohol::factory([
+            'price_index' => 0.102
+        ])->create();
+
+        $responseJson = json_decode(
+            $this
+                ->get("/api/alcohol/efficient?minPriceIndex={$minPriceIndex}&maxPriceIndex={$maxPriceIndex}")
+                ->getContent()
+        );
+
+        $this->get("/api/alcohol/efficient?minPriceIndex={$minPriceIndex}&maxPriceIndex={$maxPriceIndex}")
+            ->assertSuccessful();
+        foreach ($responseJson as $res) {
+            $this->assertGreaterThan(
+                $minPriceIndex,
+                $res->price_index
+            );
+            $this->assertLessThan(
+                $maxPriceIndex,
+                $res->price_index
+            );
+        }
     }
 }

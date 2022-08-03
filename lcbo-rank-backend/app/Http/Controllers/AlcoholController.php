@@ -12,7 +12,6 @@ class AlcoholController extends Controller
      * Display the specified resource.
      *
      * @param \App\Models\Alcohol $alcohol
-     * // * @return \Illuminate\Http\Response
      */
     public function show(Alcohol $alcohol)
     {
@@ -21,16 +20,18 @@ class AlcoholController extends Controller
 
     public function getEfficient(Request $request)
     {
-        $maxIndex   = $request->input('maxPriceIndex', '');
+        $maxIndex   = $request->input('maxPriceIndex', 1000);
+        $minIndex   = $request->input('minPriceIndex', 0);
         $order      = $request->input('order', '');
 
-        if(!$maxIndex)
+        if(!$maxIndex && !$minIndex)
             return DB::table('alcohols')
                 ->orderBy('price_index')
                 ->get()
                 ->take(30);
 
         return DB::table('alcohols')
+            ->where('price_index', '>', $minIndex)
             ->where('price_index', '<', $maxIndex)
             ->orderBy('price_index', $order ? $order : 'asc')
             ->get()
