@@ -74,22 +74,6 @@ class AlcoholControllerTest extends TestCase
             );
     }
 
-    public function test_it_can_get_all_coolers()
-    {
-        $coolers = Alcohol::factory([
-            'category' => 'Coolers',
-            'subcategory' => 'Flavoured',
-            'price_index' => 0.08
-        ])->count(1)->create();
-
-        $response = $this->get('/api/alcohol/coolers');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $coolers->toArray()
-            );
-    }
-
     public function test_it_can_sort_alcohol_by_price_index()
     {
         Alcohol::factory([
