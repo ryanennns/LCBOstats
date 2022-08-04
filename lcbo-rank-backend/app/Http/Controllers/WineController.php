@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Alcohol;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class WineController extends Controller
+class WineController extends AlcoholController
 {
-    public function getDefault(Request $request)
+    public function getDefault(Request $request): Collection
     {
         $numOfResults = min(
             $request->input('numOfResults', 10),
@@ -17,12 +18,12 @@ class WineController extends Controller
         return Alcohol::getByCategory(Alcohol::WINE, $numOfResults);
     }
 
-    public function getEfficient(Request $request)
+    public function getEfficient(
+        Request $request,
+        String $category = Alcohol::WINE,
+        String $subcategory = ''
+    ): Collection
     {
-        return DB::table('alcohols')
-            ->orderBy('price_index')
-            ->where('category', '=', Alcohol::WINE)
-            ->get()
-            ->take(AlcoholController::MAX_ALCOHOLS_RETURNED);
+        return parent::getEfficient($request, $category);
     }
 }
