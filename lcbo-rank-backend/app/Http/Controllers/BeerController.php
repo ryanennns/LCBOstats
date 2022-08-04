@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Alcohol;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class BeerController extends AlcoholController
 {
@@ -15,7 +14,11 @@ class BeerController extends AlcoholController
         return response()->json($results);
     }
 
-    public function getEfficient(Request $request, String $category = Alcohol::BEER)
+    public function getEfficient(
+        Request $request,
+        String $category = Alcohol::BEER,
+        String $subcategory = ''
+    )
     {
         return parent::getEfficient($request, $category);
     }

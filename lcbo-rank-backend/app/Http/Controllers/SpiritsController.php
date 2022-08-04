@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Alcohol;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class SpiritsController extends Controller
+class SpiritsController extends AlcoholController
 {
     public function getDefault(Request $request)
     {
@@ -14,40 +13,40 @@ class SpiritsController extends Controller
         return Alcohol::getByCategory(Alcohol::SPIRITS, $numOfResults);
     }
 
-    public function getEfficient(Request $request)
+    public function getEfficient(
+        Request $request,
+        String $category = Alcohol::SPIRITS,
+        String $subcategory = ""
+    )
     {
-        return DB::table('alcohols')
-            ->orderBy('price_index')
-            ->where('category', '=', Alcohol::SPIRITS)
-            ->get()
-            ->take(30);
+        return parent::getEfficient($request, $category, $subcategory);
     }
 
     public function getEfficientVodka(Request $request)
     {
-        return DB::table('alcohols')
-            ->orderBy('price_index')
-            ->where('subcategory', '=', Alcohol::VODKA)
-            ->get()
-            ->take(30);
+        return parent::getEfficient(
+            $request,
+            Alcohol::SPIRITS,
+            Alcohol::VODKA
+        );
     }
 
     public function getEfficientTequila(Request $request)
     {
-        return DB::table('alcohols')
-            ->orderBy('price_index')
-            ->where('subcategory', '=', Alcohol::TEQUILA)
-            ->get()
-            ->take(30);
+        return parent::getEfficient(
+            $request,
+            Alcohol::SPIRITS,
+            Alcohol::TEQUILA
+        );
     }
 
     public function getEfficientGin(Request $request)
     {
-        return DB::table('alcohols')
-            ->orderBy('price_index')
-            ->where('subcategory', '=', Alcohol::GIN)
-            ->get()
-            ->take(30);
+        return parent::getEfficient(
+            $request,
+            Alcohol::SPIRITS,
+            Alcohol::GIN
+        );
     }
 
     public function getGin(Request $request)

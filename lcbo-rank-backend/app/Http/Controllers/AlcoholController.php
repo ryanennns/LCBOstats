@@ -18,7 +18,7 @@ class AlcoholController extends Controller
         return $alcohol;
     }
 
-    public function getEfficient(Request $request, String $category = '')
+    public function getEfficient(Request $request, String $category = '', String $subcategory = '')
     {
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
         $minIndex                   = $request->input('minPriceIndex', 0);
@@ -31,6 +31,10 @@ class AlcoholController extends Controller
         if($category)
             $query
                 ->where('category', '=', $category);
+
+        if($subcategory)
+            $query
+                ->where('subcategory', '=', $subcategory);
 
         return $query
             ->where('price_index', '>', $minIndex)
