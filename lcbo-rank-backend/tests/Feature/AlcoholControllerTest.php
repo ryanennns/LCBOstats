@@ -10,28 +10,53 @@ class AlcoholControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_can_sort_alcohols_by_price()
+    /**
+     * @dataProvider alcoholSortProvider
+     */
+    public function test_it_can_sort_alcohols_by_field($sortField)
     {
         Alcohol::factory([
             'id' => 0,
-            'price' => 2
+            'price' => 2,
+            'category' => 'Beer & Cider',
+            'subcategory' => 'Lager',
         ])->create();
         Alcohol::factory([
             'id' => 1,
-            'price' => 1
+            'price' => 1,
+            'category' => 'Wine',
+            'subcategory' => 'Red Wine',
         ])->create();
         Alcohol::factory([
             'id' => 2,
-            'price' => 3
+            'price' => 3,
+            'category' => 'Spirits',
+            'subcategory' => 'Gin',
         ])->create();
 
-        $response = $this->get('/api/alcohol?sortBy=price');
+        $response = $this->get("/api/alcohol?sortBy={$sortField}");
 
-        $responseJson = json_decode($response->getContent());
+        // nice
+        $responseArray = json_decode($response->getContent(), true);
 
         $response->assertSuccessful();
-        $this->assertLessThan($responseJson[1]->price, $responseJson[0]->price);
-        $this->assertLessThan($responseJson[2]->price, $responseJson[1]->price);
+        $this->assertLessThan($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]);
+        $this->assertLessThan($responseArray[2]["$sortField"], $responseArray[1]["$sortField"]);
+    }
+
+    public function alcoholSortProvider(): array
+    {
+        return [
+            ['sortField' => 'title'],
+            ['sortField' => 'brand'],
+            ['sortField' => 'category'],
+            ['sortField' => 'subcategory'],
+            ['sortField' => 'price'],
+            ['sortField' => 'volume'],
+            ['sortField' => 'alcohol_content'],
+            ['sortField' => 'price_index'],
+            ['sortField' => 'country'],
+        ];
     }
 
     public function test_it_can_sort_alcohol_by_price_index()
