@@ -18,23 +18,24 @@ class AlcoholController extends Controller
         return $alcohol;
     }
 
-    public function getEfficient(Request $request)
+    public function getEfficient(Request $request, String $category = '')
     {
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
         $minIndex                   = $request->input('minPriceIndex', 0);
-        $sortAscendingDescending    = $request->input('order', '');
+        $sortAscendingDescending    = $request->input('order', 'asc');
         $numberOfResults            = min($request->input('numberOfResults', 100), 100);
 
-        if(!$maxIndex && !$minIndex)
-            return DB::table('alcohols')
-                ->orderBy('price_index')
-                ->get()
-                ->take(100);
+        $query = DB::table('alcohols')
+            ->orderBy('price_index');
 
-        return DB::table('alcohols')
+        if($category)
+            $query
+                ->where('category', '=', $category);
+
+        return $query
             ->where('price_index', '>', $minIndex)
             ->where('price_index', '<', $maxIndex)
-            ->orderBy('price_index', $sortAscendingDescending ? $sortAscendingDescending : 'asc')
+            ->orderBy('price_index', $sortAscendingDescending)
             ->get()
             ->take($numberOfResults);
     }

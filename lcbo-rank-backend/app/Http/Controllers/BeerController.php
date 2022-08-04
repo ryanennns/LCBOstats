@@ -6,7 +6,7 @@ use App\Models\Alcohol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class BeerController extends Controller
+class BeerController extends AlcoholController
 {
     public function getDefault(Request $request)
     {
@@ -15,12 +15,8 @@ class BeerController extends Controller
         return response()->json($results);
     }
 
-    public function getEfficient(Request $request)
+    public function getEfficient(Request $request, String $category = Alcohol::BEER)
     {
-        return DB::table('alcohols')
-            ->orderBy('price_index')
-            ->where('category', '=', Alcohol::BEER)
-            ->get()
-            ->take(30);
+        return parent::getEfficient($request, $category);
     }
 }
