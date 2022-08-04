@@ -15,7 +15,6 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_sort_alcohols_by_field($sortField)
     {
-        // todo fix
         Alcohol::factory([
             'id' => 0,
             'price' => 2,
@@ -37,26 +36,27 @@ class AlcoholControllerTest extends TestCase
 
         $response = $this->get("/api/alcohol?sortBy={$sortField}");
 
-        // nice
         $responseArray = json_decode($response->getContent(), true);
 
         $response->assertSuccessful();
-        $this->assertLessThan($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]);
-        $this->assertLessThan($responseArray[2]["$sortField"], $responseArray[1]["$sortField"]);
+        // TODO ensure that duplicate values are not used
+        // or should we just assert less than or equal to ?
+        $this->assertLessThanOrEqual($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]);
+        $this->assertLessThanOrEqual($responseArray[2]["$sortField"], $responseArray[1]["$sortField"]);
     }
 
     public function alcoholSortProvider(): array
     {
         return [
-            ['sortField' => 'title'],
-            ['sortField' => 'brand'],
-            ['sortField' => 'category'],
-            ['sortField' => 'subcategory'],
-            ['sortField' => 'price'],
-            ['sortField' => 'volume'],
-            ['sortField' => 'alcohol_content'],
-            ['sortField' => 'price_index'],
-            ['sortField' => 'country'],
+            'sort by title' => ['sortField' => 'title'],
+            'sort by brand' => ['sortField' => 'brand'],
+            'sort by category' => ['sortField' => 'category'],
+            'sort by subcategory' => ['sortField' => 'subcategory'],
+            'sort by price' => ['sortField' => 'price'],
+            'sort by volume' => ['sortField' => 'volume'],
+            'sort by alcohol_content' => ['sortField' => 'alcohol_content'],
+            'sort by price_index' => ['sortField' => 'price_index'],
+            'sort by country' => ['sortField' => 'country'],
         ];
     }
 
@@ -82,8 +82,8 @@ class AlcoholControllerTest extends TestCase
         $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
-        $this->assertLessThan($responseJson[1]->price_index, $responseJson[0]->price_index);
-        $this->assertLessThan($responseJson[2]->price_index, $responseJson[1]->price_index);
+        $this->assertLessThanOrEqual($responseJson[1]->price_index, $responseJson[0]->price_index);
+        $this->assertLessThanOrEqual($responseJson[2]->price_index, $responseJson[1]->price_index);
     }
 
     public function test_it_can_get_alcohols_by_max_price_index()
@@ -109,7 +109,7 @@ class AlcoholControllerTest extends TestCase
 
         $response->assertSuccessful();
         foreach ($responseJson as $res)
-            $this->assertLessThan($maxPriceIndex, $res->price_index);
+            $this->assertLessThanOrEqual($maxPriceIndex, $res->price_index);
     }
 
     public function test_it_can_get_alcohols_by_min_price_index()
@@ -173,7 +173,7 @@ class AlcoholControllerTest extends TestCase
                 $minPriceIndex,
                 $res->price_index
             );
-            $this->assertLessThan(
+            $this->assertLessThanOrEqual(
                 $maxPriceIndex,
                 $res->price_index
             );
@@ -200,8 +200,8 @@ class AlcoholControllerTest extends TestCase
         $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
-        $this->assertLessThan($responseJson[0]->price, $responseJson[1]->price);
-        $this->assertLessThan($responseJson[1]->price, $responseJson[2]->price);
+        $this->assertLessThanOrEqual($responseJson[0]->price, $responseJson[1]->price);
+        $this->assertLessThanOrEqual($responseJson[1]->price, $responseJson[2]->price);
     }
 
     public function test_it_can_choose_a_number_of_results()

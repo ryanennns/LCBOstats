@@ -48,12 +48,12 @@ class AlcoholController extends Controller
 
     public function getDefault(Request $request): Collection
     {
-        $id                 = $request->input('id', '');
-        $title              = $request->input('title', '');
-        $brand              = $request->input('brand', '');
-        $category           = $request->input('category', '');
-        $subcategory        = $request->input('subcategory', '');
-        $country            = $request->input('country', '');
+        $id                         = $request->input('id', '');
+        $title                      = $request->input('title', '');
+        $brand                      = $request->input('brand', '');
+        $category                   = $request->input('category', '');
+        $subcategory                = $request->input('subcategory', '');
+        $country                    = $request->input('country', '');
 
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
         $minIndex                   = $request->input('minPriceIndex', 0);
