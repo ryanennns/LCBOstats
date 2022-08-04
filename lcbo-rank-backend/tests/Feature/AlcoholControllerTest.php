@@ -60,30 +60,36 @@ class AlcoholControllerTest extends TestCase
         ];
     }
 
-    public function test_it_can_sort_alcohol_by_price_index()
+    public function test_it_can_specify_min_max_price()
     {
+        $maxPrice = 50;
+        $minPrice = 10;
+
         Alcohol::factory([
+            'id' => 0,
+            'price' => 5,
             'category' => 'Beer & Cider',
             'subcategory' => 'Lager',
-            'price_index' => 0.08
         ])->create();
         Alcohol::factory([
+            'id' => 1,
+            'price' => 25,
             'category' => 'Wine',
             'subcategory' => 'Red Wine',
-            'price_index' => 0.09
         ])->create();
         Alcohol::factory([
+            'id' => 2,
+            'price' => 75,
             'category' => 'Spirits',
             'subcategory' => 'Gin',
-            'price_index' => 0.07
         ])->create();
 
-        $response = $this->get('/api/alcohol/efficient');
-        $responseJson = json_decode($response->getContent());
+        $response = $this->get("/api/alcohol?minPrice={$minPrice}&maxPrice={$maxPrice}");
+
+        $responseArray = json_decode($response->getContent(), true);
 
         $response->assertSuccessful();
-        $this->assertLessThanOrEqual($responseJson[1]->price_index, $responseJson[0]->price_index);
-        $this->assertLessThanOrEqual($responseJson[2]->price_index, $responseJson[1]->price_index);
+        $this->markTestSkipped();
     }
 
     public function test_it_can_get_alcohols_by_max_price_index()
@@ -178,30 +184,6 @@ class AlcoholControllerTest extends TestCase
                 $res->price_index
             );
         }
-    }
-
-    public function test_it_can_sort_alcohols_by_price_descending()
-    {
-        Alcohol::factory([
-            'id' => 0,
-            'price' => 2
-        ])->create();
-        Alcohol::factory([
-            'id' => 1,
-            'price' => 1
-        ])->create();
-        Alcohol::factory([
-            'id' => 2,
-            'price' => 3
-        ])->create();
-
-        $response = $this->get('/api/alcohol?sortBy=price&order=desc');
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertLessThanOrEqual($responseJson[0]->price, $responseJson[1]->price);
-        $this->assertLessThanOrEqual($responseJson[1]->price, $responseJson[2]->price);
     }
 
     public function test_it_can_choose_a_number_of_results()
