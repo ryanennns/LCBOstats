@@ -6,7 +6,7 @@ info:
 servers:
   - url: '/api/alcohol'
 paths:
-  /:
+  /alcohol:
     get:
       summary: Returns a list of alcohols, sorted by price index.
       responses:
@@ -105,7 +105,7 @@ paths:
             type: string
           required: false
           description: A specific country of origin for an alcohol.
-          example: {}
+          example: Canada
 
         - in: path
           name: sortBy
@@ -178,7 +178,7 @@ paths:
           required: false
           description: The minimum unit volume of alcohols that will be returned.
           example: 375
-  /efficient:
+  /alcohol/efficient:
     get:
       summary: Returns a list of alcohols, sorted by price index.
       parameters:
