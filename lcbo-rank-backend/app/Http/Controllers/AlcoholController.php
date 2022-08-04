@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Alcohol;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AlcoholController extends Controller
 {
+    public const MAX_ALCOHOLS_RETURNED = 100;
+
     /**
      * Display the specified resource.
      *
@@ -18,12 +21,16 @@ class AlcoholController extends Controller
         return $alcohol;
     }
 
-    public function getEfficient(Request $request, String $category = '', String $subcategory = '')
+    public function getEfficient(
+        Request $request,
+        String $category = '',
+        String $subcategory = ''
+    ): Collection
     {
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
         $minIndex                   = $request->input('minPriceIndex', 0);
         $sortAscendingDescending    = $request->input('order', 'asc');
-        $numberOfResults            = min($request->input('numberOfResults', 100), 100);
+        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
 
         $query = DB::table('alcohols')
             ->orderBy('price_index');
@@ -44,11 +51,11 @@ class AlcoholController extends Controller
             ->take($numberOfResults);
     }
 
-    public function getDefault(Request $request)
+    public function getDefault(Request $request): Collection
     {
         $sortCondition              = $request->input('sortBy', '');
         $sortAscendingDescending    = $request->input('order', 'asc');
-        $numberOfResults            = min($request->input('numberOfResults', 100), 100);
+        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
 
         if (!$sortCondition)
             return $this->getEfficient($request);

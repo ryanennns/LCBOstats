@@ -32,13 +32,15 @@ class Alcohol extends Model
 
     public static function getByCategory(string $category, $numOfResults)
     {
-        return array_values(Alcohol::get()->where('category', '=', $category)
-            ->take($numOfResults)->toArray());
+        return Alcohol::get()
+            ->where('category', '=', $category)
+            ->take($numOfResults);
     }
 
     public static function getBySubCategory(string $subcategory, $numOfResults)
     {
-        return array_values(Alcohol::get()->where('subcategory', '=', $subcategory)
-            ->take($numOfResults)->toArray());
+        return Alcohol::get()
+            ->where('subcategory', '=', $subcategory)
+            ->take($numOfResults);
     }
 }

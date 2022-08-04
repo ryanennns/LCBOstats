@@ -10,7 +10,10 @@ class WineController extends Controller
 {
     public function getDefault(Request $request)
     {
-        $numOfResults = min($request->input('numOfResults', 10), 30);
+        $numOfResults = min(
+            $request->input('numOfResults', 10),
+            AlcoholController::MAX_ALCOHOLS_RETURNED
+        );
         return Alcohol::getByCategory(Alcohol::WINE, $numOfResults);
     }
 
@@ -20,6 +23,6 @@ class WineController extends Controller
             ->orderBy('price_index')
             ->where('category', '=', Alcohol::WINE)
             ->get()
-            ->take(30);
+            ->take(AlcoholController::MAX_ALCOHOLS_RETURNED);
     }
 }
