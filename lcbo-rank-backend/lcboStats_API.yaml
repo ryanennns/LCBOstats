@@ -11,7 +11,7 @@ paths:
       summary: Returns a list of alcohols, sorted by price index.
       responses:
         '200':
-          description: A JSON array of alcohols, sorted by price index.
+          description: A JSON array of alcohols.
           content:
             application/json:
               schema:
@@ -58,6 +58,126 @@ paths:
                   url:
                     type: string
                     example: www.lcbo.com/item
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: false
+          description: A specific ID for an alcohol.
+          example: 1
+
+        - in: path
+          name: title
+          schema:
+            type: string
+          required: false
+          description: A specific title for an alcohol.
+          example: Kelly's
+
+        - in: path
+          name: brand
+          schema:
+            type: string
+          required: false
+          description: A specific brand for an alcohol.
+          example: Crown Royal Incorporated
+
+        - in: path
+          name: category
+          schema:
+            type: string
+          required: false
+          description: A specific category of alcohol.
+          example: Spirits
+
+        - in: path
+          name: subcategory
+          schema:
+            type: string
+          required: false
+          description: A specific subcategory (i.e. Beer --> Lager, Spirits --> Gin) of alcohol.
+          example: Lager
+
+        - in: path
+          name: country
+          schema:
+            type: string
+          required: false
+          description: A specific country of origin for an alcohol.
+          example: {}
+
+        - in: path
+          name: sortBy
+          schema:
+            type: string
+          required: false
+          description: A value that determines what field the returned results are sorted by.
+          example: price_index
+
+        - in: path
+          name: order
+          schema:
+            type: string
+          required: false
+          description: A value that determines what order, ascending or descending, the returned results are sorted by.
+          example: asc || desc
+
+        - in: path
+          name: numberOfResults
+          schema:
+            type: integer
+          required: false
+          description: A value that determines the number of results to be returned. Max value of 100 is enforced.
+          example: 69
+
+        - in: path
+          name: maxPriceIndex
+          schema:
+            type: number
+          required: false
+          description: The maximum price index of alcohols that will be returned.
+          example: 0.09
+
+        - in: path
+          name: minPriceIndex
+          schema:
+            type: number
+          required: false
+          description: The minimum price index of alcohols that will be returned.
+          example: 0.07
+
+        - in: path
+          name: maxPrice
+          schema:
+            type: number
+          required: false
+          description: The maximum price of alcohols that will be returned.
+          example: 39.99
+
+        - in: path
+          name: minPrice
+          schema:
+            type: number
+          required: false
+          description: The minimum price of alcohols that will be returned
+          example: 19.99
+
+        - in: path
+          name: maxVolume
+          schema:
+            type: number
+          required: false
+          description: The maximum unit volume of alcohols that will be returned.
+          example: 750
+
+        - in: path
+          name: number
+          schema:
+            type: number
+          required: false
+          description: The minimum unit volume of alcohols that will be returned.
+          example: 375
   /efficient:
     get:
       summary: Returns a list of alcohols, sorted by price index.
