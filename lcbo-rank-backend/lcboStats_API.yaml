@@ -1,0 +1,131 @@
+openapi: 3.0.3
+info:
+  title: LCBO Stats Api
+  description: LCBO Stats Api
+  version: 0.0.1
+servers:
+  - url: '/api/alcohol'
+paths:
+  /:
+    get:
+      summary: Returns a list of alcohols, sorted by price index.
+      responses:
+        '200':
+          description: A JSON array of alcohols, sorted by price index.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: don't know lol
+                    example: 69
+                  created_at:
+                    type: string
+                    example: null
+                  updated_at:
+                    type: string
+                    example: null
+                  title:
+                    type: string
+                    example: Boxer Ice
+                  brand:
+                    type: string
+                    example: Kelly's Inc.
+                  category:
+                    type: string
+                    example: Spirits
+                  subcategory:
+                    type: string
+                    example: Gin
+                  price:
+                    type: number
+                    example: 9.99
+                  volume:
+                    type: integer
+                    example: 750
+                  alcohol_content:
+                    type: number
+                    example: 40
+                  price_index:
+                    type: number
+                    example: 0.075
+                    description: The cost of one ml of one part alcohol (1ml 100% alcohol)
+                  country:
+                    type: string
+                    example: Canada
+                  url:
+                    type: string
+                    example: www.lcbo.com/item
+  /efficient:
+    get:
+      summary: Returns a list of alcohols, sorted by price index.
+      parameters:
+        - in: path
+          name: minPriceIndex
+          schema:
+            type: number
+          required: false
+          description: The lowest price index value that will be returned when searching for efficient alcohol.
+          example: 0.07
+
+        - in: path
+          name: maxPriceIndex
+          schema:
+            type: number
+          required: false
+          description: The highest price index value that will be returned when searching for efficient alcohol.
+          example: 0.09
+
+      responses:
+        '200':
+          description: A JSON array of alcohols, sorted by price index.
+
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: don't know lol
+                    example: 69
+                  created_at:
+                    type: string
+                    example: null
+                  updated_at:
+                    type: string
+                    example: null
+                  title:
+                    type: string
+                    example: Boxer Ice
+                  brand:
+                    type: string
+                    example: Kelly's Inc.
+                  category:
+                    type: string
+                    example: Spirits
+                  subcategory:
+                    type: string
+                    example: Gin
+                  price:
+                    type: number
+                    example: 9.99
+                  volume:
+                    type: integer
+                    example: 750
+                  alcohol_content:
+                    type: number
+                    example: 40
+                  price_index:
+                    type: number
+                    example: 0.075
+                    description: The cost of one ml of one part alcohol (1ml 100% alcohol)
+                  country:
+                    type: string
+                    example: Canada
+                  url:
+                    type: string
+                    example: www.lcbo.com/item
+

@@ -20,28 +20,30 @@ class AlcoholController extends Controller
 
     public function getEfficient(Request $request)
     {
-        $maxIndex   = $request->input('maxPriceIndex', 1000);
-        $minIndex   = $request->input('minPriceIndex', 0);
-        $order      = $request->input('order', '');
+        $maxIndex                   = $request->input('maxPriceIndex', 1000);
+        $minIndex                   = $request->input('minPriceIndex', 0);
+        $sortAscendingDescending    = $request->input('order', '');
+        $numberOfResults            = min($request->input('numberOfResults', 100), 100);
 
         if(!$maxIndex && !$minIndex)
             return DB::table('alcohols')
                 ->orderBy('price_index')
                 ->get()
-                ->take(30);
+                ->take(100);
 
         return DB::table('alcohols')
             ->where('price_index', '>', $minIndex)
             ->where('price_index', '<', $maxIndex)
-            ->orderBy('price_index', $order ? $order : 'asc')
+            ->orderBy('price_index', $sortAscendingDescending ? $sortAscendingDescending : 'asc')
             ->get()
-            ->take(100);
+            ->take($numberOfResults);
     }
 
     public function getDefault(Request $request)
     {
-        $sortCondition = $request->input('sortBy', '');
-        $sortAscendingDescending = $request->input('order', 'asc');
+        $sortCondition              = $request->input('sortBy', '');
+        $sortAscendingDescending    = $request->input('order', 'asc');
+        $numberOfResults            = min($request->input('numberOfResults', 100), 100);
 
         if (!$sortCondition)
             return $this->getEfficient($request);
@@ -52,7 +54,7 @@ class AlcoholController extends Controller
         return DB::table('alcohols')
             ->orderBy($sortCondition, $sortAscendingDescending)
             ->get()
-            ->take(30);
+            ->take($numberOfResults);
     }
 }
 

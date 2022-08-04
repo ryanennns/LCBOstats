@@ -10,100 +10,28 @@ class AlcoholControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_can_get_all_wine()
+    public function test_it_can_sort_alcohols_by_price()
     {
-        $wine = Alcohol::factory([
-            'category' => 'Wine',
-            'subcategory' => 'Red Wine',
-            'price_index' => 0.08
-        ])->count(1)->create();
+        Alcohol::factory([
+            'id' => 0,
+            'price' => 2
+        ])->create();
+        Alcohol::factory([
+            'id' => 1,
+            'price' => 1
+        ])->create();
+        Alcohol::factory([
+            'id' => 2,
+            'price' => 3
+        ])->create();
 
-        $response = $this->get('/api/alcohol/wine');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $wine->toArray()
-            );
-    }
+        $response = $this->get('/api/alcohol?sortBy=price');
 
-    public function test_it_can_get_all_spirits()
-    {
-        $spirit = Alcohol::factory([
-            'category' => 'Spirits',
-            'subcategory' => 'Vodka',
-            'price_index' => 0.08
-        ])->count(1)->create();
+        $responseJson = json_decode($response->getContent());
 
-        $response = $this->get('/api/alcohol/spirits');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $spirit->toArray()
-            );
-    }
-
-    public function test_it_can_get_all_gin()
-    {
-        $gin = Alcohol::factory([
-            'category' => 'Spirits',
-            'subcategory' => 'Gin',
-            'price_index' => 0.08
-        ])->count(1)->create();
-
-        $response = $this->get('/api/alcohol/spirits/gin');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $gin->toArray()
-            );
-    }
-
-    public function test_it_can_get_all_vodka()
-    {
-        $vodka = Alcohol::factory([
-            'category' => 'Spirits',
-            'subcategory' => 'Vodka',
-            'price_index' => 0.08
-        ])->count(1)->create();
-
-        $response = $this->get('/api/alcohol/spirits/vodka');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $vodka->toArray()
-            );
-    }
-
-    public function test_it_can_get_all_tequila()
-    {
-        $tequila = Alcohol::factory([
-            'category' => 'Spirits',
-            'subcategory' => 'Tequila',
-            'price_index' => 0.08
-        ])->count(1)->create();
-
-        $response = $this->get('/api/alcohol/spirits/tequila');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $tequila->toArray()
-            );
-    }
-
-    public function test_it_can_get_all_coolers()
-    {
-        $coolers = Alcohol::factory([
-            'category' => 'Coolers',
-            'subcategory' => 'Flavoured',
-            'price_index' => 0.08
-        ])->count(1)->create();
-
-        $response = $this->get('/api/alcohol/coolers');
-        $response
-            ->assertSuccessful()
-            ->assertJson(
-                $coolers->toArray()
-            );
+        $response->assertSuccessful();
+        $this->assertLessThan($responseJson[1]->price, $responseJson[0]->price);
+        $this->assertLessThan($responseJson[2]->price, $responseJson[1]->price);
     }
 
     public function test_it_can_sort_alcohol_by_price_index()
@@ -130,54 +58,6 @@ class AlcoholControllerTest extends TestCase
         $response->assertSuccessful();
         $this->assertLessThan($responseJson[1]->price_index, $responseJson[0]->price_index);
         $this->assertLessThan($responseJson[2]->price_index, $responseJson[1]->price_index);
-    }
-
-    public function test_it_can_sort_alcohols_by_price()
-    {
-        Alcohol::factory([
-            'id' => 0,
-            'price' => 2
-        ])->create();
-        Alcohol::factory([
-            'id' => 1,
-            'price' => 1
-        ])->create();
-        Alcohol::factory([
-            'id' => 2,
-            'price' => 3
-        ])->create();
-
-        $response = $this->get('/api/alcohol?sortBy=price');
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertLessThan($responseJson[1]->price, $responseJson[0]->price);
-        $this->assertLessThan($responseJson[2]->price, $responseJson[1]->price);
-    }
-
-    public function test_it_can_sort_alcohols_by_price_descending()
-    {
-        Alcohol::factory([
-            'id' => 0,
-            'price' => 2
-        ])->create();
-        Alcohol::factory([
-            'id' => 1,
-            'price' => 1
-        ])->create();
-        Alcohol::factory([
-            'id' => 2,
-            'price' => 3
-        ])->create();
-
-        $response = $this->get('/api/alcohol?sortBy=price&order=desc');
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertLessThan($responseJson[0]->price, $responseJson[1]->price);
-        $this->assertLessThan($responseJson[1]->price, $responseJson[2]->price);
     }
 
     public function test_it_can_get_alcohols_by_max_price_index()
@@ -272,5 +152,54 @@ class AlcoholControllerTest extends TestCase
                 $res->price_index
             );
         }
+    }
+
+    public function test_it_can_sort_alcohols_by_price_descending()
+    {
+        Alcohol::factory([
+            'id' => 0,
+            'price' => 2
+        ])->create();
+        Alcohol::factory([
+            'id' => 1,
+            'price' => 1
+        ])->create();
+        Alcohol::factory([
+            'id' => 2,
+            'price' => 3
+        ])->create();
+
+        $response = $this->get('/api/alcohol?sortBy=price&order=desc');
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertLessThan($responseJson[0]->price, $responseJson[1]->price);
+        $this->assertLessThan($responseJson[1]->price, $responseJson[2]->price);
+    }
+
+    public function test_it_can_choose_a_number_of_results()
+    {
+        $numberOfResults = 69;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?numberOfResults={$numberOfResults}");
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertEquals($numberOfResults, count($responseJson));
+    }
+
+    public function test_it_wont_return_more_than_one_hundred_results()
+    {
+        Alcohol::factory(100)->create();
+
+        $response = $this->get('/api/alcohol?numberOfResults=150');
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertLessThanOrEqual(100, count($responseJson));
     }
 }
