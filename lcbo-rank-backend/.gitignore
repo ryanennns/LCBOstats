@@ -8,4 +8,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-.phpunit.result.cache
+/.phpunit.result.cache
+/.idea/php.xml
