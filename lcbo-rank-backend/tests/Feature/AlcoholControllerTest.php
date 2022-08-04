@@ -15,6 +15,7 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_sort_alcohols_by_field($sortField)
     {
+        // todo fix
         Alcohol::factory([
             'id' => 0,
             'price' => 2,
