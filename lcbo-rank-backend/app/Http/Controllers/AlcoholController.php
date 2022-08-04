@@ -27,16 +27,13 @@ class AlcoholController extends Controller
         $sortAscendingDescending    = $request->input('order', 'asc');
         $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
 
-        $query = DB::table('alcohols')
-            ->orderBy('price_index');
+        $query = DB::table('alcohols')->orderBy('price_index');
 
         if($category)
-            $query
-                ->where('category', '=', $category);
+            $query->where('category', '=', $category);
 
         if($subcategory)
-            $query
-                ->where('subcategory', '=', $subcategory);
+            $query->where('subcategory', '=', $subcategory);
 
         return $query
             ->where('price_index', '>', $minIndex)
@@ -93,16 +90,16 @@ class AlcoholController extends Controller
             $query->orderBy($sortCondition, $sortAscendingDescending);
 
         // INDEX
-        $query->where('price_index', '<', $maxIndex);
-        $query->where('price_index', '>', $minIndex);
+        $query->where('price_index', '<=', $maxIndex);
+        $query->where('price_index', '>=', $minIndex);
 
         // PRICE
-        $query->where('price', '<', $maxPrice);
-        $query->where('price', '>', $minPrice);
+        $query->where('price', '<=', $maxPrice);
+        $query->where('price', '>=', $minPrice);
 
         // VOLUME
-        $query->where('volume', '<', $maxVolume);
-        $query->where('price', '>', $minVolume);
+        $query->where('volume', '<=', $maxVolume);
+        $query->where('price', '>=', $minVolume);
 
         return $query
             ->get()
