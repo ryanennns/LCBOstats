@@ -11,11 +11,6 @@ class AlcoholController extends Controller
 {
     public const MAX_ALCOHOLS_RETURNED = 100;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\Alcohol $alcohol
-     */
     public function show(Alcohol $alcohol)
     {
         return $alcohol;
@@ -53,18 +48,63 @@ class AlcoholController extends Controller
 
     public function getDefault(Request $request): Collection
     {
+        $id                 = $request->input('id', '');
+        $title              = $request->input('title', '');
+        $brand              = $request->input('brand', '');
+        $category           = $request->input('category', '');
+        $subcategory        = $request->input('subcategory', '');
+        $country            = $request->input('country', '');
+
+        $maxIndex                   = $request->input('maxPriceIndex', 1000);
+        $minIndex                   = $request->input('minPriceIndex', 0);
+        $maxPrice                   = $request->input('maxPrice', 100000);
+        $minPrice                   = $request->input('minPrice', 0);
+        $maxVolume                  = $request->input('maxVolume', 100000);
+        $minVolume                  = $request->input('minVolume', 0);
+
         $sortCondition              = $request->input('sortBy', '');
         $sortAscendingDescending    = $request->input('order', 'asc');
         $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
 
-        if (!$sortCondition)
-            return $this->getEfficient($request);
+        $query = DB::table('alcohols');
 
         if($sortAscendingDescending != 'asc' && $sortAscendingDescending != 'desc')
             $sortAscendingDescending = 'desc';
 
-        return DB::table('alcohols')
-            ->orderBy($sortCondition, $sortAscendingDescending)
+        if($id)
+            $query->where('id', '=', $id);
+
+        if($title)
+            $query->where('title', '=', $title);
+
+        if($brand)
+            $query->where('brand', '=', $brand);
+
+        if($category)
+            $query->where('category', '=', $category);
+
+        if($subcategory)
+            $query->where('subcategory', '=', $subcategory);
+
+        if($country)
+            $query->where('country', '=', $country);
+
+        if($sortCondition)
+            $query->orderBy($sortCondition, $sortAscendingDescending);
+
+        // INDEX
+        $query->where('price_index', '<', $maxIndex);
+        $query->where('price_index', '>', $minIndex);
+
+        // PRICE
+        $query->where('price', '<', $maxPrice);
+        $query->where('price', '>', $minPrice);
+
+        // VOLUME
+        $query->where('volume', '<', $maxVolume);
+        $query->where('price', '>', $minVolume);
+
+        return $query
             ->get()
             ->take($numberOfResults);
     }
