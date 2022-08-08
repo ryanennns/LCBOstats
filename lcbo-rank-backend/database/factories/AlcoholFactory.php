@@ -16,7 +16,7 @@ class AlcoholFactory extends Factory
      */
     public function definition()
     {
-        $price = $this->faker->numberBetween(10, 50);
+        $price = $this->faker->numberBetween(10, 1000);
         $alcohol_content = $this->faker->numberBetween(4, 45);
         $volume = $this->faker->numberBetween(375, 1400);
 
