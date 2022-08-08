@@ -101,7 +101,7 @@ class AlcoholController extends Controller
 
         // VOLUME
         $query->where('volume', '<=', $maxVolume);
-        $query->where('price', '>=', $minVolume);
+        $query->where('volume', '>=', $minVolume);
 
         // ALCOHOL CONTENT
         $query->where('alcohol_content', '<=', $maxAlcContent);
