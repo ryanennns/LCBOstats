@@ -60,36 +60,135 @@ class AlcoholControllerTest extends TestCase
         ];
     }
 
-    public function test_it_can_specify_min_max_price()
+
+    public function test_it_can_choose_a_number_of_results()
     {
-        $maxPrice = 50;
-        $minPrice = 10;
+        $numberOfResults = 69;
+        Alcohol::factory(100)->create();
 
-        Alcohol::factory([
-            'id' => 0,
-            'price' => 5,
-            'category' => 'Beer & Cider',
-            'subcategory' => 'Lager',
-        ])->create();
-        Alcohol::factory([
-            'id' => 1,
-            'price' => 25,
-            'category' => 'Wine',
-            'subcategory' => 'Red Wine',
-        ])->create();
-        Alcohol::factory([
-            'id' => 2,
-            'price' => 75,
-            'category' => 'Spirits',
-            'subcategory' => 'Gin',
-        ])->create();
+        $response = $this->get("/api/alcohol?numberOfResults={$numberOfResults}");
 
-        $response = $this->get("/api/alcohol?minPrice={$minPrice}&maxPrice={$maxPrice}");
-
-        $responseArray = json_decode($response->getContent(), true);
+        $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
-        $this->markTestSkipped();
+        $this->assertEquals($numberOfResults, count($responseJson));
+    }
+
+    public function test_it_wont_return_more_than_one_hundred_results()
+    {
+        Alcohol::factory(100)->create();
+
+        $response = $this->get('/api/alcohol?numberOfResults=150');
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertLessThanOrEqual(100, count($responseJson));
+    }
+
+    public function test_it_can_filter_based_max_price_index()
+    {
+        $maxPriceIndex = 0.10;
+
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?maxPriceIndex=${maxPriceIndex}");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThanOrEqual($maxPriceIndex, $res->price_index);
+    }
+
+    public function test_it_can_filter_based_min_price_index()
+    {
+        $minPriceIndex = 0.10;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?minPriceIndex=$minPriceIndex");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertGreaterThanOrEqual($minPriceIndex, $res->price_index);
+    }
+
+    public function test_it_can_filter_based_max_price()
+    {
+        $maxPrice = 25;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?maxPrice=$maxPrice");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThanOrEqual($maxPrice, $res->price);
+    }
+
+    public function test_it_can_filter_based_on_min_price()
+    {
+        $minPrice = 25;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?minPrice=$minPrice");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertGreaterThanOrEqual($minPrice, $res->price);
+    }
+
+    public function test_it_can_filter_based_on_max_volume()
+    {
+        $maxVolume = 750;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?maxVolume=$maxVolume");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThanOrEqual($maxVolume, $res->volume);
+    }
+
+    public function test_it_can_filter_based_on_min_volume()
+    {
+        $minVolume = 750;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?minVolume=$minVolume");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertGreaterThanOrEqual($minVolume, $res->volume);
+    }
+
+    public function test_it_can_filter_based_on_max_alcohol_content()
+    {
+        $minAlcoholContent = 20;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?maxAlcoholContent=$minAlcoholContent");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThanOrEqual($minAlcoholContent, $res->alcohol_content);
+    }
+
+    public function test_it_can_filter_based_on_min_alcohol_content()
+    {
+        $minAlcoholContent = 15;
+        Alcohol::factory(100)->create();
+
+        $response = $this->get("/api/alcohol?minAlcoholContent=$minAlcoholContent");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertGreaterThanOrEqual($minAlcoholContent, $res->alcohol_content);
     }
 
     public function test_it_can_get_alcohols_by_max_price_index()
@@ -184,30 +283,5 @@ class AlcoholControllerTest extends TestCase
                 $res->price_index
             );
         }
-    }
-
-    public function test_it_can_choose_a_number_of_results()
-    {
-        $numberOfResults = 69;
-        Alcohol::factory(100)->create();
-
-        $response = $this->get("/api/alcohol?numberOfResults={$numberOfResults}");
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertEquals($numberOfResults, count($responseJson));
-    }
-
-    public function test_it_wont_return_more_than_one_hundred_results()
-    {
-        Alcohol::factory(100)->create();
-
-        $response = $this->get('/api/alcohol?numberOfResults=150');
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertLessThanOrEqual(100, count($responseJson));
     }
 }
