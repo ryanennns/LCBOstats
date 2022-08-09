@@ -60,7 +60,6 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_wont_return_more_than_one_hundred_results()
     {
-
         $response = $this->get('/api/alcohol?numberOfResults=150');
 
         $responseJson = json_decode($response->getContent());

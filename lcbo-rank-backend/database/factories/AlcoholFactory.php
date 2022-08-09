@@ -24,7 +24,14 @@ class AlcoholFactory extends Factory
             'id' => $this->faker->unique()->numberBetween(0, 10000),
             'title' => $this->faker->unique()->words(3, true),
             'brand' => $this->faker->company(),
-            'category' => '',
+            'category' => $this->faker->randomElement(
+                [
+                    'Beer & Cider',
+                    'Spirits',
+                    'Coolers',
+                    'Wine'
+                ]
+            ),
             'subcategory' => '',
             'price' => $price,
             'volume' => $volume,
