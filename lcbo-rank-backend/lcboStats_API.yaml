@@ -19,7 +19,6 @@ paths:
                 properties:
                   id:
                     type: integer
-                    format: don't know lol
                     example: 69
                   created_at:
                     type: string
@@ -172,12 +171,29 @@ paths:
           example: 750
 
         - in: path
-          name: number
+          name: minVolume
           schema:
             type: number
           required: false
           description: The minimum unit volume of alcohols that will be returned.
           example: 375
+
+        - in: path
+          name: maxAlcoholContent
+          schema:
+            type: number
+          required: false
+          description: The minimum alcohol content of alcohols that will be returned.
+          example: 76
+
+        - in: path
+          name: minAlcoholContent
+          schema:
+            type: number
+          required: false
+          description: The minimum alcohol content of alcohols that will be returned.
+          example: 20
+
   /alcohol/efficient:
     get:
       summary: Returns a list of alcohols, sorted by price index.
