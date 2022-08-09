@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alcohol;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
