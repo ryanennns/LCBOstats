@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 namespace Tests\Feature;
 
@@ -34,7 +34,7 @@ class AlcoholControllerTest extends TestCase
             'subcategory' => 'Gin',
         ])->create();
 
-        $response = $this->get("/api/alcohol?sortBy={$sortField}");
+        $response = $this->get("/api/alcohol?sortBy=$sortField");
 
         $responseArray = json_decode($response->getContent(), true);
 
@@ -60,18 +60,17 @@ class AlcoholControllerTest extends TestCase
         ];
     }
 
-
     public function test_it_can_choose_a_number_of_results()
     {
         $numberOfResults = 69;
         Alcohol::factory(100)->create();
 
-        $response = $this->get("/api/alcohol?numberOfResults={$numberOfResults}");
+        $response = $this->get("/api/alcohol?numberOfResults=$numberOfResults");
 
         $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
-        $this->assertEquals($numberOfResults, count($responseJson));
+        $this->assertCount($numberOfResults, $responseJson);
     }
 
     public function test_it_wont_return_more_than_one_hundred_results()
@@ -92,7 +91,7 @@ class AlcoholControllerTest extends TestCase
 
         Alcohol::factory(100)->create();
 
-        $response = $this->get("/api/alcohol?maxPriceIndex=${maxPriceIndex}");
+        $response = $this->get("/api/alcohol?maxPriceIndex=$maxPriceIndex");
         $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
@@ -208,7 +207,7 @@ class AlcoholControllerTest extends TestCase
             'price_index' => 0.082
         ])->create();
 
-        $response = $this->get("/api/alcohol/efficient?maxPriceIndex={$maxPriceIndex}&order=desc");
+        $response = $this->get("/api/alcohol/efficient?maxPriceIndex=$maxPriceIndex&order=desc");
 
         $responseJson = json_decode($response->getContent());
 
@@ -233,7 +232,7 @@ class AlcoholControllerTest extends TestCase
             'price_index' => 0.092
         ])->create();
 
-        $response = $this->get("/api/alcohol/efficient?minPriceIndex={$minPriceIndex}&order=desc");
+        $response = $this->get("/api/alcohol/efficient?minPriceIndex=$minPriceIndex&order=desc");
 
         $responseJson = json_decode($response->getContent());
 
@@ -267,11 +266,11 @@ class AlcoholControllerTest extends TestCase
 
         $responseJson = json_decode(
             $this
-                ->get("/api/alcohol/efficient?minPriceIndex={$minPriceIndex}&maxPriceIndex={$maxPriceIndex}")
+                ->get("/api/alcohol/efficient?minPriceIndex=$minPriceIndex&maxPriceIndex=$maxPriceIndex")
                 ->getContent()
         );
 
-        $this->get("/api/alcohol/efficient?minPriceIndex={$minPriceIndex}&maxPriceIndex={$maxPriceIndex}")
+        $this->get("/api/alcohol/efficient?minPriceIndex=$minPriceIndex&maxPriceIndex=$maxPriceIndex")
             ->assertSuccessful();
         foreach ($responseJson as $res) {
             $this->assertGreaterThan(
