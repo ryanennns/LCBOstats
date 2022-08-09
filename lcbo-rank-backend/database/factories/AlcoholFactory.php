@@ -22,8 +22,6 @@ class AlcoholFactory extends Factory
 
         return [
             'id' => $this->faker->unique()->numberBetween(0, 10000),
-            'created_at' => $this->faker->time(),
-            'updated_at' => $this->faker->time(),
             'title' => $this->faker->unique()->words(3, true),
             'brand' => $this->faker->company(),
             'category' => '',
