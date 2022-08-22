@@ -52,14 +52,15 @@ class AlcoholController extends Controller
         $subcategory                = $request->input('subcategory', '');
         $country                    = $request->input('country', '');
 
+        // min & max values
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
         $minIndex                   = $request->input('minPriceIndex', 0);
         $maxPrice                   = $request->input('maxPrice', 100000);
         $minPrice                   = $request->input('minPrice', 0);
         $maxVolume                  = $request->input('maxVolume', 100000);
         $minVolume                  = $request->input('minVolume', 0);
-        $maxAlcContent                 = $request->input('maxAlcoholContent', 100000);
-        $minAlcContent                 = $request->input('minAlcoholContent', 0);
+        $maxAlcoholContent              = $request->input('maxAlcoholContent', 100000);
+        $minAlcoholContent              = $request->input('minAlcoholContent', 0);
 
         $sortCondition              = $request->input('sortBy', '');
         $sortAscendingDescending    = $request->input('order', 'asc');
@@ -104,8 +105,8 @@ class AlcoholController extends Controller
         $query->where('volume', '>=', $minVolume);
 
         // ALCOHOL CONTENT
-        $query->where('alcohol_content', '<=', $maxAlcContent);
-        $query->where('alcohol_content', '>=', $minAlcContent);
+        $query->where('alcohol_content', '<=', $maxAlcoholContent);
+        $query->where('alcohol_content', '>=', $minAlcoholContent);
 
         return $query
             ->get()
