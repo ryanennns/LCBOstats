@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-//    throw new Exception();
+    return 'documentation coming soon :)';
 });

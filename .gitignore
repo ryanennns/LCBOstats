@@ -1,0 +1,6 @@
+
+.phpunit.result.cache
+*.cache
+.phpunit.result.cache
+lcbo-rank-backend/.phpunit.result.cache
+lcbo-rank-backend/.env
