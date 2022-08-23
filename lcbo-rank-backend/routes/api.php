@@ -12,6 +12,7 @@ Route::prefix('alcohol')->group(function () {
         ->group(function () {
             Route::get('/', 'getDefault');
             Route::get('/efficient', 'getEfficient');
+
         });
 
     Route::controller(SpiritsController::class)
@@ -52,4 +53,5 @@ Route::prefix('alcohol')->group(function () {
 
     Route::get('/efficient', 'App\Http\Controllers\AlcoholController@getEfficient');
     Route::get('/', 'App\Http\Controllers\AlcoholController@getDefault');
+    Route::post('/', 'App\Http\Controllers\AlcoholController@postDefault');
 });

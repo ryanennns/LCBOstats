@@ -14,7 +14,7 @@ class AlcoholFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         $price = $this->faker->numberBetween(10, 1000);
         $alcohol_content = $this->faker->numberBetween(4, 45);

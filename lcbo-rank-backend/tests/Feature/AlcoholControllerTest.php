@@ -215,4 +215,13 @@ class AlcoholControllerTest extends TestCase
             );
         }
     }
+
+    public function test_it_can_differentiate_post_get()
+    {
+        self::markTestSkipped();
+        $response = $this->post('/api/alcohol');
+        $response->assertSuccessful();
+
+        $response->assertSee('this is a post endpoint');
+    }
 }
