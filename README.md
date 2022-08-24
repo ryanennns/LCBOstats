@@ -2,7 +2,7 @@
 
 Currently available at www.lcbostats.com.
 
-An early work in progress.
+An early work in progress. Documentation and more to come soon.
 
 ## What is this thing?
 
