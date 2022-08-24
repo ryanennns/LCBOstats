@@ -13,7 +13,6 @@ class AlcoholControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
         Alcohol::factory(100)->create();
     }
 
@@ -204,15 +203,48 @@ class AlcoholControllerTest extends TestCase
 
         $this->get("/api/alcohol/efficient?minPriceIndex=$minPriceIndex&maxPriceIndex=$maxPriceIndex")
             ->assertSuccessful();
-        foreach ($responseJson as $res) {
+        foreach ($responseJson as $alcohol) {
             $this->assertGreaterThan(
                 $minPriceIndex,
-                $res->price_index
+                $alcohol->price_index
             );
             $this->assertLessThanOrEqual(
                 $maxPriceIndex,
-                $res->price_index
+                $alcohol->price_index
             );
         }
+    }
+
+    /**
+     * @dataProvider provideCategoryFilters
+     */
+    public function test_it_can_filter_by_category($category)
+    {
+//        dd($category);
+
+        Alcohol::factory([
+            'category' => $category,
+        ])->create();
+
+        $response = $this->get("/api/alcohol?category=$category")
+            ->assertSuccessful();
+
+        $responseJson = json_decode($response->getContent());
+
+        $this->assertNotEmpty($responseJson);
+
+        foreach($responseJson as $alcohol) {
+            $this->assertEquals($alcohol->category, $category);
+        }
+    }
+
+    public function provideCategoryFilters()
+    {
+        return [
+            'filter for \'Beer & Cider\'' => ['Beer & Cider'], // TODO resolve the ampersand dillema
+            'filter for \'Wine\'' => ['Wine'],
+            'filter for \'Spirits\'' => ['Spirits'],
+            'filter for \'Coolers\'' => ['Coolers'],
+        ];
     }
 }
