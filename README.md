@@ -1,5 +1,9 @@
 # LCBO-Rank-App
 
+Currently available at www.lcbostats.com.
+
+An early work in progress.
+
 ## What is this thing?
 
 An API used to serve information regarding alcoholic beverages stocked at the LCBO.
