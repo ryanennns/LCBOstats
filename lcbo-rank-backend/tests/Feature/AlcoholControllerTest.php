@@ -220,13 +220,13 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_filter_by_category($category)
     {
-//        dd($category);
+        $escapedCategory = str_replace('&', '%26', $category);
 
         Alcohol::factory([
             'category' => $category,
         ])->create();
 
-        $response = $this->get("/api/alcohol?category=$category")
+        $response = $this->get("/api/alcohol?category=$escapedCategory")
             ->assertSuccessful();
 
         $responseJson = json_decode($response->getContent());
