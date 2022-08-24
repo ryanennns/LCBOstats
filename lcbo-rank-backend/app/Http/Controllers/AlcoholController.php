@@ -59,8 +59,8 @@ class AlcoholController extends Controller
         $minPrice                   = $request->input('minPrice', 0);
         $maxVolume                  = $request->input('maxVolume', 100000);
         $minVolume                  = $request->input('minVolume', 0);
-        $maxAlcoholContent              = $request->input('maxAlcoholContent', 100000);
-        $minAlcoholContent              = $request->input('minAlcoholContent', 0);
+        $maxAlcoholContent          = $request->input('maxAlcoholContent', 100000);
+        $minAlcoholContent          = $request->input('minAlcoholContent', 0);
 
         $sortCondition              = $request->input('sortBy', '');
         $sortAscendingDescending    = $request->input('order', 'asc');
