@@ -6,6 +6,12 @@ use App\Http\Controllers\SpiritsController;
 use App\Http\Controllers\WineController;
 use Illuminate\Support\Facades\Route;
 
+Route::prefix('meme')->group(function() {
+    Route::get('/', function() {
+        return 'meme';
+    });
+});
+
 Route::prefix('alcohol')->group(function () {
     Route::controller(BeerController::class)
         ->prefix('beer')
@@ -53,5 +59,4 @@ Route::prefix('alcohol')->group(function () {
 
     Route::get('/efficient', 'App\Http\Controllers\AlcoholController@getEfficient');
     Route::get('/', 'App\Http\Controllers\AlcoholController@getDefault');
-    Route::post('/', 'App\Http\Controllers\AlcoholController@postDefault');
 });
