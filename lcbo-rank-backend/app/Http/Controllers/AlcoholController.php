@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class AlcoholController extends Controller
 {
-    public const MAX_ALCOHOLS_RETURNED = 100;
+    public const MAX_ALCOHOLS_RETURNED = 10000;
 
     public function show(Alcohol $alcohol)
     {
@@ -25,7 +25,9 @@ class AlcoholController extends Controller
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
         $minIndex                   = $request->input('minPriceIndex', 0);
         $sortAscendingDescending    = $request->input('order', 'asc');
-        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
+//        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
+
+        $numberOfResults = $request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED);
 
         $query = DB::table('alcohols')->orderBy('price_index');
 
@@ -39,8 +41,7 @@ class AlcoholController extends Controller
             ->where('price_index', '>', $minIndex)
             ->where('price_index', '<', $maxIndex)
             ->orderBy('price_index', $sortAscendingDescending)
-            ->get()
-            ->take($numberOfResults);
+            ->get();
     }
 
     public function getDefault(Request $request): Collection
@@ -64,7 +65,9 @@ class AlcoholController extends Controller
 
         $sortCondition              = $request->input('sortBy', '');
         $sortAscendingDescending    = $request->input('order', 'asc');
-        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
+//        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
+
+        $numberOfResults            = $request->input('numberOfResults');
 
         $query = DB::table('alcohols');
 
@@ -92,6 +95,8 @@ class AlcoholController extends Controller
         if($sortCondition)
             $query->orderBy($sortCondition, $sortAscendingDescending);
 
+        // todo introduce conditions on these?
+
         // INDEX
         $query->where('price_index', '<=', $maxIndex);
         $query->where('price_index', '>=', $minIndex);
@@ -109,8 +114,7 @@ class AlcoholController extends Controller
         $query->where('alcohol_content', '>=', $minAlcoholContent);
 
         return $query
-            ->get()
-            ->take($numberOfResults);
+            ->get();
     }
 }
 
