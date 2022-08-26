@@ -10,10 +10,7 @@ class BeerController extends AlcoholController
 {
     public function getDefault(Request $request): Collection
     {
-        $numOfResults = min(
-            $request->input('numOfResults', 10),
-            AlcoholController::MAX_ALCOHOLS_RETURNED
-        );
+        $numOfResults = min($request->input('numOfResults', 10), AlcoholController::MAX_ALCOHOLS_RETURNED);
         return Alcohol::getByCategory(Alcohol::BEER, $numOfResults);
     }
 
