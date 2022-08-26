@@ -41,7 +41,8 @@ class AlcoholController extends Controller
             ->where('price_index', '>', $minIndex)
             ->where('price_index', '<', $maxIndex)
             ->orderBy('price_index', $sortAscendingDescending)
-            ->get();
+            ->get()
+            ->take($numberOfResults);
     }
 
     public function getDefault(Request $request): Collection
@@ -114,7 +115,8 @@ class AlcoholController extends Controller
         $query->where('alcohol_content', '>=', $minAlcoholContent);
 
         return $query
-            ->get();
+            ->get()
+            ->take($numberOfResults);
     }
 }
 
