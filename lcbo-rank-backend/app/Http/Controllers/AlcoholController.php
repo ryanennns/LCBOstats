@@ -25,7 +25,6 @@ class AlcoholController extends Controller
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
         $minIndex                   = $request->input('minPriceIndex', 0);
         $sortAscendingDescending    = $request->input('order', 'asc');
-//        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
 
         $numberOfResults = $request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED);
 
@@ -41,7 +40,8 @@ class AlcoholController extends Controller
             ->where('price_index', '>', $minIndex)
             ->where('price_index', '<', $maxIndex)
             ->orderBy('price_index', $sortAscendingDescending)
-            ->get();
+            ->get()
+            ->take($numberOfResults);
     }
 
     public function getDefault(Request $request): Collection
@@ -65,7 +65,6 @@ class AlcoholController extends Controller
 
         $sortCondition              = $request->input('sortBy', '');
         $sortAscendingDescending    = $request->input('order', 'asc');
-//        $numberOfResults            = min($request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED), 100);
 
         $numberOfResults            = $request->input('numberOfResults');
 

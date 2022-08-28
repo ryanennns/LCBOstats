@@ -158,7 +158,6 @@ class AlcoholControllerTest extends TestCase
     public function test_it_can_get_alcohols_by_max_price_index()
     {
         $maxPriceIndex = 0.09;
-        // TODO make this reliably fail
 
         $response = $this->get("/api/alcohol/efficient?maxPriceIndex=$maxPriceIndex&order=desc");
 
@@ -182,6 +181,7 @@ class AlcoholControllerTest extends TestCase
             $this->assertGreaterThan($minPriceIndex, $res->price_index);
     }
 
+    // todo is this needed?
     public function test_it_can_get_alcohols_by_min_and_max_price_index()
     {
         $minPriceIndex = 0.08;

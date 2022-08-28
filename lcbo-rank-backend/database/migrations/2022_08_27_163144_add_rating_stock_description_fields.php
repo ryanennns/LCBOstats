@@ -13,7 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        // todo make rating not a double (fix python script)
+        // todo make rating not a double (fix python script rofl)
+        // todo make tests for sorting by rating, filter by out_of_stock
         Schema::table('alcohols', function (Blueprint $table) {
             $table->string('rating')->nullable()->default(0.0);
             $table->string('out_of_stock')->nullable();
