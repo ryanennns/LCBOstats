@@ -114,7 +114,8 @@ class AlcoholController extends Controller
         $query->where('alcohol_content', '>=', $minAlcoholContent);
 
         return $query
-            ->get();
+            ->get()
+            ->take($numberOfResults);
     }
 }
 

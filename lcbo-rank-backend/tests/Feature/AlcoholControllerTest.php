@@ -48,7 +48,6 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_can_choose_a_number_of_results()
     {
-        $this->markTestSkipped();
         Alcohol::factory(400)->create();
         $numberOfResults = 420;
 
@@ -58,17 +57,6 @@ class AlcoholControllerTest extends TestCase
 
         $response->assertSuccessful();
         $this->assertCount($numberOfResults, $responseJson);
-    }
-
-    public function test_it_wont_return_more_than_one_hundred_results()
-    {
-        self::markTestSkipped();
-        $response = $this->get('/api/alcohol?numberOfResults=150');
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertLessThanOrEqual(100, count($responseJson));
     }
 
     public function test_it_can_filter_based_max_price_index()
@@ -224,7 +212,7 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_filter_by_category($category)
     {
-        $escapedCategory = str_replace('&', '%26', $category);
+        $escapedCategory = str_replace('&', '%26', $category); // BOTCHED lol
 
         Alcohol::factory([
             'category' => $category,
@@ -245,7 +233,7 @@ class AlcoholControllerTest extends TestCase
     public function provideCategoryFilters()
     {
         return [
-            'filter for \'Beer & Cider\'' => ['Beer & Cider'], // TODO resolve the ampersand dillema
+            'filter for \'Beer & Cider\'' => ['Beer & Cider'],
             'filter for \'Wine\'' => ['Wine'],
             'filter for \'Spirits\'' => ['Spirits'],
             'filter for \'Coolers\'' => ['Coolers'],
