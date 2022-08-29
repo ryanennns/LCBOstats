@@ -42,10 +42,9 @@ class AlcoholFactory extends Factory
             'out_of_stock' => $this->faker->randomElement(
                 [
                     'false',
-                    'true'
-
+                    'true',
                 ]
-            )
+            ),
         ];
     }
 }
