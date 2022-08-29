@@ -240,4 +240,15 @@ class AlcoholControllerTest extends TestCase
             'filter for \'Coolers\'' => ['Coolers'],
         ];
     }
+
+    public function test_it_can_filter_by_stock_status()
+    {
+        $response = $this->get("/api/alcohol?inStock=false");
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertEquals('false', $res->out_of_stock); //todo change this when field is boolean and not string, yuck
+    }
 }

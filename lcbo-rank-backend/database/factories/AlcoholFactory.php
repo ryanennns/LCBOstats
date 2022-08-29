@@ -38,7 +38,14 @@ class AlcoholFactory extends Factory
             'alcohol_content' => $alcohol_content,
             'price_index' => $price / (($alcohol_content / 100)*$volume),
             'country' => $this->faker->country(),
-            'url' => $this->faker->url()
+            'url' => $this->faker->url(),
+            'out_of_stock' => $this->faker->randomElement(
+                [
+                    'false',
+                    'true'
+
+                ]
+            )
         ];
     }
 }
