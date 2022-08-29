@@ -1,6 +1,6 @@
 # LCBO API
 
-Currently available at www.lcbostats.com.
+Currently available at www.lcbostats.com/api/alcohol.
 
 An early work in progress. Documentation and more to come soon.
 
@@ -14,4 +14,4 @@ I found it on the side of the road.
 
 ## Why did you make this?
 
-To enable open source, cost efficient alcoholic beverage acquisition for the province of Ontario, of course! :)
+To enable open source, cost-efficient alcoholic beverage acquisition for the province of Ontario, of course! :)
