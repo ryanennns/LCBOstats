@@ -64,29 +64,14 @@ class AlcoholControllerTest extends TestCase
      * @return void
      * @dataProvider filterMinConditionProvider
      */
-    public function test_it_can_filter_min($filterValue, $queryParameter, $alcoholProperty)
+    public function test_it_can_filter_by_min_values($filterValue, $queryParameter, $alcoholProperty)
     {
         $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
         $responseJson = json_decode($response->getContent());
 
         $response->assertSuccessful();
         foreach ($responseJson as $res)
-            dump($res);
             $this->assertGreaterThanOrEqual($filterValue, $res->$alcoholProperty);
-    }
-
-    /**
-     * @return void
-     * @dataProvider filterMaxConditionProvider
-     */
-    public function test_it_can_filter_max($filterValue, $queryParameter, $alcoholProperty)
-    {
-        $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertLessThanOrEqual($filterValue, $res->$alcoholProperty);
     }
 
     public function filterMinConditionProvider()
@@ -96,9 +81,39 @@ class AlcoholControllerTest extends TestCase
                 'filterValue' => 0.10,
                 'queryParameter' => 'minPriceIndex',
                 'alcoholProperty' => 'price_index'
-            ]
+            ],
+            'min price' => [
+                'filterValue' => 25,
+                'queryParameter' => 'minPrice',
+                'alcoholProperty' => 'price'
+            ],
+            'min volume' => [
+                'filterValue' => 750,
+                'queryParameter' => 'minVolume',
+                'alcoholProperty' => 'volume'
+            ],
+            'min alcohol content' => [
+                'filterValue' => 15,
+                'queryParameter' => 'minAlcoholContent',
+                'alcoholProperty' => 'alcohol_content'
+            ],
         ];
     }
+
+    /**
+     * @return void
+     * @dataProvider filterMaxConditionProvider
+     */
+    public function test_it_can_filter_by_max_values($filterValue, $queryParameter, $alcoholProperty)
+    {
+        $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThanOrEqual($filterValue, $res->$alcoholProperty);
+    }
+
     public function filterMaxConditionProvider()
     {
         return [
@@ -107,155 +122,22 @@ class AlcoholControllerTest extends TestCase
                 'queryParameter' => 'maxPriceIndex',
                 'alcoholProperty' => 'price_index'
             ],
+            'max price' => [
+                'filterValue' => 25,
+                'queryParameter' => 'maxPrice',
+                'alcoholProperty' => 'price'
+            ],
+            'max volume' => [
+                'filterValue' => 750,
+                'queryParameter' => 'maxVolume',
+                'alcoholProperty' => 'volume'
+            ],
+            'max alcohol content' => [
+                'filterValue' => 20,
+                'queryParameter' => 'maxAlcoholContent',
+                'alcoholProperty' => 'alcohol_content'
+            ],
         ];
-    }
-
-    public function test_it_can_filter_based_max_price_index()
-    {
-        $maxPriceIndex = 0.10;
-
-        $response = $this->get("/api/alcohol?maxPriceIndex=$maxPriceIndex");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertLessThanOrEqual($maxPriceIndex, $res->price_index);
-    }
-
-    public function test_it_can_filter_based_min_price_index()
-    {
-        $minPriceIndex = 0.10;
-
-        $response = $this->get("/api/alcohol?minPriceIndex=$minPriceIndex");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertGreaterThanOrEqual($minPriceIndex, $res->price_index);
-    }
-
-    public function test_it_can_filter_based_max_price()
-    {
-        $maxPrice = 25;
-
-        $response = $this->get("/api/alcohol?maxPrice=$maxPrice");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertLessThanOrEqual($maxPrice, $res->price);
-    }
-
-    public function test_it_can_filter_based_on_min_price()
-    {
-        $minPrice = 25;
-
-        $response = $this->get("/api/alcohol?minPrice=$minPrice");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertGreaterThanOrEqual($minPrice, $res->price);
-    }
-
-    public function test_it_can_filter_based_on_max_volume()
-    {
-        $maxVolume = 750;
-
-        $response = $this->get("/api/alcohol?maxVolume=$maxVolume");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertLessThanOrEqual($maxVolume, $res->volume);
-    }
-
-    public function test_it_can_filter_based_on_min_volume()
-    {
-        $minVolume = 750;
-
-        $response = $this->get("/api/alcohol?minVolume=$minVolume");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertGreaterThanOrEqual($minVolume, $res->volume);
-    }
-
-    public function test_it_can_filter_based_on_max_alcohol_content()
-    {
-        $minAlcoholContent = 20;
-
-        $response = $this->get("/api/alcohol?maxAlcoholContent=$minAlcoholContent");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertLessThanOrEqual($minAlcoholContent, $res->alcohol_content);
-    }
-
-    public function test_it_can_filter_based_on_min_alcohol_content()
-    {
-        $minAlcoholContent = 15;
-
-        $response = $this->get("/api/alcohol?minAlcoholContent=$minAlcoholContent");
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertGreaterThanOrEqual($minAlcoholContent, $res->alcohol_content);
-    }
-
-    public function test_it_can_get_alcohols_by_max_price_index()
-    {
-        $maxPriceIndex = 0.09;
-
-        $response = $this->get("/api/alcohol/efficient?maxPriceIndex=$maxPriceIndex&order=desc");
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertLessThanOrEqual($maxPriceIndex, $res->price_index);
-    }
-
-    public function test_it_can_get_alcohols_by_min_price_index()
-    {
-        $minPriceIndex = 0.09;
-
-        $response = $this->get("/api/alcohol/efficient?minPriceIndex=$minPriceIndex&order=desc");
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        foreach ($responseJson as $res)
-            $this->assertGreaterThan($minPriceIndex, $res->price_index);
-    }
-
-    // todo is this needed?
-    public function test_it_can_get_alcohols_by_min_and_max_price_index()
-    {
-        $minPriceIndex = 0.08;
-        $maxPriceIndex = 0.10;
-
-        $responseJson = json_decode(
-            $this
-                ->get("/api/alcohol/efficient?minPriceIndex=$minPriceIndex&maxPriceIndex=$maxPriceIndex")
-                ->getContent()
-        );
-
-        $this->get("/api/alcohol/efficient?minPriceIndex=$minPriceIndex&maxPriceIndex=$maxPriceIndex")
-            ->assertSuccessful();
-        foreach ($responseJson as $alcohol) {
-            $this->assertGreaterThan(
-                $minPriceIndex,
-                $alcohol->price_index
-            );
-            $this->assertLessThanOrEqual(
-                $maxPriceIndex,
-                $alcohol->price_index
-            );
-        }
     }
 
     /**
@@ -293,7 +175,7 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_can_filter_by_stock_status()
     {
-        $response = $this->get("/api/alcohol?inStock=false");
+        $response = $this->get("/api/alcohol?outOfStock=false");
 
         $responseJson = json_decode($response->getContent());
 

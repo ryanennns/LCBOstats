@@ -52,7 +52,7 @@ class AlcoholController extends Controller
         $category                   = $request->input('category', '');
         $subcategory                = $request->input('subcategory', '');
         $country                    = $request->input('country', '');
-        $outOfStock                 = $request->input('inStock', '');
+        $outOfStock                 = $request->input('outOfStock', '');
 
         // min & max values
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
