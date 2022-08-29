@@ -1,4 +1,4 @@
-# LCBO-Rank-App
+# LCBO API
 
 Currently available at www.lcbostats.com.
 
