@@ -43,6 +43,7 @@ class AlcoholControllerTest extends TestCase
             'sort by alcohol_content' => ['sortField' => 'alcohol_content'],
             'sort by price_index' => ['sortField' => 'price_index'],
             'sort by country' => ['sortField' => 'country'],
+            'sort by rating' => ['sortField' => 'rating'],
         ];
     }
 
