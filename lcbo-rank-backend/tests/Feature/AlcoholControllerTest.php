@@ -60,6 +60,56 @@ class AlcoholControllerTest extends TestCase
         $this->assertCount($numberOfResults, $responseJson);
     }
 
+    /**
+     * @return void
+     * @dataProvider filterMinConditionProvider
+     */
+    public function test_it_can_filter_min($filterValue, $queryParameter, $alcoholProperty)
+    {
+        $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            dump($res);
+            $this->assertGreaterThanOrEqual($filterValue, $res->$alcoholProperty);
+    }
+
+    /**
+     * @return void
+     * @dataProvider filterMaxConditionProvider
+     */
+    public function test_it_can_filter_max($filterValue, $queryParameter, $alcoholProperty)
+    {
+        $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        foreach ($responseJson as $res)
+            $this->assertLessThanOrEqual($filterValue, $res->$alcoholProperty);
+    }
+
+    public function filterMinConditionProvider()
+    {
+        return [
+            'min price index' => [
+                'filterValue' => 0.10,
+                'queryParameter' => 'minPriceIndex',
+                'alcoholProperty' => 'price_index'
+            ]
+        ];
+    }
+    public function filterMaxConditionProvider()
+    {
+        return [
+            'max price index' => [
+                'filterValue' => 0.10,
+                'queryParameter' => 'maxPriceIndex',
+                'alcoholProperty' => 'price_index'
+            ],
+        ];
+    }
+
     public function test_it_can_filter_based_max_price_index()
     {
         $maxPriceIndex = 0.10;
