@@ -52,6 +52,7 @@ class AlcoholController extends Controller
         $category                   = $request->input('category', '');
         $subcategory                = $request->input('subcategory', '');
         $country                    = $request->input('country', '');
+        $outOfStock                 = $request->input('outOfStock', '');
 
         // min & max values
         $maxIndex                   = $request->input('maxPriceIndex', 1000);
@@ -90,6 +91,9 @@ class AlcoholController extends Controller
 
         if($country)
             $query->where('country', '=', $country);
+
+        if($outOfStock)
+            $query->where('out_of_stock', '=', $outOfStock);
 
         if($sortCondition)
             $query->orderBy($sortCondition, $sortAscendingDescending);
