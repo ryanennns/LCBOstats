@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class AlcoholController extends Controller
 {
-    public const MAX_ALCOHOLS_RETURNED = 10000;
+    public const DEFAULT_ALCOHOLS_RETURNED = 25;
 
     public function show(Alcohol $alcohol)
     {
@@ -26,7 +26,7 @@ class AlcoholController extends Controller
         $minIndex                   = $request->input('minPriceIndex', 0);
         $sortAscendingDescending    = $request->input('order', 'asc');
 
-        $numberOfResults = $request->input('numberOfResults', AlcoholController::MAX_ALCOHOLS_RETURNED);
+        $numberOfResults = $request->input('numberOfResults', AlcoholController::DEFAULT_ALCOHOLS_RETURNED);
 
         $query = DB::table('alcohols')->orderBy('price_index');
 
@@ -67,7 +67,10 @@ class AlcoholController extends Controller
         $sortCondition              = $request->input('sortBy', '');
         $sortAscendingDescending    = $request->input('order', 'asc');
 
-        $numberOfResults            = $request->input('numberOfResults');
+        $numberOfResults            = $request->input(
+            'numberOfResults',
+            AlcoholController::DEFAULT_ALCOHOLS_RETURNED
+        );
 
         $query = DB::table('alcohols');
 

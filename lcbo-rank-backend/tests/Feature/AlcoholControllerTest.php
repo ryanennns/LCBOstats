@@ -183,4 +183,14 @@ class AlcoholControllerTest extends TestCase
         foreach ($responseJson as $res)
             $this->assertEquals('false', $res->out_of_stock); //todo change this when field is boolean and not string, yuck
     }
+
+    public function test_it_returns_default_number_of_results_if_no_parameter_specified()
+    {
+        $response = $this->get('/api/alcohol');
+
+        $responseJson = json_decode($response->getContent());
+
+        $response->assertSuccessful();
+        $this->assertCount(25, $responseJson);
+    }
 }
