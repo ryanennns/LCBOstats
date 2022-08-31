@@ -3,3 +3,4 @@
 .phpunit.result.cache
 lcbo-rank-backend/.phpunit.result.cache
 lcbo-rank-backend/.env
+/.idea/misc.xml
