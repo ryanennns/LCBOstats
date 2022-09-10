@@ -8,6 +8,8 @@ use PhpParser\Node\Scalar\String_;
 
 class Alcohol extends Model
 {
+    use HasFactory;
+
     public const BEER = "Beer & Cider";
     public const CIDER = "Beer & Cider";
     public const WINE = "Wine";
@@ -27,20 +29,4 @@ class Alcohol extends Model
         self::TEQUILA,
         self::COOLER
     ];
-
-    use HasFactory;
-
-    public static function getByCategory(string $category, $numOfResults)
-    {
-        return Alcohol::get()
-            ->where('category', '=', $category)
-            ->take($numOfResults);
-    }
-
-    public static function getBySubCategory(string $subcategory, $numOfResults)
-    {
-        return Alcohol::get()
-            ->where('subcategory', '=', $subcategory)
-            ->take($numOfResults);
-    }
 }
