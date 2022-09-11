@@ -29,4 +29,24 @@ class Alcohol extends Model
         self::TEQUILA,
         self::COOLER
     ];
+
+    public $fillable = [
+        'title',
+        'brand',
+        'category',
+        'subcategory',
+        'price',
+        'volume',
+        'alcohol_content',
+        'price_index',
+        'country',
+        'url',
+        'thumbnail_url',
+        'image_url',
+        'rating',
+        'out_of_stock',
+        'description',
+        'reviews',
+        'permanent_id'
+    ];
 }

@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
 {
-    use DatabaseTransactions;
+//    use DatabaseTransactions;
 
     public function setUp(): void
     {
