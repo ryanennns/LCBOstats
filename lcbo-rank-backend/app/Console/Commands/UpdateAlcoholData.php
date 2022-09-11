@@ -13,7 +13,6 @@ class UpdateAlcoholData extends Command
 {
     private const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
-    private const NUMBER_OF_RESULTS = 250;
     private const COPIED_HEADERS = [
         "accept" => "*/*",
         "accept-language" => "en-US,en;q=0.9",
