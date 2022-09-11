@@ -67,9 +67,9 @@ class UpdateAlcoholData extends Command
         $url                = $alcohol->sysuri;
         $thumbnail_url      = $alcohol->ec_thumbnails;
         $image_url          = str_replace('319.319', '1280.1280', $alcohol->ec_thumbnails);
-        $rating             = $alcohol->ec_rating ?? 0.0;
         $out_of_stock       = $alcohol->out_of_stock;
         $description        = isset($alcohol->ec_shortdesc) ? trim($alcohol->ec_shortdesc) : '';
+        $rating             = $alcohol->ec_rating ?? 0.0;
         $reviews            = $alcohol->avg_reviews ?? 0;
         $permanent_id       = $alcohol->permanentid;
 
@@ -86,9 +86,9 @@ class UpdateAlcoholData extends Command
             'url'               => $url,
             'thumbnail_url'     => $thumbnail_url,
             'image_url'         => $image_url,
-            'rating'            => $rating,
             'out_of_stock'      => $out_of_stock,
             'description'       => $description,
+            'rating'            => $rating,
             'reviews'           => $reviews,
             'permanent_id'      => $permanent_id,
         ];
