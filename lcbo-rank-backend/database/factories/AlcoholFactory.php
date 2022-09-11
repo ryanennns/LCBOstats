@@ -36,7 +36,7 @@ class AlcoholFactory extends Factory
             'price' => $price,
             'volume' => $volume,
             'alcohol_content' => $alcohol_content,
-            'price_index' => $price / (($alcohol_content / 100)*$volume),
+            'price_index' => $price / (($alcohol_content / 100) * $volume),
             'country' => $this->faker->country(),
             'url' => $this->faker->url(),
             'out_of_stock' => $this->faker->randomElement(
@@ -48,7 +48,7 @@ class AlcoholFactory extends Factory
             'description' => $this->faker->words(3, true),
             'rating' => $this->faker->numberBetween(0, 5),
             'reviews' => $this->faker->randomNumber(),
-            'permanent_id' => $this->faker->unique()->numberBetween(0,10000),
+            'permanent_id' => $this->faker->unique()->numberBetween(0, 10000),
         ];
     }
 }

@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Alcohol;
-use Database\Factories\AlcoholFactory;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use stdClass;
 
 class UpdateAlcoholData extends Command
