@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('alcohols', function(Blueprint $table) {
-            $table->bigInteger('permanent_id')->unique();
+            $table->integer('permanent_id')->unique();
         });
     }
 

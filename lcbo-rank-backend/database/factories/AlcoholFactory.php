@@ -45,10 +45,10 @@ class AlcoholFactory extends Factory
                     'true',
                 ]
             ),
-            'description' => $this->faker->words(),
+            'description' => $this->faker->words(3, true),
             'rating' => $this->faker->numberBetween(0, 5),
             'reviews' => $this->faker->randomNumber(),
-            'permanent_id' => $this->faker->numberBetween(0,100000),
+            'permanent_id' => $this->faker->unique()->numberBetween(0,10000),
         ];
     }
 }
