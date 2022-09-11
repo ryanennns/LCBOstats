@@ -29,11 +29,11 @@ class UpdateAlcoholDataTest extends TestCase
     public function numberOfItemsToReturnProvider(): array
     {
         return [
-            'return 1 result' => ['count' => 1],
-            'return 100 results' => ['count' => 100],
-            'return 250 results' => ['count' => 250],
-            'return 1000 results' => ['count' => 1000],
-            'return 2000 results' => ['count' => 2000],
+            'return 1 item' => ['count' => 1],
+            'return 100 items' => ['count' => 100],
+            'return 250 items' => ['count' => 250],
+            'return 1000 items' => ['count' => 1000],
+            'return 2000 items' => ['count' => 2000],
         ];
     }
 }

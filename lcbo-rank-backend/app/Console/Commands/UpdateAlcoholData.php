@@ -55,42 +55,42 @@ class UpdateAlcoholData extends Command
     // headaches ! :)
     public function getProperties(stdClass $alcohol): array
     {
-        $title = trim($alcohol->title);
-        $brand = $alcohol->ec_brand ?? null;
-        $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
-        $subcategory = explode("|", $alcohol->ec_category_filter[0])[2];
-        $price = $alcohol->ec_price ?? -1;
-        $volume = $alcohol->lcbo_total_volume ?? $alcohol->lcbo_unit_volume ?? 0;
-        $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
-        $price_index = 0.0;
-        $country = $alcohol->country_of_manufacture ?? '';
-        $url = $alcohol->sysuri;
-        $thumbnail_url = $alcohol->ec_thumbnails;
-        $image_url = str_replace('319.319', '1280.1280', $alcohol->ec_thumbnails);
-        $rating = $alcohol->ec_rating ?? 0.0;
-        $out_of_stock = $alcohol->out_of_stock;
-        $description = isset($alcohol->ec_shortdesc) ? trim($alcohol->ec_shortdesc) : '';
-        $reviews = $alcohol->avg_reviews ?? 0;
-        $permanent_id = $alcohol->permanentid;
+        $title              = trim($alcohol->title);
+        $brand              = $alcohol->ec_brand ?? null;
+        $category           = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
+        $subcategory        = explode("|", $alcohol->ec_category_filter[0])[2];
+        $price              = $alcohol->ec_price ?? -1;
+        $volume             = $alcohol->lcbo_total_volume ?? $alcohol->lcbo_unit_volume ?? 0;
+        $alcohol_content    = $alcohol->lcbo_alcohol_percent ?? 0.0;
+        $price_index        = 0.0;
+        $country            = $alcohol->country_of_manufacture ?? '';
+        $url                = $alcohol->sysuri;
+        $thumbnail_url      = $alcohol->ec_thumbnails;
+        $image_url          = str_replace('319.319', '1280.1280', $alcohol->ec_thumbnails);
+        $rating             = $alcohol->ec_rating ?? 0.0;
+        $out_of_stock       = $alcohol->out_of_stock;
+        $description        = isset($alcohol->ec_shortdesc) ? trim($alcohol->ec_shortdesc) : '';
+        $reviews            = $alcohol->avg_reviews ?? 0;
+        $permanent_id       = $alcohol->permanentid;
 
         return [
-            'title' => $title,
-            'brand' => $brand,
-            'category' => $category,
-            'subcategory' => $subcategory,
-            'price' => $price,
-            'volume' => $volume,
-            'alcohol_content' => $alcohol_content,
-            'price_index' => $price_index,
-            'country' => $country,
-            'url' => $url,
-            'thumbnail_url' => $thumbnail_url,
-            'image_url' => $image_url,
-            'rating' => $rating,
-            'out_of_stock' => $out_of_stock,
-            'description' => $description,
-            'reviews' => $reviews,
-            'permanent_id' => $permanent_id,
+            'title'             => $title,
+            'brand'             => $brand,
+            'category'          => $category,
+            'subcategory'       => $subcategory,
+            'price'             => $price,
+            'volume'            => $volume,
+            'alcohol_content'   => $alcohol_content,
+            'price_index'       => $price_index,
+            'country'           => $country,
+            'url'               => $url,
+            'thumbnail_url'     => $thumbnail_url,
+            'image_url'         => $image_url,
+            'rating'            => $rating,
+            'out_of_stock'      => $out_of_stock,
+            'description'       => $description,
+            'reviews'           => $reviews,
+            'permanent_id'      => $permanent_id,
         ];
     }
 }
