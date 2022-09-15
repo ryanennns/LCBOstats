@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Alcohol;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use stdClass;
 
@@ -31,6 +32,9 @@ class UpdateAlcoholData extends Command
     protected $signature = 'alcohol:update {--category=Wine} {--count=1}';
     protected $description = 'Updates the database with the latest information from the LCBO\'s API.';
 
+    /**
+     * @throws GuzzleException
+     */
     public function handle(): void
     {
         $client = new Client();
