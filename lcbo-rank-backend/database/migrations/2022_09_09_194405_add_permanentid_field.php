@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('alcohols', function(Blueprint $table) {
-            $table->integer('permanent_id')->unique();
-        });
+//        Schema::table('alcohols', function(Blueprint $table) {
+//            $table->integer('permanent_id')->unique();
+//        });
     }
 
     /**
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('alcohols', function(Blueprint $table) {
-            $table->dropColumn('permanent_id');
-        });
+//        Schema::table('alcohols', function(Blueprint $table) {
+//            $table->dropColumn('permanent_id');
+//        });
     }
 };

@@ -14,6 +14,7 @@ return new class extends Migration {
     {
         Schema::create('alcohols', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('permanent_id');
             $table->timestamps();
             $table->string('title');
             $table->string('brand')->nullable();

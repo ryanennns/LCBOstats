@@ -21,7 +21,6 @@ class Alcohol extends Model
 
     public const CATEGORIES = [
         self::BEER,
-        self::CIDER,
         self::WINE,
         self::SPIRITS,
         self::GIN,
@@ -30,7 +29,10 @@ class Alcohol extends Model
         self::COOLER
     ];
 
-    public $fillable = [
+    public $incrementing = false;
+    protected $primaryKey = 'permanent_id';
+
+    protected $fillable = [
         'title',
         'brand',
         'category',
@@ -49,4 +51,5 @@ class Alcohol extends Model
         'reviews',
         'permanent_id'
     ];
+
 }
