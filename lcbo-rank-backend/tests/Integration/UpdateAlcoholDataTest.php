@@ -23,7 +23,7 @@ class UpdateAlcoholDataTest extends TestCase
      * @dataProvider provideAlcoholCategories
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function test_it_can_specify_number_of_items_to_return($category): void
+    public function test_it_can_scrape_entire_categories($category)
     {
         $client = new Client();
         $initResponse = $client->request('POST', UpdateAlcoholData::SEARCH_REQ_URL, [
@@ -35,17 +35,18 @@ class UpdateAlcoholDataTest extends TestCase
             ],
         ]);
         $totalCount = json_decode($initResponse->getBody()->getContents())->totalCount;
+        dump($totalCount);
 
-        $this->artisan("alcohol:update --category=\"Products|{$category}\"");
+        $this->artisan("alcohol:update --category=\"Products|${category}\"");
         $this->assertDatabaseCount(Alcohol::class, $totalCount);
     }
 
     public function provideAlcoholCategories(): array
     {
         return [
-            "Beer & Cider" => [Alcohol::BEER],
+//            "Beer & Cider" => [Alcohol::BEER],
             "Spirits" => [Alcohol::SPIRITS],
-            "Coolers" => [Alcohol::COOLER],
+//            "Coolers" => [Alcohol::COOLER],
         ];
     }
 

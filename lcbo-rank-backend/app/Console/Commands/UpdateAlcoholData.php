@@ -10,7 +10,7 @@ use stdClass;
 
 class UpdateAlcoholData extends Command
 {
-    private const GET_IN_EACH_REQUEST = 250;
+    private const GET_IN_EACH_REQUEST = 1000;
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
@@ -51,6 +51,7 @@ class UpdateAlcoholData extends Command
             ],
         ]);
 
+
         $totalCount = json_decode($initResponse->getBody()->getContents())->totalCount;
         dump($totalCount);
         $recordsScraped = 0;
@@ -64,23 +65,15 @@ class UpdateAlcoholData extends Command
                     "firstResult" => $recordsScraped,
                 ],
             ]);
+
+            dump("STARTING AT INDEX: ${recordsScraped}");
+
             $alcoholsReturned = collect(json_decode($response->getBody()->getContents())->results);
+
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
-
-//                $foo = Alcohol::query()->find($alcohol->permanentid);
-//
-//                if ($foo) {
-//                    // todo make updating a thing
-//                    dump('badbadnotgood');
-//                    return;
-//                }
-
                 Alcohol::query()->create($this->getProperties($alcohol));
             });
-
-            if($recordsScraped == 2750)
-                dd($alcoholsReturned->count());
 
             $recordsScraped += $alcoholsReturned->count();
             dump("Scraped: $recordsScraped / $totalCount");
@@ -91,23 +84,23 @@ class UpdateAlcoholData extends Command
     // headaches ! :)
     public function getProperties(stdClass $alcohol): array
     {
-        $title = trim($alcohol->title);
-        $brand = $alcohol->ec_brand ?? null;
-        $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
-        $subcategory = explode("|", $alcohol->ec_category_filter[0])[2];
-        $price = $alcohol->ec_price ?? -1;
-        $volume = $alcohol->lcbo_total_volume ?? $this->truncatedVolumeToInteger(isset($alcohol->lcbo_unit_volume) ?: 0);
-        $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
-        $price_index = 0.0;
-        $country = $alcohol->country_of_manufacture ?? '';
-        $url = $alcohol->sysuri;
-        $thumbnail_url = $alcohol->ec_thumbnails;
-        $image_url = str_replace('319.319', '1280.1280', $alcohol->ec_thumbnails);
-        $out_of_stock = $alcohol->out_of_stock;
-        $description = isset($alcohol->ec_shortdesc) ? trim($alcohol->ec_shortdesc) : '';
-        $rating = $alcohol->ec_rating ?? 0.0;
-        $reviews = $alcohol->avg_reviews ?? 0;
-        $permanent_id = $alcohol->permanentid;
+        $title              = trim($alcohol->title);
+        $brand              = $alcohol->ec_brand ?? null;
+        $category           = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
+        $subcategory        = explode("|", $alcohol->ec_category_filter[0])[2];
+        $price              = $alcohol->ec_price ?? -1;
+        $volume             = $alcohol->lcbo_total_volume ?? $this->truncatedVolumeToInteger(isset($alcohol->lcbo_unit_volume) ?: 0);
+        $alcohol_content    = $alcohol->lcbo_alcohol_percent ?? 0.0;
+        $price_index        = 0.0;
+        $country            = $alcohol->country_of_manufacture ?? '';
+        $url                = $alcohol->sysuri;
+        $thumbnail_url      = $alcohol->ec_thumbnails;
+        $image_url          = str_replace('319.319', '1280.1280', $alcohol->ec_thumbnails);
+        $out_of_stock       = $alcohol->out_of_stock;
+        $description        = isset($alcohol->ec_shortdesc) ? trim($alcohol->ec_shortdesc) : '';
+        $rating             = $alcohol->ec_rating ?? 0.0;
+        $reviews            = $alcohol->avg_reviews ?? 0;
+        $permanent_id       = $alcohol->permanentid;
 
         return [
             'permanent_id' => $permanent_id,
