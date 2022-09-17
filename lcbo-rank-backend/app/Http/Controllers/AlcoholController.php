@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alcohol;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -18,22 +19,22 @@ class AlcoholController extends Controller
 
     public function getEfficient(
         Request $request,
-        String $category = '',
-        String $subcategory = ''
+        string  $category = '',
+        string  $subcategory = ''
     ): Collection
     {
-        $maxIndex                   = $request->input('maxPriceIndex', 1000);
-        $minIndex                   = $request->input('minPriceIndex', 0);
-        $sortAscendingDescending    = $request->input('order', 'asc');
+        $maxIndex = $request->input('maxPriceIndex', 1000);
+        $minIndex = $request->input('minPriceIndex', 0);
+        $sortAscendingDescending = $request->input('order', 'asc');
 
         $numberOfResults = $request->input('numberOfResults', AlcoholController::DEFAULT_ALCOHOLS_RETURNED);
 
         $query = DB::table('alcohols')->orderBy('price_index');
 
-        if($category)
+        if ($category)
             $query->where('category', '=', $category);
 
-        if($subcategory)
+        if ($subcategory)
             $query->where('subcategory', '=', $subcategory);
 
         return $query
@@ -46,59 +47,59 @@ class AlcoholController extends Controller
 
     public function getDefault(Request $request): Collection
     {
-        $id                         = $request->input('id', '');
-        $title                      = $request->input('title', '');
-        $brand                      = $request->input('brand', '');
-        $category                   = $request->input('category', '');
-        $subcategory                = $request->input('subcategory', '');
-        $country                    = $request->input('country', '');
-        $outOfStock                 = $request->input('outOfStock', '');
+        $id = $request->input('id', '');
+        $title = $request->input('title', '');
+        $brand = $request->input('brand', '');
+        $category = $request->input('category', '');
+        $subcategory = $request->input('subcategory', '');
+        $country = $request->input('country', '');
+        $outOfStock = $request->input('outOfStock', '');
 
         // min & max values
-        $maxIndex                   = $request->input('maxPriceIndex', 1000);
-        $minIndex                   = $request->input('minPriceIndex', 0);
-        $maxPrice                   = $request->input('maxPrice', 100000);
-        $minPrice                   = $request->input('minPrice', 0);
-        $maxVolume                  = $request->input('maxVolume', 100000);
-        $minVolume                  = $request->input('minVolume', 0);
-        $maxAlcoholContent          = $request->input('maxAlcoholContent', 100000);
-        $minAlcoholContent          = $request->input('minAlcoholContent', 0);
+        $maxIndex = $request->input('maxPriceIndex', 1000);
+        $minIndex = $request->input('minPriceIndex', 0);
+        $maxPrice = $request->input('maxPrice', 100000);
+        $minPrice = $request->input('minPrice', 0);
+        $maxVolume = $request->input('maxVolume', 100000);
+        $minVolume = $request->input('minVolume', 0);
+        $maxAlcoholContent = $request->input('maxAlcoholContent', 100000);
+        $minAlcoholContent = $request->input('minAlcoholContent', 0);
 
-        $sortCondition              = $request->input('sortBy', '');
-        $sortAscendingDescending    = $request->input('order', 'asc');
+        $sortCondition = $request->input('sortBy', '');
+        $sortAscendingDescending = $request->input('order', 'asc');
 
-        $numberOfResults            = $request->input(
+        $numberOfResults = $request->input(
             'numberOfResults',
             AlcoholController::DEFAULT_ALCOHOLS_RETURNED
         );
 
         $query = DB::table('alcohols');
 
-        if($sortAscendingDescending != 'asc' && $sortAscendingDescending != 'desc')
+        if ($sortAscendingDescending != 'asc' && $sortAscendingDescending != 'desc')
             $sortAscendingDescending = 'desc';
 
-        if($id)
+        if ($id)
             $query->where('id', '=', $id);
 
-        if($title)
+        if ($title)
             $query->where('title', '=', $title);
 
-        if($brand)
+        if ($brand)
             $query->where('brand', '=', $brand);
 
-        if($category)
+        if ($category)
             $query->where('category', '=', $category);
 
-        if($subcategory)
+        if ($subcategory)
             $query->where('subcategory', '=', $subcategory);
 
-        if($country)
+        if ($country)
             $query->where('country', '=', $country);
 
-        if($outOfStock)
+        if ($outOfStock)
             $query->where('out_of_stock', '=', $outOfStock);
 
-        if($sortCondition)
+        if ($sortCondition)
             $query->orderBy($sortCondition, $sortAscendingDescending);
 
         // todo introduce conditions on these?
@@ -122,6 +123,17 @@ class AlcoholController extends Controller
         return $query
             ->get()
             ->take($numberOfResults);
+    }
+
+    public function updatedStatus()
+    {
+        // select alcohols that have been updated within the last seven days
+        $oneWeekAgoToday = Carbon::today()->subWeek();
+        $updatedRecords = Alcohol::query()->where('updated_at', '>', $oneWeekAgoToday)->get();
+
+        return response()->json([
+            'recordsUpdated' => !!$updatedRecords->count(),
+        ]);
     }
 }
 
