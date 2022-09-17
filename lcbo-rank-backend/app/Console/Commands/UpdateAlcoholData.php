@@ -164,3 +164,8 @@ class UpdateAlcoholData extends Command
             return $price / (($alcoholContent / 100) * $volume);
     }
 }
+
+/*
+ * FIND DUPLICATES QUERY
+    select *, count(*) from alcohols group by permanent_id having count(*) > 1;
+ */
