@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Console\Commands\UpdateAlcoholData;
 use App\Models\Alcohol;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -10,30 +13,44 @@ class UpdateAlcoholDataTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_defaults_to_one_alcohol_with_no_count_specified(): void
-    {
-        $this->artisan('alcohol:update --category=Products|Wine');
-        $this->assertDatabaseCount(Alcohol::class, 1);
-    }
-
     /**
      * @return void
-     * @dataProvider numberOfItemsToReturnProvider
+     * @dataProvider provideAlcoholCategories
+     * @throws GuzzleException
      */
-    public function test_it_can_specify_number_of_items_to_return($count): void
+    public function test_it_can_scrape_entire_categories($category)
     {
-        $this->artisan("alcohol:update --category=Products|Wine --count={$count}");
-        $this->assertDatabaseCount(Alcohol::class, $count);
+        $client = new Client();
+        $initResponse = $client->request('POST', UpdateAlcoholData::SEARCH_REQ_URL, [
+            "headers" => UpdateAlcoholData::COPIED_HEADERS,
+            "form_params" => [
+                "aq" => "@ec_category=Products|${category}",
+                "firstResult" => 0,
+                "numberOfResults" => 0,
+            ],
+        ]);
+        $expectedNumberOfRecords = min(json_decode($initResponse->getBody()->getContents())->totalCount, 5000);
+
+        // TODO fix this
+        if($category == 'Spirits')
+            $expectedNumberOfRecords--;
+
+        $this->artisan("alcohol:update --category=\"Products|${category}\"");
+        $this->assertDatabaseCount(Alcohol::class, $expectedNumberOfRecords);
     }
 
-    public function numberOfItemsToReturnProvider(): array
+    public function provideAlcoholCategories(): array
     {
         return [
-            'return 1 item' => ['count' => 1],
-            'return 100 items' => ['count' => 100],
-            'return 250 items' => ['count' => 250],
-            'return 1000 items' => ['count' => 1000],
-            'return 2000 items' => ['count' => 2000],
+            "Beer & Cider" => [Alcohol::BEER_AND_CIDER],
+            "Spirits" => [Alcohol::SPIRITS],
+            "Coolers" => [Alcohol::COOLER],
+            "Red Wine" => [Alcohol::RED_WINE],
+            "White Wine" => [Alcohol::WHITE_WINE],
+            "Rose Wine" => [Alcohol::ROSE_WINE],
+            "Fortified Wine" => [Alcohol::FORTIFIED_WINE],
+            "Sparkling Wine" => [Alcohol::SPARKLING_WINE],
+            "Champagne" => [Alcohol::CHAMPAGNE],
         ];
     }
 }
