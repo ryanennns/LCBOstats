@@ -18,6 +18,7 @@ class AlcoholFactory extends Factory
         $volume = $this->faker->numberBetween(375, 1400);
 
         return [
+            'id' => $this->faker->unique()->numberBetween(0, 10000),
             'permanent_id' => $this->faker->unique()->numberBetween(0, 10000),
             'title' => $this->faker->unique()->words(3, true),
             'brand' => $this->faker->company(),
@@ -45,7 +46,6 @@ class AlcoholFactory extends Factory
             'description' => $this->faker->words(3, true),
             'rating' => $this->faker->numberBetween(0, 5),
             'reviews' => $this->faker->randomNumber(),
-            'permanent_id' => $this->faker->unique()->numberBetween(0, 10000),
         ];
     }
 }
