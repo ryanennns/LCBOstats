@@ -74,7 +74,8 @@ class UpdateAlcoholData extends Command
 
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
-                Alcohol::query()->updateOrCreate($this->getProperties($alcohol));
+                if(!$this->isAlcoholAPromotion($alcohol))
+                    Alcohol::query()->updateOrCreate($this->getProperties($alcohol));
             });
 
             $recordsScraped += $alcoholsReturned->count();
@@ -154,6 +155,16 @@ class UpdateAlcoholData extends Command
         });
 
         return $totalVolume;
+    }
+
+    public function isAlcoholAPromotion(stdClass $alcohol): bool
+    {
+        collect($alcohol->ec_category)->each(function(string $categoryLayer) {
+            if(str_contains('Promotion', $categoryLayer))
+                return true;
+        });
+
+        return false;
     }
 
     public function calculatePriceIndex($price, $alcoholContent, $volume): ?float
