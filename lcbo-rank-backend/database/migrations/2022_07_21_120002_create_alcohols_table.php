@@ -13,8 +13,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('alcohols', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('permanent_id');
+            $table->unsignedBigInteger('permanent_id')->primary();
             $table->timestamps();
             $table->string('title');
             $table->string('brand')->nullable();

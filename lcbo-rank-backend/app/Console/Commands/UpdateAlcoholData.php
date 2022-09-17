@@ -74,7 +74,7 @@ class UpdateAlcoholData extends Command
 
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
-                Alcohol::query()->create($this->getProperties($alcohol));
+                Alcohol::query()->updateOrCreate($this->getProperties($alcohol));
             });
 
             $recordsScraped += $alcoholsReturned->count();
