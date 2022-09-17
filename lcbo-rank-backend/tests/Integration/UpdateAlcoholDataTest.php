@@ -18,7 +18,7 @@ class UpdateAlcoholDataTest extends TestCase
      * @dataProvider provideAlcoholCategories
      * @throws GuzzleException
      */
-    public function test_it_can_scrape_entire_categories($category)
+    public function test_it_can_scrape_entire_categories($category): void
     {
         $client = new Client();
         $initResponse = $client->request('POST', UpdateAlcoholData::SEARCH_REQ_URL, [

@@ -11,12 +11,11 @@ class Alcohol extends Model
     use HasFactory;
 
     public const BEER_AND_CIDER = "Beer & Cider";
-    public const WINE = "Wine";
     public const RED_WINE = "Wine|Red Wine";
     public const WHITE_WINE = "Wine|White Wine";
     public const ROSE_WINE = "Wine|Rose Wine";
     public const FORTIFIED_WINE = "Wine|Fortified Wine";
-    public const SPARKLING_WINE = "Wine|Sparkline Wine";
+    public const SPARKLING_WINE = "Wine|Sparkling Wine";
     public const CHAMPAGNE = "Wine|Champagne";
     public const SPIRITS = "Spirits";
     public const GIN = "Gin";
@@ -40,8 +39,8 @@ class Alcohol extends Model
         self::COOLER
     ];
 
-    public $incrementing = true;
-    protected $primaryKey = 'id';
+//    public $incrementing = true;
+//    protected $primaryKey = 'id';
 
     protected $fillable = [
         'title',

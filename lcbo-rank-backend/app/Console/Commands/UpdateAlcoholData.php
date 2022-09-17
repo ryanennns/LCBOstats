@@ -41,59 +41,45 @@ class UpdateAlcoholData extends Command
      */
     public function handle(Client $client): void // todo HTTPFacade
     {
-        // todo read about dependency injection
         $category = $this->option('category');
-        $initResponse = $client->request('POST', self::SEARCH_REQ_URL, [
-            "headers" => self::COPIED_HEADERS,
-            "form_params" => [
-                "aq" => "@ec_category=${category}",
-                "firstResult" => 0,
-                "numberOfResults" => 0,
-            ],
-        ]);
 
-        $expectedNumberOfRecords = min(json_decode($initResponse->getBody()->getContents())->totalCount, 5000);
+        $startIndex = 0;
+        // numberOfResults
+        $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
+        $recordsScraped = 0;
 
         // I cannot figure out why this is needed, but it is.
         // TODO fix this monstrosity.
         if ($category == 'Products|Spirits')
             $expectedNumberOfRecords--;
 
-        $recordsScraped = 0;
-        while ($recordsScraped < $expectedNumberOfRecords) {
+        while ($startIndex < $expectedNumberOfRecords) {
             $response = $client->request('POST', self::SEARCH_REQ_URL, [
                 "headers" => self::COPIED_HEADERS,
                 "form_params" => [
                     "aq" => "@ec_category==\"" . $this->option('category') . "\"",
                     "numberOfResults" => self::GET_IN_EACH_REQUEST,
-                    "firstResult" => $recordsScraped,
+                    "firstResult" => $startIndex,
                 ],
             ]);
 
             $alcoholsReturned = collect(json_decode($response->getBody()->getContents())->results);
+            $recordsScraped += $alcoholsReturned->count();
+            $startIndex += self::GET_IN_EACH_REQUEST;
 
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
-                Alcohol::query()->create($this->getProperties($alcohol));
+                Alcohol::query()->updateOrCreate($this->getProperties($alcohol));
             });
 
-            $recordsScraped += $alcoholsReturned->count();
             dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
-            sleep(1);
+            sleep(0.5);
         }
-    }
-
-    public function getAllRecords()
-    {
-        collect(Alcohol::CATEGORIES)->each(function () {
-
-        });
     }
 
     // headaches ! :)
     public function getProperties(stdClass $alcohol): array
     {
-        // price/((alc/100)*volume)
         $title = trim($alcohol->title);
         $brand = $alcohol->ec_brand ?? null;
         $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
@@ -162,6 +148,26 @@ class UpdateAlcoholData extends Command
             return null;
         else
             return $price / (($alcoholContent / 100) * $volume);
+    }
+
+    /**
+     * @param Client $client
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getExpectedNumberOfRecords($category): int
+    {
+        // todo read about dependency injection
+        $client = new Client();
+        $initResponse = $client->request('POST', self::SEARCH_REQ_URL, [
+            "headers" => self::COPIED_HEADERS,
+            "form_params" => [
+                "aq" => "@ec_category=${category}",
+                "firstResult" => 0,
+                "numberOfResults" => 0,
+            ],
+        ]);
+        return min(json_decode($initResponse->getBody()->getContents())->totalCount, 5000);
     }
 }
 
