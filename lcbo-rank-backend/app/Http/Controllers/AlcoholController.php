@@ -127,7 +127,6 @@ class AlcoholController extends Controller
 
     public function updatedStatus()
     {
-        // select alcohols that have been updated within the last seven days
         $oneWeekAgoToday = Carbon::today()->subWeek();
         $updatedRecords = Alcohol::query()->where('updated_at', '>', $oneWeekAgoToday)->get();
 
