@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\SkippedTest;
 use Tests\TestCase;
@@ -192,5 +193,31 @@ class AlcoholControllerTest extends TestCase
 
         $response->assertSuccessful();
         $this->assertCount(25, $responseJson);
+    }
+
+    public function test_it_returns_true_if_records_have_been_updated_recently()
+    {
+        // create an alcohol that has been upadted within the last seven days
+        Alcohol::factory()->create([
+            'updated_at' => Carbon::today()->subDays(3),
+        ]);
+
+        // hit the /updated route
+        $this->get('/api/alcohol/updated')
+            ->assertSuccessful()
+            ->assertJson([
+                'recordsUpdated' => true,
+            ]);
+    }
+
+    public function test_it_returns_false_if_no_records_have_been_updated_recently()
+    {
+        // create an alcohol that has been upadted within the last seven days
+        // hit the /updated route
+        $this->get('/api/alcohol/updated')
+            ->assertSuccessful()
+            ->assertJson([
+                'recordsUpdated' => false,
+            ]);
     }
 }
