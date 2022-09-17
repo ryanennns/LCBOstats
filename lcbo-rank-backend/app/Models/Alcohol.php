@@ -10,9 +10,14 @@ class Alcohol extends Model
 {
     use HasFactory;
 
-    public const BEER = "Beer & Cider";
-    public const CIDER = "Beer & Cider";
+    public const BEER_AND_CIDER = "Beer & Cider";
     public const WINE = "Wine";
+    public const RED_WINE = "Wine|Red Wine";
+    public const WHITE_WINE = "Wine|White Wine";
+    public const ROSE_WINE = "Wine|Rose Wine";
+    public const FORTIFIED_WINE = "Wine|Fortified Wine";
+    public const SPARKLING_WINE = "Wine|Sparkline Wine";
+    public const CHAMPAGNE = "Wine|Champagne";
     public const SPIRITS = "Spirits";
     public const GIN = "Gin";
     public const VODKA = "Vodka";
@@ -20,8 +25,14 @@ class Alcohol extends Model
     public const COOLER = "Coolers";
 
     public const CATEGORIES = [
-        self::BEER,
-        self::WINE,
+        self::BEER_AND_CIDER,
+        self::RED_WINE,
+        self::WHITE_WINE,
+        self::ROSE_WINE,
+        self::FORTIFIED_WINE,
+        self::SPARKLING_WINE,
+        self::CHAMPAGNE,
+        self::SPIRITS,
         self::SPIRITS,
         self::GIN,
         self::VODKA,
@@ -29,8 +40,8 @@ class Alcohol extends Model
         self::COOLER
     ];
 
-    public $incrementing = false;
-    protected $primaryKey = 'permanent_id';
+    public $incrementing = true;
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'title',

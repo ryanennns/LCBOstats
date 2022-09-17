@@ -18,9 +18,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->string('title');
             $table->string('brand')->nullable();
-            $table->enum(
-                'category',
-                [
+            $table->enum('category', [
                     'Beer & Cider',
                     'Spirits',
                     'Coolers',
@@ -31,7 +29,7 @@ return new class extends Migration {
             $table->double('price');
             $table->double('volume');
             $table->double('alcohol_content');
-            $table->double('price_index')->default(0.00);
+            $table->double('price_index')->default(0.00)->nullable();
             $table->string('country')->nullable();
             $table->longText('url')->nullable();
         });
