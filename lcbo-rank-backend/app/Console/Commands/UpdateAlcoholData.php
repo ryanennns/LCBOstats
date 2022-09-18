@@ -3,14 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Models\Alcohol;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use stdClass;
 
 class UpdateAlcoholData extends Command
 {
-    private const GET_IN_EACH_REQUEST = 500;
+    private const GET_IN_EACH_REQUEST = 250;
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
@@ -39,7 +39,7 @@ class UpdateAlcoholData extends Command
     /**
      * @throws GuzzleException
      */
-    public function handle(Client $client): void // todo HTTPFacade
+    public function handle(): void // todo HTTPFacade
     {
         $category = $this->option('category');
 
@@ -54,16 +54,15 @@ class UpdateAlcoholData extends Command
             $expectedNumberOfRecords--;
 
         while ($startIndex < $expectedNumberOfRecords) {
-            $response = $client->request('POST', self::SEARCH_REQ_URL, [
-                "headers" => self::COPIED_HEADERS,
-                "form_params" => [
-                    "aq" => "@ec_category==\"" . $this->option('category') . "\"",
+            $response = Http::withHeaders(self::COPIED_HEADERS)
+                ->asForm()
+                ->post(self::SEARCH_REQ_URL, [
+                    "aq" => "@ec_category=${category}",
                     "numberOfResults" => self::GET_IN_EACH_REQUEST,
                     "firstResult" => $startIndex,
-                ],
-            ]);
+                ]);
 
-            $alcoholsReturned = collect(json_decode($response->getBody()->getContents())->results);
+            $alcoholsReturned = collect(json_decode($response->body())->results);
             $recordsScraped += $alcoholsReturned->count();
             $startIndex += self::GET_IN_EACH_REQUEST;
 
@@ -157,17 +156,14 @@ class UpdateAlcoholData extends Command
      */
     public function getExpectedNumberOfRecords(string $category): int
     {
-        // todo read about dependency injection
-        $client = new Client();
-        $initResponse = $client->request('POST', self::SEARCH_REQ_URL, [
-            "headers" => self::COPIED_HEADERS,
-            "form_params" => [
+        $initResponse = Http::withHeaders(self::COPIED_HEADERS)
+            ->asForm()
+            ->post(self::SEARCH_REQ_URL, [
                 "aq" => "@ec_category=${category}",
                 "firstResult" => 0,
                 "numberOfResults" => 0,
-            ],
-        ]);
-        return min(json_decode($initResponse->getBody()->getContents())->totalCount, 5000);
+            ]);
+        return min(json_decode($initResponse->body())->totalCount, 5000);
     }
 }
 
