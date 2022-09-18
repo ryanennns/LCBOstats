@@ -151,11 +151,11 @@ class UpdateAlcoholData extends Command
     }
 
     /**
-     * @param Client $client
-     * @return array
+     * @param string $category
+     * @return int
      * @throws GuzzleException
      */
-    public function getExpectedNumberOfRecords($category): int
+    public function getExpectedNumberOfRecords(string $category): int
     {
         // todo read about dependency injection
         $client = new Client();
