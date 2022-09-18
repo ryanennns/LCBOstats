@@ -3,14 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Models\Alcohol;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use stdClass;
 
 class UpdateAlcoholData extends Command
 {
-    private const GET_IN_EACH_REQUEST = 500;
+    private const GET_IN_EACH_REQUEST = 250;
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
@@ -39,62 +39,48 @@ class UpdateAlcoholData extends Command
     /**
      * @throws GuzzleException
      */
-    public function handle(Client $client): void // todo HTTPFacade
+    public function handle(): void
     {
-        // todo read about dependency injection
         $category = $this->option('category');
-        $initResponse = $client->request('POST', self::SEARCH_REQ_URL, [
-            "headers" => self::COPIED_HEADERS,
-            "form_params" => [
-                "aq" => "@ec_category=${category}",
-                "firstResult" => 0,
-                "numberOfResults" => 0,
-            ],
-        ]);
 
-        $expectedNumberOfRecords = min(json_decode($initResponse->getBody()->getContents())->totalCount, 5000);
+        $startIndex = 0;
+        // numberOfResults
+        $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
+        $recordsScraped = 0;
 
         // I cannot figure out why this is needed, but it is.
         // TODO fix this monstrosity.
         if ($category == 'Products|Spirits')
             $expectedNumberOfRecords--;
 
-        $recordsScraped = 0;
-        while ($recordsScraped < $expectedNumberOfRecords) {
-            $response = $client->request('POST', self::SEARCH_REQ_URL, [
-                "headers" => self::COPIED_HEADERS,
-                "form_params" => [
-                    "aq" => "@ec_category==\"" . $this->option('category') . "\"",
+        while ($startIndex < $expectedNumberOfRecords) {
+            $response = Http::withHeaders(self::COPIED_HEADERS)
+                ->asForm()
+                ->post(self::SEARCH_REQ_URL, [
+                    "aq" => "@ec_category=${category}",
                     "numberOfResults" => self::GET_IN_EACH_REQUEST,
-                    "firstResult" => $recordsScraped,
-                ],
-            ]);
+                    "firstResult" => $startIndex,
+                ]);
 
-            $alcoholsReturned = collect(json_decode($response->getBody()->getContents())->results);
+            $alcoholsReturned = collect(json_decode($response->body())->results);
+            $recordsScraped += $alcoholsReturned->count();
+            $startIndex += self::GET_IN_EACH_REQUEST;
 
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
+
                 if(!$this->isAlcoholAPromotion($alcohol))
                     Alcohol::query()->updateOrCreate($this->getProperties($alcohol));
             });
 
-            $recordsScraped += $alcoholsReturned->count();
             dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
-            sleep(1);
+            sleep(0.5);
         }
-    }
-
-    public function getAllRecords()
-    {
-        collect(Alcohol::CATEGORIES)->each(function () {
-
-        });
     }
 
     // headaches ! :)
     public function getProperties(stdClass $alcohol): array
     {
-        // price/((alc/100)*volume)
         $title = trim($alcohol->title);
         $brand = $alcohol->ec_brand ?? null;
         $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
@@ -173,6 +159,23 @@ class UpdateAlcoholData extends Command
             return null;
         else
             return $price / (($alcoholContent / 100) * $volume);
+    }
+
+    /**
+     * @param string $category
+     * @return int
+     * @throws GuzzleException
+     */
+    public function getExpectedNumberOfRecords(string $category): int
+    {
+        $initResponse = Http::withHeaders(self::COPIED_HEADERS)
+            ->asForm()
+            ->post(self::SEARCH_REQ_URL, [
+                "aq" => "@ec_category=${category}",
+                "firstResult" => 0,
+                "numberOfResults" => 0,
+            ]);
+        return min(json_decode($initResponse->body())->totalCount, 5000);
     }
 }
 
