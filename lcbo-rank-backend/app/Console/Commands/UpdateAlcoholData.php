@@ -39,7 +39,7 @@ class UpdateAlcoholData extends Command
     /**
      * @throws GuzzleException
      */
-    public function handle(): void // todo HTTPFacade
+    public function handle(): void
     {
         $category = $this->option('category');
 
@@ -68,7 +68,7 @@ class UpdateAlcoholData extends Command
 
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
-                
+
                 if(!$this->isAlcoholAPromotion($alcohol))
                     Alcohol::query()->updateOrCreate($this->getProperties($alcohol));
             });
