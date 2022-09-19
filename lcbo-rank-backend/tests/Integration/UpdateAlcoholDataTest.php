@@ -35,6 +35,7 @@ class UpdateAlcoholDataTest extends TestCase
     {
         return [
             "Beer & Cider" => [Alcohol::BEER_AND_CIDER],
+            "Coolers" => [Alcohol::COOLER],
             "Spirits" => [Alcohol::SPIRITS],
             "Coolers" => [Alcohol::COOLER],
             "Red Wine" => [Alcohol::RED_WINE],
