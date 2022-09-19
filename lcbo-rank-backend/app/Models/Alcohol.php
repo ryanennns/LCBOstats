@@ -39,8 +39,7 @@ class Alcohol extends Model
         self::COOLER
     ];
 
-//    public $incrementing = true;
-//    protected $primaryKey = 'id';
+    protected $primaryKey = 'permanent_id';
 
     protected $fillable = [
         'title',
