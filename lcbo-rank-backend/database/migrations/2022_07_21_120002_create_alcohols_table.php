@@ -31,6 +31,12 @@ return new class extends Migration {
             $table->double('price_index')->default(0.00)->nullable();
             $table->string('country')->nullable();
             $table->longText('url')->nullable();
+            $table->longText('thumbnail_url')->nullable();
+            $table->longText('image_url')->nullable();
+            $table->double('rating')->nullable()->default(0.0);
+            $table->integer('reviews')->nullable()->default(0);
+            $table->boolean('out_of_stock')->nullable();
+            $table->longText('description')->nullable();
         });
     }
 
