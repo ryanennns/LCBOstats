@@ -17,12 +17,6 @@ class UpdateAlcoholDataTest extends TestCase
         parent::setUp();
     }
 
-    /*
-     * IDEAS
-     * Create a dynamic test fixture system that loads records from beer-response.json as specified
-     * in ->post() call
-     */
-    // dd(FixtureLoader::loadFixture('beer-response'));
     public function test_it_creates_records_from_returned_data()
     {
         Http::fake([
@@ -71,5 +65,26 @@ class UpdateAlcoholDataTest extends TestCase
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
         // assert that records have been inserted into the database
         $this->assertDatabaseCount('alcohols',9);
+    }
+
+    public function test_it_wont_create_records_with_blacklisted_ids()
+    {
+        Http::fake([
+            UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
+                ->push(FixtureLoader::loadRawFixture('empty-response'),
+                    200,
+                    ["content-type" => "application/json"]
+                )
+                ->push(FixtureLoader::loadRawFixture('blacklisted-response-chunk'),
+                    200,
+                    ["content-type" => "application/json"]
+                )
+        ]);
+
+        // call our Artisan command
+        $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
+        // assert that records have been inserted into the database
+//        $this->assertDatabaseMissing()
+        $this->assertDatabaseCount('alcohols',1);
     }
 }

@@ -66,7 +66,7 @@ class UpdateAlcoholData extends Command
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
 
-                if(!$this->isAlcoholAPromotion($alcohol))
+                if(!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
                     Alcohol::query()->updateOrCreate(
                         ['permanent_id' => $alcohol->permanentid],
                         $this->getProperties($alcohol)
@@ -150,6 +150,13 @@ class UpdateAlcoholData extends Command
                 return true;
         });
 
+        return false;
+    }
+
+    public function isAlcoholBlacklisted(stdClass $alcohol): bool
+    {
+        if(collect(Alcohol::BLACKLISTED_IDS)->contains($alcohol->permanentid))
+            return true;
         return false;
     }
 
