@@ -1,0 +1,21 @@
+{
+    "totalCount" : 3,
+    "totalCountFiltered" : 3,
+    "duration" : 2,
+    "indexDuration" : 3,
+    "requestDuration" : 2,
+    "searchUid" : "c6ca0149-7b32-4460-bdfd-1e4b7a728ffe",
+    "pipeline" : "default",
+    "apiVersion" : 2,
+    "index" : "cache",
+    "refinedKeywords" : [ ],
+    "triggers" : [ ],
+    "termsToHighlight" : { },
+    "phrasesToHighlight" : { },
+    "queryCorrections" : [ ],
+    "groupByResults" : [ ],
+    "facets" : [ ],
+    "suggestedFacets" : [ ],
+    "categoryFacets" : [ ],
+    "results" : [ ]
+}

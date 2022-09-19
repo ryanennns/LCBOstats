@@ -10,7 +10,7 @@ use stdClass;
 
 class UpdateAlcoholData extends Command
 {
-    private const GET_IN_EACH_REQUEST = 250;
+    public const GET_IN_EACH_REQUEST = 250;
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
@@ -44,7 +44,6 @@ class UpdateAlcoholData extends Command
         $category = $this->option('category');
 
         $startIndex = 0;
-        // numberOfResults
         $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
         $recordsScraped = 0;
 
@@ -59,7 +58,7 @@ class UpdateAlcoholData extends Command
 
             $alcoholsReturned = collect(json_decode($response->body())->results);
             $recordsScraped += $alcoholsReturned->count();
-            $startIndex += self::GET_IN_EACH_REQUEST;
+            $startIndex +=  $alcoholsReturned->count();
 
             if($recordsScraped == 0) // a failsafe from the old python script
                 break;
@@ -165,7 +164,6 @@ class UpdateAlcoholData extends Command
     /**
      * @param string $category
      * @return int
-     * @throws GuzzleException
      */
     public function getExpectedNumberOfRecords(string $category): int
     {
