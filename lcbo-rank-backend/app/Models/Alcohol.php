@@ -8,6 +8,10 @@ use PhpParser\Node\Scalar\String_;
 
 class Alcohol extends Model
 {
+    private const BLACKLISTED_IDS = [
+        21514,
+        27049, // smirnoff
+    ];
     use HasFactory;
 
     public const BEER_AND_CIDER = "Beer & Cider";
