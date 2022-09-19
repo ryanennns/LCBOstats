@@ -4,9 +4,8 @@ namespace Tests\Feature;
 
 use App\Console\Commands\UpdateAlcoholData;
 use App\Models\Alcohol;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class UpdateAlcoholDataTest extends TestCase
@@ -16,20 +15,17 @@ class UpdateAlcoholDataTest extends TestCase
     /**
      * @return void
      * @dataProvider provideAlcoholCategories
-     * @throws GuzzleException
      */
     public function test_it_can_scrape_entire_categories($category): void
     {
-        $client = new Client();
-        $initResponse = $client->request('POST', UpdateAlcoholData::SEARCH_REQ_URL, [
-            "headers" => UpdateAlcoholData::COPIED_HEADERS,
-            "form_params" => [
-                "aq" => "@ec_category=Products|${category}",
+        $initResponse = Http::withHeaders(UpdateAlcoholData::COPIED_HEADERS)
+            ->asForm()
+            ->post(UpdateAlcoholData::SEARCH_REQ_URL, [
+                "aq" => "@ec_category=${category}",
                 "firstResult" => 0,
                 "numberOfResults" => 0,
-            ],
-        ]);
-        $expectedNumberOfRecords = min(json_decode($initResponse->getBody()->getContents())->totalCount, 5000);
+            ]);
+        $expectedNumberOfRecords = min(json_decode($initResponse->body())->totalCount, 5000);
 
         // TODO fix this
         if($category == 'Spirits')
