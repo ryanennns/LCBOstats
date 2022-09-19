@@ -16,7 +16,7 @@ return new class extends Migration
         // todo squash all the migrations into one, I hate the ordering of these columns
         Schema::table('alcohols', function (Blueprint $table) {
             $table->double('rating')->nullable()->default(0.0);
-            $table->string('out_of_stock')->nullable();
+            $table->boolean('out_of_stock')->nullable();
             $table->longText('description')->nullable();
         });
     }
