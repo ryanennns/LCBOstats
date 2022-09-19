@@ -70,7 +70,10 @@ class UpdateAlcoholData extends Command
                 $alcohol = $alcohol->raw;
 
                 if(!$this->isAlcoholAPromotion($alcohol))
-                    Alcohol::query()->updateOrCreate([$alcohol->permanentid], $this->getProperties($alcohol));
+                    Alcohol::query()->updateOrCreate(
+                        ['permanent_id' => $alcohol->permanentid],
+                        $this->getProperties($alcohol)
+                    );
             });
 
             dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
