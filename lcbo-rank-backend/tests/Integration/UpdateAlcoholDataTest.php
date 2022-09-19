@@ -34,8 +34,8 @@ class UpdateAlcoholDataTest extends TestCase
     public function provideAlcoholCategories(): array
     {
         return [
-            "Coolers" => [Alcohol::COOLER],
             "Beer & Cider" => [Alcohol::BEER_AND_CIDER],
+            "Coolers" => [Alcohol::COOLER],
             "Spirits" => [Alcohol::SPIRITS],
             "Red Wine" => [Alcohol::RED_WINE],
             "White Wine" => [Alcohol::WHITE_WINE],
