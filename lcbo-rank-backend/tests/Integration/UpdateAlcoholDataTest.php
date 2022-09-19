@@ -27,10 +27,6 @@ class UpdateAlcoholDataTest extends TestCase
             ]);
         $expectedNumberOfRecords = min(json_decode($initResponse->body())->totalCount, 5000);
 
-        // TODO fix this
-        if($category == 'Spirits')
-            $expectedNumberOfRecords--;
-
         $this->artisan("alcohol:update --category=\"Products|${category}\"");
         $this->assertDatabaseCount(Alcohol::class, $expectedNumberOfRecords);
     }

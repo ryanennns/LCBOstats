@@ -48,11 +48,6 @@ class UpdateAlcoholData extends Command
         $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
         $recordsScraped = 0;
 
-        // I cannot figure out why this is needed, but it is.
-        // TODO fix this monstrosity.
-        if ($category == 'Products|Spirits')
-            $expectedNumberOfRecords--;
-
         while ($startIndex < $expectedNumberOfRecords) {
             $response = Http::withHeaders(self::COPIED_HEADERS)
                 ->asForm()
@@ -65,6 +60,9 @@ class UpdateAlcoholData extends Command
             $alcoholsReturned = collect(json_decode($response->body())->results);
             $recordsScraped += $alcoholsReturned->count();
             $startIndex += self::GET_IN_EACH_REQUEST;
+
+            if($recordsScraped == 0) // a failsafe from the old python script
+                break;
 
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
