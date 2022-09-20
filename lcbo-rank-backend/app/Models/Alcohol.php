@@ -961,6 +961,7 @@ class Alcohol extends Model
         "Products|Wine|Champagne",
     ];
 
+    // todo refactor blacklisted ids to be config values?
     public const BLACKLISTED_IDS = [
         21514,
         27049, // smirnoff
