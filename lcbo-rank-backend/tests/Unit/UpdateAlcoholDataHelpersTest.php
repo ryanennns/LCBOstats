@@ -3,8 +3,9 @@
 
 use App\Console\Commands\UpdateAlcoholData;
 use PHPUnit\Framework\TestCase;
+use Tests\Fixtures\FixtureLoader;
 
-class Test extends TestCase
+class UpdateAlcoholDataHelpersTest extends TestCase
 {
     /**
      * @return void
@@ -20,6 +21,7 @@ class Test extends TestCase
         return [
             '0' => ['0', 0],
             '473 x 1' => ['473', 473],
+            '500 x 1' => ['500', 500],
             '12 x 355' => ['12 x 355', 4260],
             '6 x 473' => ['6 x 473', 2838],
             '8 x 750' => ['8 x 750', 6000],

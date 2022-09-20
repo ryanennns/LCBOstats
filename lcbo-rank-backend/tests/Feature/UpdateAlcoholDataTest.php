@@ -32,10 +32,7 @@ class UpdateAlcoholDataTest extends TestCase
                 )
         ]);
 
-        // call our Artisan command
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-
-        // assert that records have been inserted into the database
         $this->assertDatabaseCount('alcohols',3);
     }
 
@@ -61,9 +58,7 @@ class UpdateAlcoholDataTest extends TestCase
                 )
         ]);
 
-        // call our Artisan command
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-        // assert that records have been inserted into the database
         $this->assertDatabaseCount('alcohols',9);
     }
 
@@ -81,15 +76,7 @@ class UpdateAlcoholDataTest extends TestCase
                 )
         ]);
 
-        // call our Artisan command
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-        // assert that records have been inserted into the database
-//        $this->assertDatabaseMissing()
         $this->assertDatabaseCount('alcohols',1);
     }
-
-//    public function test_it_throws_exception_if_category_invalid()
-//    {
-//        $this->artisan("alcohol:update --category=\"meme\"");
-//    }
 }

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Alcohol;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use stdClass;
@@ -71,7 +70,7 @@ class UpdateAlcoholData extends Command
                 if(!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
                     Alcohol::query()->updateOrCreate(
                         ['permanent_id' => $alcohol->permanentid],
-                        $this->getProperties($alcohol)
+                        self::getProperties($alcohol)
                     );
             });
 
@@ -81,7 +80,7 @@ class UpdateAlcoholData extends Command
     }
 
     // headaches ! :)
-    public function getProperties(stdClass $alcohol): array
+    public static function getProperties(stdClass $alcohol): array
     {
         $title = trim($alcohol->title);
         $brand = $alcohol->ec_brand ?? null;
@@ -89,12 +88,12 @@ class UpdateAlcoholData extends Command
         $subcategory = explode("|", $alcohol->ec_category_filter[0])[2] ?? null;
         $price = $alcohol->ec_price ?? -1;
         $volume = -1;
-        // todo refactor this shindig
+        // todo refactor this trash
         if(!isset($alcohol->lcbo_total_volume))
         {
             if(isset($alcohol->lcbo_unit_volume))
             {
-                $this->truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
+                $volume = self::truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
             }
         }
         else
@@ -102,7 +101,7 @@ class UpdateAlcoholData extends Command
             $volume = $alcohol->lcbo_total_volume;
         }
         $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
-        $price_index = $this->calculatePriceIndex($price, $alcohol_content, $volume);
+        $price_index = self::calculatePriceIndex($price, $alcohol_content, $volume);
         $country = $alcohol->country_of_manufacture ?? '';
         $url = $alcohol->sysuri;
         $thumbnail_url = $alcohol->ec_thumbnails;
@@ -174,7 +173,7 @@ class UpdateAlcoholData extends Command
         return false;
     }
 
-    public function calculatePriceIndex($price, $alcoholContent, $volume): ?float
+    public static function calculatePriceIndex($price, $alcoholContent, $volume): ?float
     {
         if ($price == 0 || $alcoholContent == 0 || $volume == 0)
             return null;
