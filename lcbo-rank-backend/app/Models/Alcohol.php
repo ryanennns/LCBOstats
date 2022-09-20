@@ -949,6 +949,17 @@ class Alcohol extends Model
         "Vintages|Exclusivités en ligne|Vins de luxe",
         "Vintages|Online Exclusives|Luxe"
     ];
+    public const THE_BIG_KAHUNAS = [
+        "Products|Beer & Cider",
+        "Products|Spirits",
+        "Products|Coolers",
+        "Products|Wine|Red Wine",
+        "Products|Wine|White Wine",
+        "Products|Wine|Sparkling Wine",
+        "Products|Wine|Rose Wine",
+        "Products|Wine|Fortified Wine",
+        "Products|Wine|Champagne",
+    ];
 
     public const BLACKLISTED_IDS = [
         21514,
