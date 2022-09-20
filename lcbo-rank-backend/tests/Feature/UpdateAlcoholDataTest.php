@@ -87,4 +87,9 @@ class UpdateAlcoholDataTest extends TestCase
 //        $this->assertDatabaseMissing()
         $this->assertDatabaseCount('alcohols',1);
     }
+
+//    public function test_it_throws_exception_if_category_invalid()
+//    {
+//        $this->artisan("alcohol:update --category=\"meme\"");
+//    }
 }

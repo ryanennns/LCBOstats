@@ -34,11 +34,7 @@ class UpdateAlcoholData extends Command
     protected $signature = 'alcohol:update {--category=Products}';
     protected $description = 'Updates the database with the latest information from the LCBO\'s API.';
 
-    // todo fixture file
-
-    /**
-     * @throws GuzzleException
-     */
+    // todo refactor dumps to proper console out
     public function handle(): void
     {
         $category = $this->option('category');
