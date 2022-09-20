@@ -19,7 +19,7 @@ class UpdateAlcoholDataTest extends TestCase
         parent::setUp();
     }
 
-    public function test_it_creates_records_from_returned_data()
+    public function test_it_creates_records_from_returned_data(): void
     {
         Http::fake([
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
@@ -38,7 +38,7 @@ class UpdateAlcoholDataTest extends TestCase
         $this->assertDatabaseCount('alcohols', 3);
     }
 
-    public function test_it_creates_records_from_paginated_response()
+    public function test_it_creates_records_from_paginated_response(): void
     {
         Http::fake([
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
@@ -64,7 +64,7 @@ class UpdateAlcoholDataTest extends TestCase
         $this->assertDatabaseCount('alcohols', 9);
     }
 
-    public function test_it_wont_create_records_with_blacklisted_ids()
+    public function test_it_wont_create_records_with_blacklisted_ids(): void
     {
         Http::fake([
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
@@ -82,14 +82,10 @@ class UpdateAlcoholDataTest extends TestCase
         $this->assertDatabaseCount('alcohols', 1);
     }
 
-    public function test_it_can_scrape_the_big_kahunas()
+    public function test_it_can_scrape_the_big_kahunas(): void
     {
         Http::fake([
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
-                ->push(FixtureLoader::loadRawFixture('beer-response-chunk'),
-                    200,
-                    ["content-type" => "application/json"]
-                )
                 ->whenEmpty(Http::response(
                     FixtureLoader::loadRawFixture('beer-response-chunk'),
                     200,
