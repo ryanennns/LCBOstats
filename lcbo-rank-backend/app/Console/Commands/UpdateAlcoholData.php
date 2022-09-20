@@ -42,6 +42,11 @@ class UpdateAlcoholData extends Command
     public function handle(): void
     {
         $category = $this->option('category');
+        if(!in_array($category, Alcohol::FORMATTED_CATEGORIES))
+        {
+            dump("Invalid category!");
+            return;
+        }
 
         $startIndex = 0;
         $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
@@ -86,10 +91,19 @@ class UpdateAlcoholData extends Command
         $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
         $subcategory = explode("|", $alcohol->ec_category_filter[0])[2];
         $price = $alcohol->ec_price ?? -1;
-        $volume = $alcohol->lcbo_total_volume ??
-            $this->truncatedVolumeToInteger(
-                isset($alcohol->lcbo_unit_volume) ?: 0
-            );
+        $volume = -1;
+        // todo refactor this shindig
+        if(!isset($alcohol->lcbo_total_volume))
+        {
+            if(isset($alcohol->lcbo_unit_volume))
+            {
+                $this->truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
+            }
+        }
+        else
+        {
+            $volume = $alcohol->lcbo_total_volume;
+        }
         $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
         $price_index = $this->calculatePriceIndex($price, $alcohol_content, $volume);
         $country = $alcohol->country_of_manufacture ?? '';

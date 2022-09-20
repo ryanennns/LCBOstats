@@ -10,7 +10,7 @@ class Test extends TestCase
      * @return void
      * @dataProvider provideTruncatedValueStrings
      */
-    public function test_it_can_properly_calculate_truncated_values($truncatedValue, $expectedResult)
+    public function test_it_can_properly_calculate_truncated_values($truncatedValue, $expectedResult): void
     {
         self::assertEquals($expectedResult, UpdateAlcoholData::truncatedVolumeToInteger($truncatedValue));
     }
@@ -18,6 +18,8 @@ class Test extends TestCase
     public function provideTruncatedValueStrings(): array
     {
         return [
+            '0' => ['0', 0],
+            '473 x 1' => ['473', 473],
             '12 x 355' => ['12 x 355', 4260],
             '6 x 473' => ['6 x 473', 2838],
             '8 x 750' => ['8 x 750', 6000],
