@@ -35,6 +35,7 @@ class UpdateAlcoholData extends Command
     protected $description = 'Updates the database with the latest information from the LCBO\'s API.';
 
     // todo refactor dumps to proper console out
+    // todo handle exceptions (undefined stdClass::$results)
     public function handle(): void
     {
         $category = $this->option('category');
@@ -140,6 +141,9 @@ class UpdateAlcoholData extends Command
     public static function truncatedVolumeToInteger(string $truncatedValue): int
     {
         $volumes = collect(explode('x', $truncatedValue));
+
+        if($volumes->count() == 1)
+            return $truncatedValue;
 
         $totalVolume = 0;
         $volumes->each(function ($volume) use (&$totalVolume, $volumes) {
