@@ -37,46 +37,23 @@ class UpdateAlcoholData extends Command
     // todo handle exceptions (undefined stdClass::$results)
     public function handle(): void
     {
-        $category = $this->option('category');
-        if(!in_array($category, Alcohol::FORMATTED_CATEGORIES))
-        {
+        $category = ($this->option('category'));
+        $lowerCaseCategory = strtolower($category);
+        if (!in_array($category, Alcohol::THE_BIG_KAHUNAS) &&
+            $lowerCaseCategory != 'the big kahunas' &&
+            $lowerCaseCategory != 'all'
+        ) {
             dump("Invalid category!");
             return;
         }
 
-        $startIndex = 0;
-        $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
-        $recordsScraped = 0;
-
-        while ($startIndex < $expectedNumberOfRecords) {
-            $response = Http::withHeaders(self::COPIED_HEADERS)
-                ->asForm()
-                ->post(self::SEARCH_REQ_URL, [
-                    "aq" => "@ec_category=${category}",
-                    "numberOfResults" => self::GET_IN_EACH_REQUEST,
-                    "firstResult" => $startIndex,
-                ]);
-
-            $alcoholsReturned = collect(json_decode($response->body())->results);
-            $recordsScraped += $alcoholsReturned->count();
-            $startIndex +=  $alcoholsReturned->count();
-
-            if($recordsScraped == 0) // a failsafe from the old python script
-                break;
-
-            $alcoholsReturned->each(function ($alcohol) {
-                $alcohol = $alcohol->raw;
-
-                if(!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
-                    Alcohol::query()->updateOrCreate(
-                        ['permanent_id' => $alcohol->permanentid],
-                        self::getProperties($alcohol)
-                    );
+        if ($lowerCaseCategory === 'the big kahunas' || $lowerCaseCategory === 'all') {
+            dump("it's big kahuna time!");
+            collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
+                $this->fetchDataForGivenCategory($category);
             });
-
-            dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
-            sleep(0.5);
-        }
+        } else
+            $this->fetchDataForGivenCategory($category);
     }
 
     // headaches ! :)
@@ -89,15 +66,11 @@ class UpdateAlcoholData extends Command
         $price = $alcohol->ec_price ?? -1;
         $volume = -1;
         // todo refactor this trash
-        if(!isset($alcohol->lcbo_total_volume))
-        {
-            if(isset($alcohol->lcbo_unit_volume))
-            {
+        if (!isset($alcohol->lcbo_total_volume)) {
+            if (isset($alcohol->lcbo_unit_volume)) {
                 $volume = self::truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
             }
-        }
-        else
-        {
+        } else {
             $volume = $alcohol->lcbo_total_volume;
         }
         $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
@@ -133,15 +106,11 @@ class UpdateAlcoholData extends Command
         ];
     }
 
-    /**
-     * @param string $truncatedValue
-     * @return int
-     */
     public static function truncatedVolumeToInteger(string $truncatedValue): int
     {
         $volumes = collect(explode('x', $truncatedValue));
 
-        if($volumes->count() == 1)
+        if ($volumes->count() == 1)
             return $truncatedValue;
 
         $totalVolume = 0;
@@ -158,8 +127,8 @@ class UpdateAlcoholData extends Command
 
     public function isAlcoholAPromotion(stdClass $alcohol): bool
     {
-        collect($alcohol->ec_category)->each(function(string $categoryLayer) {
-            if(str_contains('Promotion', $categoryLayer))
+        collect($alcohol->ec_category)->each(function (string $categoryLayer) {
+            if (str_contains('Promotion', $categoryLayer))
                 return true;
         });
 
@@ -168,12 +137,12 @@ class UpdateAlcoholData extends Command
 
     public function isAlcoholBlacklisted(stdClass $alcohol): bool
     {
-        if(collect(Alcohol::BLACKLISTED_IDS)->contains($alcohol->permanentid))
+        if (collect(Alcohol::BLACKLISTED_IDS)->contains($alcohol->permanentid))
             return true;
         return false;
     }
 
-    public static function calculatePriceIndex($price, $alcoholContent, $volume): ?float
+    public static function calculatePriceIndex(float $price, float $alcoholContent, int $volume): ?float
     {
         if ($price == 0 || $alcoholContent == 0 || $volume == 0)
             return null;
@@ -181,10 +150,6 @@ class UpdateAlcoholData extends Command
             return $price / (($alcoholContent / 100) * $volume);
     }
 
-    /**
-     * @param string $category
-     * @return int
-     */
     public function getExpectedNumberOfRecords(string $category): int
     {
         $initResponse = Http::withHeaders(self::COPIED_HEADERS)
@@ -196,9 +161,41 @@ class UpdateAlcoholData extends Command
             ]);
         return min(json_decode($initResponse->body())->totalCount, 5000);
     }
-}
 
-/*
- * FIND DUPLICATES QUERY
-    select *, count(*) from alcohols group by permanent_id having count(*) > 1;
- */
+    public function fetchDataForGivenCategory(string $category): void
+    {
+        $startIndex = 0;
+        $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
+        $recordsScraped = 0;
+
+        while ($startIndex < $expectedNumberOfRecords) {
+            $response = Http::withHeaders(self::COPIED_HEADERS)
+                ->asForm()
+                ->post(self::SEARCH_REQ_URL, [
+                    "aq" => "@ec_category=${category}",
+                    "numberOfResults" => self::GET_IN_EACH_REQUEST,
+                    "firstResult" => $startIndex,
+                ]);
+
+            $alcoholsReturned = collect(json_decode($response->body())->results);
+            $recordsScraped += $alcoholsReturned->count();
+            $startIndex += $alcoholsReturned->count();
+
+            if ($recordsScraped == 0) // a failsafe from the old python script
+                break;
+
+            $alcoholsReturned->each(function ($alcohol) {
+                $alcohol = $alcohol->raw;
+
+                if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
+                    Alcohol::query()->updateOrCreate(
+                        ['permanent_id' => $alcohol->permanentid],
+                        self::getProperties($alcohol)
+                    );
+            });
+
+            dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
+            sleep(0.5);
+        }
+    }
+}
