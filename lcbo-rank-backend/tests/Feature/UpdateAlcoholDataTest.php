@@ -33,7 +33,7 @@ class UpdateAlcoholDataTest extends TestCase
         ]);
 
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-        $this->assertDatabaseCount('alcohols',3);
+        $this->assertDatabaseCount('alcohols', 3);
     }
 
     public function test_it_creates_records_from_paginated_response()
@@ -59,7 +59,7 @@ class UpdateAlcoholDataTest extends TestCase
         ]);
 
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-        $this->assertDatabaseCount('alcohols',9);
+        $this->assertDatabaseCount('alcohols', 9);
     }
 
     public function test_it_wont_create_records_with_blacklisted_ids()
@@ -77,6 +77,6 @@ class UpdateAlcoholDataTest extends TestCase
         ]);
 
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-        $this->assertDatabaseCount('alcohols',1);
+        $this->assertDatabaseCount('alcohols', 1);
     }
 }

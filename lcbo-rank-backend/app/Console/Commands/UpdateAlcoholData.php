@@ -38,8 +38,7 @@ class UpdateAlcoholData extends Command
     public function handle(): void
     {
         $category = $this->option('category');
-        if(!in_array($category, Alcohol::FORMATTED_CATEGORIES))
-        {
+        if (!in_array($category, Alcohol::FORMATTED_CATEGORIES)) {
             dump("Invalid category!");
             return;
         }
@@ -59,15 +58,15 @@ class UpdateAlcoholData extends Command
 
             $alcoholsReturned = collect(json_decode($response->body())->results);
             $recordsScraped += $alcoholsReturned->count();
-            $startIndex +=  $alcoholsReturned->count();
+            $startIndex += $alcoholsReturned->count();
 
-            if($recordsScraped == 0) // a failsafe from the old python script
+            if ($recordsScraped == 0) // a failsafe from the old python script
                 break;
 
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
 
-                if(!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
+                if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
                     Alcohol::query()->updateOrCreate(
                         ['permanent_id' => $alcohol->permanentid],
                         self::getProperties($alcohol)
@@ -89,15 +88,11 @@ class UpdateAlcoholData extends Command
         $price = $alcohol->ec_price ?? -1;
         $volume = -1;
         // todo refactor this trash
-        if(!isset($alcohol->lcbo_total_volume))
-        {
-            if(isset($alcohol->lcbo_unit_volume))
-            {
+        if (!isset($alcohol->lcbo_total_volume)) {
+            if (isset($alcohol->lcbo_unit_volume)) {
                 $volume = self::truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
             }
-        }
-        else
-        {
+        } else {
             $volume = $alcohol->lcbo_total_volume;
         }
         $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
@@ -141,7 +136,7 @@ class UpdateAlcoholData extends Command
     {
         $volumes = collect(explode('x', $truncatedValue));
 
-        if($volumes->count() == 1)
+        if ($volumes->count() == 1)
             return $truncatedValue;
 
         $totalVolume = 0;
@@ -158,8 +153,8 @@ class UpdateAlcoholData extends Command
 
     public function isAlcoholAPromotion(stdClass $alcohol): bool
     {
-        collect($alcohol->ec_category)->each(function(string $categoryLayer) {
-            if(str_contains('Promotion', $categoryLayer))
+        collect($alcohol->ec_category)->each(function (string $categoryLayer) {
+            if (str_contains('Promotion', $categoryLayer))
                 return true;
         });
 
@@ -168,7 +163,7 @@ class UpdateAlcoholData extends Command
 
     public function isAlcoholBlacklisted(stdClass $alcohol): bool
     {
-        if(collect(Alcohol::BLACKLISTED_IDS)->contains($alcohol->permanentid))
+        if (collect(Alcohol::BLACKLISTED_IDS)->contains($alcohol->permanentid))
             return true;
         return false;
     }
