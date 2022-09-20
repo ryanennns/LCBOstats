@@ -85,7 +85,7 @@ class UpdateAlcoholData extends Command
         $title = trim($alcohol->title);
         $brand = $alcohol->ec_brand ?? null;
         $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
-        $subcategory = explode("|", $alcohol->ec_category_filter[0])[2];
+        $subcategory = explode("|", $alcohol->ec_category_filter[0])[2] ?? null;
         $price = $alcohol->ec_price ?? -1;
         $volume = -1;
         // todo refactor this shindig
