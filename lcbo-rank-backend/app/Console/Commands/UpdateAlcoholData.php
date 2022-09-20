@@ -52,8 +52,9 @@ class UpdateAlcoholData extends Command
             collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
                 $this->fetchDataForGivenCategory($category);
             });
-        } else
+        } else {
             $this->fetchDataForGivenCategory($category);
+        }
     }
 
     // headaches ! :)
@@ -131,7 +132,6 @@ class UpdateAlcoholData extends Command
             if (str_contains('Promotion', $categoryLayer))
                 return true;
         });
-
         return false;
     }
 
