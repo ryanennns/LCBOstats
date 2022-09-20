@@ -964,6 +964,7 @@ class Alcohol extends Model
     public const BLACKLISTED_IDS = [
         21514,
         27049, // smirnoff
+        28009, // georgian bay + sunglasses (#1)
     ];
 
     use HasFactory;
