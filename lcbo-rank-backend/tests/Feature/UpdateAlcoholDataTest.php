@@ -104,12 +104,4 @@ class UpdateAlcoholDataTest extends TestCase
             });
         });
     }
-//        Http::assertSent(fn (Request $request) => $request->url() === $apiPath && $request->method() === 'GET' && $request->hasHeaders(['Authorization' => 'Bearer '.$this->user->lms_token]));
-//        for ($i = 0; $i < count($rawResult['Objects']); $i++) {
-//            $this->assertInstanceOf(LmsExam::class, $lmsExams[$i]);
-//            $this->assertEquals($rawResult['Objects'][$i]['QuizId'], $lmsExams[$i]->getId());
-//            $this->assertEquals($rawResult['Objects'][$i]['Name'], $lmsExams[$i]->getName());
-//            $this->assertEquals($rawResult['Objects'][$i]['StartDate'], $lmsExams[$i]->getStartDate());
-//            $this->assertEquals($rawResult['Objects'][$i]['Password'], $lmsExams[$i]->getAccessCode());
-//        }
 }
