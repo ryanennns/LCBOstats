@@ -19,7 +19,7 @@ class AlcoholFactory extends Factory
         $volume = $this->faker->numberBetween(375, 1400);
 
         return [
-            'id' => $this->faker->unique()->numberBetween(0, 10000),
+            'permanent_id' => $this->faker->unique()->numberBetween(0, 10000),
             'created_at' => Carbon::today()->subMonth()->toDateTimeString(),
             'updated_at' => Carbon::today()->subMonth()->toDateTimeString(),
             'permanent_id' => $this->faker->unique()->numberBetween(0, 10000),
