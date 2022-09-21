@@ -130,11 +130,12 @@ class UpdateAlcoholData extends Command
 
     public function isAlcoholAPromotion(stdClass $alcohol): bool
     {
-        collect($alcohol->ec_category)->each(function (string $categoryLayer) {
+        $returnValue = false;
+        collect($alcohol->ec_category)->each(function (string $categoryLayer) use (&$returnValue) {
             if (str_contains('Promotion', $categoryLayer))
-                return true;
+                $returnValue = true;
         });
-        return false;
+        return $returnValue;
     }
 
     public function isAlcoholBlacklisted(stdClass $alcohol): bool
