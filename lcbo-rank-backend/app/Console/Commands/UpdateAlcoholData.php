@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Mockery\Exception;
 use stdClass;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class UpdateAlcoholData extends Command
 {
@@ -44,13 +45,13 @@ class UpdateAlcoholData extends Command
             $lowerCaseCategory != 'the big kahunas' &&
             $lowerCaseCategory != 'all'
         ) {
-            dump("Invalid category!");
+            $this->error("Invalid category!");
             return;
         }
 
         if ($lowerCaseCategory === 'the big kahunas' || $lowerCaseCategory === 'all') {
-            dump("it's big kahuna time!");
-            collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
+            $this->info("it's big kahuna time!");
+            $this->withProgressBar(Alcohol::THE_BIG_KAHUNAS, function ($category) {
                 $this->fetchDataForGivenCategory($category);
             });
         } else {
@@ -169,6 +170,12 @@ class UpdateAlcoholData extends Command
         $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
         $recordsScraped = 0;
 
+        ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max% {%bar%}\n");
+        $progressBar = $this->output->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
+        $progressBar->setFormat('custom');
+        $progressBar->setMessage($category);
+        $progressBar->start();
+
         while ($startIndex < $expectedNumberOfRecords) {
             $response = Http::withHeaders(self::COPIED_HEADERS)
                 ->asForm()
@@ -190,14 +197,15 @@ class UpdateAlcoholData extends Command
 
                 try {
                     if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
+                    {
                         Alcohol::query()->updateOrCreate(
                             ['permanent_id' => $alcohol->permanentid],
                             self::getProperties($alcohol)
                         );
+                    }
                 } catch (Exception $e) {}
             });
-
-            dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
+            $progressBar->advance();
             sleep(0.5);
         }
     }
