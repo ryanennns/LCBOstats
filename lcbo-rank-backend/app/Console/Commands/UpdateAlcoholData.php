@@ -170,7 +170,7 @@ class UpdateAlcoholData extends Command
         $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
         $recordsScraped = 0;
 
-        ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max% {%bar%}\n");
+        ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max%\t{%bar%}\n");
         $progressBar = $this->output->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
         $progressBar->setFormat('custom');
         $progressBar->setMessage($category);
