@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Alcohol;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Mockery\Exception;
 use stdClass;
 
 class UpdateAlcoholData extends Command
@@ -65,7 +66,7 @@ class UpdateAlcoholData extends Command
         $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
         $subcategory = explode("|", $alcohol->ec_category_filter[0])[2] ?? null;
         $price = $alcohol->ec_price ?? -1;
-        $volume = -1;
+        $volume = null;
         // todo refactor this trash
         if (!isset($alcohol->lcbo_total_volume)) {
             if (isset($alcohol->lcbo_unit_volume)) {
@@ -142,7 +143,7 @@ class UpdateAlcoholData extends Command
         return false;
     }
 
-    public static function calculatePriceIndex(float $price, float $alcoholContent, int $volume): ?float
+    public static function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
     {
         if ($price == 0 || $alcoholContent == 0 || $volume == 0)
             return null;
@@ -187,11 +188,13 @@ class UpdateAlcoholData extends Command
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
 
-                if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
-                    Alcohol::query()->updateOrCreate(
-                        ['permanent_id' => $alcohol->permanentid],
-                        self::getProperties($alcohol)
-                    );
+                try {
+                    if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
+                        Alcohol::query()->updateOrCreate(
+                            ['permanent_id' => $alcohol->permanentid],
+                            self::getProperties($alcohol)
+                        );
+                } catch (Exception $e) {}
             });
 
             dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
