@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alcohol;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,7 @@ class AlcoholController extends Controller
 {
     public const DEFAULT_ALCOHOLS_RETURNED = 25;
 
-    public function show(Alcohol $alcohol)
+    public function show(Alcohol $alcohol): Alcohol
     {
         return $alcohol;
     }
@@ -125,7 +126,7 @@ class AlcoholController extends Controller
             ->take($numberOfResults);
     }
 
-    public function updatedStatus()
+    public function updatedStatus(): JsonResponse
     {
         $oneWeekAgoToday = Carbon::today()->subWeek();
         $updatedRecords = Alcohol::query()->where('updated_at', '>', $oneWeekAgoToday)->get();

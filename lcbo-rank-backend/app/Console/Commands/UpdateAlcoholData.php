@@ -15,21 +15,21 @@ class UpdateAlcoholData extends Command
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
-        "accept" => "*/*",
-        "User-Agent" => "Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion",
-        "accept-language" => "en-US,en;q=0.9",
-        "authorization" => self::AUTH_TOKEN,
-        "content-type" => "application/x-www-form-urlencoded; charset=UTF-8",
-        "sec-ch-ua" => "\".Not/A)Brand\";v=\"99\", \"Google Chrome\";v=\"103\", \"Chromium\";v=\"103\"",
-        "sec-ch-ua-mobile" => "?0",
-        "sec-ch-ua-platform" => "\"Windows\"",
-        "sec-fetch-dest" => "empty",
-        "sec-fetch-mode" => "cors",
-        "sec-fetch-site" => "cross-site",
-        "referrer" => "https://www.lcbo.com/",
-        "referrerPolicy" => "strict-origin-when-cross-origin",
-        "mode" => "cors",
-        "credentials" => "include",
+        'accept' => '*/*',
+        'User-Agent' => 'Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion',
+        'accept-language' => 'en-US,en;q=0.9',
+        'authorization' => self::AUTH_TOKEN,
+        'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+        'sec-ch-ua' => '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
+        'sec-ch-ua-mobile' => '?0',
+        'sec-ch-ua-platform' => '"Windows"',
+        'sec-fetch-dest' => 'empty',
+        'sec-fetch-mode' => 'cors',
+        'sec-fetch-site' => 'cross-site',
+        'referrer' => 'https://www.lcbo.com/',
+        'referrerPolicy' => 'strict-origin-when-cross-origin',
+        'mode' => 'cors',
+        'credentials' => 'include',
     ];
 
     protected $signature = 'alcohol:update {--category=Products}';
@@ -45,12 +45,12 @@ class UpdateAlcoholData extends Command
             $lowerCaseCategory != 'the big kahunas' &&
             $lowerCaseCategory != 'all'
         ) {
-            $this->error("Invalid category!");
+            $this->error('Invalid category!');
             return;
         }
 
         if ($lowerCaseCategory === 'the big kahunas' || $lowerCaseCategory === 'all') {
-            $this->info("it's big kahuna time!");
+            $this->info('it\'s big kahuna time!');
             collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
                 $this->fetchDataForGivenCategory($category);
             });
@@ -64,8 +64,8 @@ class UpdateAlcoholData extends Command
     {
         $title = trim($alcohol->title);
         $brand = $alcohol->ec_brand ?? null;
-        $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
-        $subcategory = explode("|", $alcohol->ec_category_filter[0])[2] ?? null;
+        $category = isset($alcohol->ec_category_filter) ? explode('|', $alcohol->ec_category_filter[0])[1] : '';
+        $subcategory = explode('|', $alcohol->ec_category_filter[0])[2] ?? null;
         $price = $alcohol->ec_price ?? -1;
         $volume = null;
         // todo refactor this trash
@@ -158,9 +158,9 @@ class UpdateAlcoholData extends Command
         $initResponse = Http::withHeaders(self::COPIED_HEADERS)
             ->asForm()
             ->post(self::SEARCH_REQ_URL, [
-                "aq" => "@ec_category=${category}",
-                "firstResult" => 0,
-                "numberOfResults" => 0,
+                'aq' => "@ec_category=${category}",
+                'firstResult' => 0,
+                'numberOfResults' => 0,
             ]);
         return min(json_decode($initResponse->body())->totalCount, 5000);
     }
@@ -181,9 +181,9 @@ class UpdateAlcoholData extends Command
             $response = Http::withHeaders(self::COPIED_HEADERS)
                 ->asForm()
                 ->post(self::SEARCH_REQ_URL, [
-                    "aq" => "@ec_category=${category}",
-                    "numberOfResults" => self::GET_IN_EACH_REQUEST,
-                    "firstResult" => $startIndex,
+                    'aq' => "@ec_category=${category}",
+                    'numberOfResults' => self::GET_IN_EACH_REQUEST,
+                    'firstResult' => $startIndex,
                 ]);
 
             $alcoholsReturned = collect(json_decode($response->body())->results);
@@ -197,14 +197,14 @@ class UpdateAlcoholData extends Command
                 $alcohol = $alcohol->raw;
 
                 try {
-                    if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
-                    {
+                    if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol)) {
                         Alcohol::query()->updateOrCreate(
                             ['permanent_id' => $alcohol->permanentid],
                             self::getProperties($alcohol)
                         );
                     }
-                } catch (Exception $e) {}
+                } catch (Exception $e) {
+                }
             });
             $progressBar->advance();
             sleep(0.5);

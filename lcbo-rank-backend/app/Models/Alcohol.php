@@ -968,8 +968,6 @@ class Alcohol extends Model
         28009, // georgian bay + sunglasses (#1)
     ];
 
-    use HasFactory;
-
     public const BEER_AND_CIDER = "Beer & Cider";
     public const RED_WINE = "Wine|Red Wine";
     public const WHITE_WINE = "Wine|White Wine";
@@ -998,6 +996,8 @@ class Alcohol extends Model
         self::TEQUILA,
         self::COOLER
     ];
+
+    use HasFactory;
 
     protected $primaryKey = 'permanent_id';
 
