@@ -25,12 +25,12 @@ class UpdateAlcoholDataTest extends TestCase
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
                 ->push(FixtureLoader::loadRawFixture('empty-response'),
                     200,
-                    ["content-type" => "application/json"]
+                    ['content-type' => 'application/json']
                 )
                 ->whenEmpty(Http::response(
                     FixtureLoader::loadRawFixture('beer-response-chunk'),
                     200,
-                    ["content-type" => "application/json"])
+                    ['content-type' => 'application/json'])
                 )
         ]);
 
@@ -44,23 +44,23 @@ class UpdateAlcoholDataTest extends TestCase
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
                 ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-empty-response'),
                     200,
-                    ["content-type" => "application/json"]
+                    ['content-type' => 'application/json']
                 )
                 ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-chunk-a'),
                     200,
-                    ["content-type" => "application/json"]
+                    ['content-type' => 'application/json']
                 )
                 ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-chunk-b'),
                     200,
-                    ["content-type" => "application/json"]
+                    ['content-type' => 'application/json']
                 )
                 ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-chunk-c'),
                     200,
-                    ["content-type" => "application/json"]
+                    ['content-type' => 'application/json']
                 )
         ]);
 
-        $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
+        $this->artisan('alcohol:update --category="Products|Beer & Cider"');
         $this->assertDatabaseCount('alcohols', 9);
     }
 
@@ -70,15 +70,15 @@ class UpdateAlcoholDataTest extends TestCase
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
                 ->push(FixtureLoader::loadRawFixture('empty-response'),
                     200,
-                    ["content-type" => "application/json"]
+                    ['content-type' => 'application/json']
                 )
                 ->push(FixtureLoader::loadRawFixture('blacklisted-response-chunk'),
                     200,
-                    ["content-type" => "application/json"]
+                    ['content-type' => 'application/json']
                 )
         ]);
 
-        $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
+        $this->artisan('alcohol:update --category="Products|Beer & Cider"');
         $this->assertDatabaseCount('alcohols', 1);
     }
 
@@ -89,11 +89,11 @@ class UpdateAlcoholDataTest extends TestCase
                 ->whenEmpty(Http::response(
                     FixtureLoader::loadRawFixture('beer-response-chunk'),
                     200,
-                    ["content-type" => "application/json"])
+                    ['content-type' => 'application/json'])
                 )
         ]);
 
-        $this->artisan("alcohol:update --category=\"THE BIG KAHUNAS\"");
+        $this->artisan('alcohol:update --category="THE BIG KAHUNAS"');
         collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
             Http::assertSent(function (Request $request) use ($category) {
                 return $request['aq'] == "@ec_category=$category";

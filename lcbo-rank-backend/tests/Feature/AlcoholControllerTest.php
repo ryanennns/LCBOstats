@@ -21,7 +21,7 @@ class AlcoholControllerTest extends TestCase
     /**
      * @dataProvider alcoholSortProvider
      */
-    public function test_it_can_sort_alcohols_by_field($sortField)
+    public function test_it_can_sort_alcohols_by_field($sortField): void
     {
         $response = $this->get("/api/alcohol?sortBy=$sortField");
 
@@ -48,7 +48,7 @@ class AlcoholControllerTest extends TestCase
         ];
     }
 
-    public function test_it_can_choose_a_number_of_results()
+    public function test_it_can_choose_a_number_of_results(): void
     {
         Alcohol::factory(400)->create();
         $numberOfResults = 420;
@@ -75,7 +75,7 @@ class AlcoholControllerTest extends TestCase
             $this->assertGreaterThanOrEqual($filterValue, $res->$alcoholProperty);
     }
 
-    public function filterMinConditionProvider()
+    public function filterMinConditionProvider(): array
     {
         return [
             'min price index' => [
@@ -105,7 +105,7 @@ class AlcoholControllerTest extends TestCase
      * @return void
      * @dataProvider filterMaxConditionProvider
      */
-    public function test_it_can_filter_by_max_values($filterValue, $queryParameter, $alcoholProperty)
+    public function test_it_can_filter_by_max_values($filterValue, $queryParameter, $alcoholProperty): void
     {
         $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
         $responseJson = json_decode($response->getContent());
@@ -115,7 +115,7 @@ class AlcoholControllerTest extends TestCase
             $this->assertLessThanOrEqual($filterValue, $res->$alcoholProperty);
     }
 
-    public function filterMaxConditionProvider()
+    public function filterMaxConditionProvider(): array
     {
         return [
             'max price index' => [
@@ -164,7 +164,7 @@ class AlcoholControllerTest extends TestCase
         }
     }
 
-    public function provideCategoryFilters()
+    public function provideCategoryFilters(): array
     {
         return [
             'filter for \'Beer & Cider\'' => ['Beer & Cider'],
@@ -174,9 +174,9 @@ class AlcoholControllerTest extends TestCase
         ];
     }
 
-    public function test_it_can_filter_by_stock_status()
+    public function test_it_can_filter_by_stock_status(): void
     {
-        $response = $this->get("/api/alcohol?outOfStock=false");
+        $response = $this->get('/api/alcohol?outOfStock=false');
 
         $responseJson = json_decode($response->getContent());
 
@@ -185,7 +185,7 @@ class AlcoholControllerTest extends TestCase
             $this->assertEquals(false, $res->out_of_stock);
     }
 
-    public function test_it_returns_default_number_of_results_if_no_parameter_specified()
+    public function test_it_returns_default_number_of_results_if_no_parameter_specified(): void
     {
         $response = $this->get('/api/alcohol');
 
@@ -195,7 +195,7 @@ class AlcoholControllerTest extends TestCase
         $this->assertCount(25, $responseJson);
     }
 
-    public function test_it_returns_true_if_records_have_been_updated_recently()
+    public function test_it_returns_true_if_records_have_been_updated_recently(): void
     {
         Alcohol::factory()->create([
             'updated_at' => Carbon::today()->subDays(3),
@@ -208,7 +208,7 @@ class AlcoholControllerTest extends TestCase
             ]);
     }
 
-    public function test_it_returns_false_if_no_records_have_been_updated_recently()
+    public function test_it_returns_false_if_no_records_have_been_updated_recently(): void
     {
         $this->get('/api/alcohol/updated')
             ->assertSuccessful()
