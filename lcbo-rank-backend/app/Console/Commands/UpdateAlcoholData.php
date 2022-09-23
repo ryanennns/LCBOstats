@@ -35,7 +35,6 @@ class UpdateAlcoholData extends Command
     protected $signature = 'alcohol:update {--category=Products}';
     protected $description = 'Updates the database with the latest information from the LCBO\'s API.';
 
-    // todo refactor dumps to proper console out
     // todo handle exceptions (undefined stdClass::$results)
     public function handle(): void
     {
