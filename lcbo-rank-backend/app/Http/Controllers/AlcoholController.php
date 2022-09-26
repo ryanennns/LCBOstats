@@ -126,13 +126,14 @@ class AlcoholController extends Controller
             ->take($numberOfResults);
     }
 
+    // todo test this
     public function updatedStatus(): JsonResponse
     {
-        $oneWeekAgoToday = Carbon::today()->subWeek();
-        $updatedRecords = Alcohol::query()->where('updated_at', '>', $oneWeekAgoToday)->get();
+        $oneDayAgo = Carbon::today()->subDay();
+        $updatedRecords = Alcohol::query()->where('updated_at', '<', $oneDayAgo)->get();
 
         return response()->json([
-            'recordsUpdated' => !!$updatedRecords->count(),
+            'recordsUpdated' => $updatedRecords->toJson(),
         ]);
     }
 }
