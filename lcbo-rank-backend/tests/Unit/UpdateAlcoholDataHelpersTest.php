@@ -3,7 +3,6 @@
 
 use App\Console\Commands\UpdateAlcoholData;
 use PHPUnit\Framework\TestCase;
-use Tests\Fixtures\FixtureLoader;
 
 class UpdateAlcoholDataHelpersTest extends TestCase
 {

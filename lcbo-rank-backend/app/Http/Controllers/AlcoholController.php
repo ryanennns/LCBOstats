@@ -13,7 +13,7 @@ class AlcoholController extends Controller
 {
     public const DEFAULT_ALCOHOLS_RETURNED = 25;
 
-    public function show(Alcohol $alcohol)
+    public function show(Alcohol $alcohol): Alcohol
     {
         return $alcohol;
     }

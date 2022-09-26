@@ -6,6 +6,7 @@ use App\Models\Alcohol;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use stdClass;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class UpdateAlcoholData extends Command
 {
@@ -13,80 +14,58 @@ class UpdateAlcoholData extends Command
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
-        "accept" => "*/*",
-        "User-Agent" => "Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion",
-        "accept-language" => "en-US,en;q=0.9",
-        "authorization" => self::AUTH_TOKEN,
-        "content-type" => "application/x-www-form-urlencoded; charset=UTF-8",
-        "sec-ch-ua" => "\".Not/A)Brand\";v=\"99\", \"Google Chrome\";v=\"103\", \"Chromium\";v=\"103\"",
-        "sec-ch-ua-mobile" => "?0",
-        "sec-ch-ua-platform" => "\"Windows\"",
-        "sec-fetch-dest" => "empty",
-        "sec-fetch-mode" => "cors",
-        "sec-fetch-site" => "cross-site",
-        "referrer" => "https://www.lcbo.com/",
-        "referrerPolicy" => "strict-origin-when-cross-origin",
-        "mode" => "cors",
-        "credentials" => "include",
+        'accept' => '*/*',
+        'User-Agent' => 'Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion',
+        'accept-language' => 'en-US,en;q=0.9',
+        'authorization' => self::AUTH_TOKEN,
+        'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+        'sec-ch-ua' => '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
+        'sec-ch-ua-mobile' => '?0',
+        'sec-ch-ua-platform' => '"Windows"',
+        'sec-fetch-dest' => 'empty',
+        'sec-fetch-mode' => 'cors',
+        'sec-fetch-site' => 'cross-site',
+        'referrer' => 'https://www.lcbo.com/',
+        'referrerPolicy' => 'strict-origin-when-cross-origin',
+        'mode' => 'cors',
+        'credentials' => 'include',
     ];
 
     protected $signature = 'alcohol:update {--category=Products}';
     protected $description = 'Updates the database with the latest information from the LCBO\'s API.';
 
-    // todo refactor dumps to proper console out
     // todo handle exceptions (undefined stdClass::$results)
     public function handle(): void
     {
-        $category = $this->option('category');
-        if (!in_array($category, Alcohol::FORMATTED_CATEGORIES)) {
-            dump("Invalid category!");
+        $category = ($this->option('category'));
+        $lowerCaseCategory = strtolower($category);
+
+        if (!in_array($category, Alcohol::THE_BIG_KAHUNAS) &&
+            $lowerCaseCategory != 'the big kahunas' &&
+            $lowerCaseCategory != 'all'
+        ) {
+            $this->error('Invalid category!');
             return;
         }
 
-        $startIndex = 0;
-        $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
-        $recordsScraped = 0;
-
-        while ($startIndex < $expectedNumberOfRecords) {
-            $response = Http::withHeaders(self::COPIED_HEADERS)
-                ->asForm()
-                ->post(self::SEARCH_REQ_URL, [
-                    "aq" => "@ec_category=${category}",
-                    "numberOfResults" => self::GET_IN_EACH_REQUEST,
-                    "firstResult" => $startIndex,
-                ]);
-
-            $alcoholsReturned = collect(json_decode($response->body())->results);
-            $recordsScraped += $alcoholsReturned->count();
-            $startIndex += $alcoholsReturned->count();
-
-            if ($recordsScraped == 0) // a failsafe from the old python script
-                break;
-
-            $alcoholsReturned->each(function ($alcohol) {
-                $alcohol = $alcohol->raw;
-
-                if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol))
-                    Alcohol::query()->updateOrCreate(
-                        ['permanent_id' => $alcohol->permanentid],
-                        self::getProperties($alcohol)
-                    );
+        if ($lowerCaseCategory === 'the big kahunas' || $lowerCaseCategory === 'all') {
+            $this->info('it\'s big kahuna time!');
+            collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
+                $this->fetchDataForGivenCategory($category);
             });
-
-            dump("Scraped: $recordsScraped / $expectedNumberOfRecords");
-            sleep(0.5);
+        } else {
+            $this->fetchDataForGivenCategory($category);
         }
     }
 
-    // headaches ! :)
     public static function getProperties(stdClass $alcohol): array
     {
         $title = trim($alcohol->title);
         $brand = $alcohol->ec_brand ?? null;
-        $category = isset($alcohol->ec_category_filter) ? explode("|", $alcohol->ec_category_filter[0])[1] : "";
-        $subcategory = explode("|", $alcohol->ec_category_filter[0])[2] ?? null;
+        $category = isset($alcohol->ec_category_filter) ? explode('|', $alcohol->ec_category_filter[0])[1] : '';
+        $subcategory = explode('|', $alcohol->ec_category_filter[0])[2] ?? null;
         $price = $alcohol->ec_price ?? -1;
-        $volume = -1;
+        $volume = null;
         // todo refactor this trash
         if (!isset($alcohol->lcbo_total_volume)) {
             if (isset($alcohol->lcbo_unit_volume)) {
@@ -128,10 +107,6 @@ class UpdateAlcoholData extends Command
         ];
     }
 
-    /**
-     * @param string $truncatedValue
-     * @return int
-     */
     public static function truncatedVolumeToInteger(string $truncatedValue): int
     {
         $volumes = collect(explode('x', $truncatedValue));
@@ -153,12 +128,12 @@ class UpdateAlcoholData extends Command
 
     public function isAlcoholAPromotion(stdClass $alcohol): bool
     {
-        collect($alcohol->ec_category)->each(function (string $categoryLayer) {
+        $returnValue = false;
+        collect($alcohol->ec_category)->each(function (string $categoryLayer) use (&$returnValue) {
             if (str_contains('Promotion', $categoryLayer))
-                return true;
+                $returnValue = true;
         });
-
-        return false;
+        return $returnValue;
     }
 
     public function isAlcoholBlacklisted(stdClass $alcohol): bool
@@ -168,7 +143,7 @@ class UpdateAlcoholData extends Command
         return false;
     }
 
-    public static function calculatePriceIndex($price, $alcoholContent, $volume): ?float
+    public static function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
     {
         if ($price == 0 || $alcoholContent == 0 || $volume == 0)
             return null;
@@ -176,24 +151,77 @@ class UpdateAlcoholData extends Command
             return $price / (($alcoholContent / 100) * $volume);
     }
 
-    /**
-     * @param string $category
-     * @return int
-     */
     public function getExpectedNumberOfRecords(string $category): int
     {
         $initResponse = Http::withHeaders(self::COPIED_HEADERS)
             ->asForm()
             ->post(self::SEARCH_REQ_URL, [
-                "aq" => "@ec_category=${category}",
-                "firstResult" => 0,
-                "numberOfResults" => 0,
+                'aq' => "@ec_category=${category}",
+                'firstResult' => 0,
+                'numberOfResults' => 0,
             ]);
         return min(json_decode($initResponse->body())->totalCount, 5000);
     }
-}
 
-/*
- * FIND DUPLICATES QUERY
-    select *, count(*) from alcohols group by permanent_id having count(*) > 1;
- */
+    public function fetchDataForGivenCategory(string $category): void
+    {
+        $startIndex = 0;
+        $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
+        $recordsScraped = 0;
+
+        ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max%\t{%bar%}\n");
+        $progressBar = $this->output->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
+        $progressBar->setFormat('custom');
+        $progressBar->setMessage($category);
+        $progressBar->start();
+
+        while ($startIndex < $expectedNumberOfRecords) {
+            $response = Http::withHeaders(self::COPIED_HEADERS)
+                ->asForm()
+                ->post(self::SEARCH_REQ_URL, [
+                    'aq' => "@ec_category=${category}",
+                    'numberOfResults' => self::GET_IN_EACH_REQUEST,
+                    'firstResult' => $startIndex,
+                ]);
+
+            $alcoholsReturned = collect(json_decode($response->body())->results);
+            $recordsScraped += $alcoholsReturned->count();
+            $startIndex += $alcoholsReturned->count();
+
+            if ($recordsScraped == 0) // a failsafe from the old python script
+                break;
+
+            $alcoholsReturned->each(function ($alcohol) {
+                $alcohol = $alcohol->raw;
+
+                if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol)) {
+                    $alcoholModel = Alcohol::query()->firstOrCreate(
+                        ['permanent_id' => $alcohol->permanentid],
+                        self::getProperties($alcohol)
+                    );
+
+                    if (!$alcoholModel->wasRecentlyCreated &&
+                        !$this->areAlcoholsEqual(json_decode($alcoholModel->toJson()), $alcohol)
+                    ) {
+                        $alcoholModel
+                            ->setRawAttributes(self::getProperties($alcohol))
+                            ->save();
+                    }
+                }
+            });
+            $progressBar->advance();
+            sleep(0.5);
+        }
+    }
+
+    public function areAlcoholsEqual(stdClass $alcoholModel, stdClass $alcohol): bool
+    {
+        $equality = true;
+        collect(self::getProperties($alcohol))->each(function ($value, $key) use ($alcoholModel, &$equality) {
+            if ($key != 'price_index' && !($alcoholModel->$key == $value)) {
+                $equality = false;
+            }
+        });
+        return $equality;
+    }
+}

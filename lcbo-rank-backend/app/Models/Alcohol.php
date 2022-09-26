@@ -949,14 +949,24 @@ class Alcohol extends Model
         "Vintages|Exclusivités en ligne|Vins de luxe",
         "Vintages|Online Exclusives|Luxe"
     ];
+    public const THE_BIG_KAHUNAS = [
+        "Products|Beer & Cider",
+        "Products|Spirits",
+        "Products|Coolers",
+        "Products|Wine|Red Wine",
+        "Products|Wine|White Wine",
+        "Products|Wine|Sparkling Wine",
+        "Products|Wine|Rose Wine",
+        "Products|Wine|Fortified Wine",
+        "Products|Wine|Champagne",
+    ];
 
+    // todo refactor blacklisted ids to be config values?
     public const BLACKLISTED_IDS = [
         21514,
         27049, // smirnoff
         28009, // georgian bay + sunglasses (#1)
     ];
-
-    use HasFactory;
 
     public const BEER_AND_CIDER = "Beer & Cider";
     public const RED_WINE = "Wine|Red Wine";
@@ -986,6 +996,8 @@ class Alcohol extends Model
         self::TEQUILA,
         self::COOLER
     ];
+
+    use HasFactory;
 
     protected $primaryKey = 'permanent_id';
 
