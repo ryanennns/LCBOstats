@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Alcohol;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Mockery\Exception;
 use stdClass;
 use Symfony\Component\Console\Helper\ProgressBar;
 
@@ -40,6 +39,7 @@ class UpdateAlcoholData extends Command
     {
         $category = ($this->option('category'));
         $lowerCaseCategory = strtolower($category);
+
         if (!in_array($category, Alcohol::THE_BIG_KAHUNAS) &&
             $lowerCaseCategory != 'the big kahunas' &&
             $lowerCaseCategory != 'all'
@@ -194,18 +194,34 @@ class UpdateAlcoholData extends Command
             $alcoholsReturned->each(function ($alcohol) {
                 $alcohol = $alcohol->raw;
 
-                try {
-                    if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol)) {
-                        Alcohol::query()->updateOrCreate(
-                            ['permanent_id' => $alcohol->permanentid],
-                            self::getProperties($alcohol)
-                        );
+                if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol)) {
+                    $alcoholModel = Alcohol::query()->firstOrCreate(
+                        ['permanent_id' => $alcohol->permanentid],
+                        self::getProperties($alcohol)
+                    );
+
+                    if (!$alcoholModel->wasRecentlyCreated &&
+                        !$this->areAlcoholsEqual(json_decode($alcoholModel->toJson()), $alcohol)
+                    ) {
+                        $alcoholModel
+                            ->setRawAttributes(self::getProperties($alcohol))
+                            ->save();
                     }
-                } catch (Exception $e) {
                 }
             });
             $progressBar->advance();
             sleep(0.5);
         }
+    }
+
+    public function areAlcoholsEqual(stdClass $alcoholModel, stdClass $alcohol): bool
+    {
+        $equality = true;
+        collect(self::getProperties($alcohol))->each(function ($value, $key) use ($alcoholModel, &$equality) {
+            if ($key != 'price_index' && !($alcoholModel->$key == $value)) {
+                $equality = false;
+            }
+        });
+        return $equality;
     }
 }
