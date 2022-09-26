@@ -165,7 +165,7 @@ class UpdateAlcoholDataTest extends TestCase
         $this->artisan('alcohol:update --category="Products|Beer & Cider"');
         $updated_at = Alcohol::query()->get()->pluck('updated_at')->first();
 
-        sleep(1);
+        Carbon::setTestNow(Carbon::now()->addHour());
 
         $this->artisan('alcohol:update --category="Products|Beer & Cider"');
 
