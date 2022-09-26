@@ -244,4 +244,25 @@ class UpdateAlcoholDataTest extends TestCase
                 ->first()
         );
     }
+
+    public function test_it_wont_insert_promotions()
+    {
+        Http::fake([
+            UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
+                ->push(FixtureLoader::loadRawFixture('empty-response'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+                ->push(
+                    FixtureLoader::loadRawFixture('promotion-response-chunk'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+                ->whenEmpty(Http::response())
+        ]);
+
+        $this->artisan('alcohol:update --category="Products|Beer & Cider"');
+
+        $this->assertDatabaseCount('alcohols', 2);
+    }
 }
