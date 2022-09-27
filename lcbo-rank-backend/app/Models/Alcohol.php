@@ -1020,5 +1020,4 @@ class Alcohol extends Model
         'reviews',
         'permanent_id'
     ];
-
 }
