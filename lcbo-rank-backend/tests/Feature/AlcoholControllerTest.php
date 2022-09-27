@@ -195,28 +195,22 @@ class AlcoholControllerTest extends TestCase
         $this->assertCount(25, $responseJson);
     }
 
-    public function test_it_returns_true_if_records_have_been_updated_recently(): void
+    public function test_it_returns_records_updated_after_specified_date()
     {
-        self::markTestSkipped();
-
-        Alcohol::factory()->create([
-            'updated_at' => Carbon::today()->subDays(3),
+        $collection = Alcohol::factory(3)->create([
+            'updated_at' => Carbon::now()->subDays(3),
         ]);
 
-        $this->get('/api/alcohol/updated')
-            ->assertSuccessful()
-            ->assertJson([
-                'recordsUpdated' => true,
+        $updatedSince = Carbon::now()->subWeek();
+        $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince")
+            ->assertOk()
+            ->assertJsonFragment([
+                'recordsUpdated' => json_encode($collection[0])
             ]);
     }
 
-    public function test_it_returns_false_if_no_records_have_been_updated_recently(): void
+    public function test_it_doesnt_return_records_updated_before_specified_date()
     {
         self::markTestSkipped();
-        $this->get('/api/alcohol/updated')
-            ->assertSuccessful()
-            ->assertJson([
-                'recordsUpdated' => false,
-            ]);
     }
 }
