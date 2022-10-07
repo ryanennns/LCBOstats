@@ -1000,6 +1000,7 @@ class Alcohol extends Model
     use HasFactory;
 
     protected $primaryKey = 'permanent_id';
+    public $incrementing = false;
 
     protected $fillable = [
         'title',

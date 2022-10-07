@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Alcohol;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use PHPUnit\Framework\SkippedTest;
 use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
@@ -159,7 +158,7 @@ class AlcoholControllerTest extends TestCase
 
         $this->assertNotEmpty($responseJson);
 
-        foreach($responseJson as $alcohol) {
+        foreach ($responseJson as $alcohol) {
             $this->assertEquals($alcohol->category, $category);
         }
     }
@@ -197,24 +196,30 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_returns_records_updated_after_specified_date()
     {
-        $collection = Alcohol::factory(3)->create([
-            'updated_at' => Carbon::now()->subDays(3),
+        $updated_at = Carbon::now()->subDays(3);
+        $expectedAlcohols = Alcohol::factory(3)->create([
+            'updated_at' => $updated_at,
         ]);
 
         $updatedSince = Carbon::now()->subWeek();
         $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
 
-        dump($response->getContent());
-//        dd(json_encode(['recordsUpdated' => [$collection[0]]]));
-        $response
-            ->assertOk()
-            ->assertJsonFragment([
-                'recordsUpdated' => [$collection[0]]
+        $response->assertOk()
+            ->assertJsonCount(3, 'recordsUpdated');
+
+        $expectedAlcohols->each(function ($alcohol) use ($response, $expectedAlcohols) {
+            $response->assertJsonFragment([
+                'permanent_id' => $alcohol->permanent_id,
             ]);
+        });
     }
 
     public function test_it_doesnt_return_records_updated_before_specified_date()
     {
-        self::markTestSkipped();
+        $updatedSince = Carbon::now()->subWeek();
+        $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
+
+        $response->assertOk()
+            ->assertJsonCount(0, 'recordsUpdated');
     }
 }

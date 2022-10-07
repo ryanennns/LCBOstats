@@ -130,8 +130,10 @@ class AlcoholController extends Controller
     public function getUpdated(Request $request): JsonResponse
     {
         $updatedSince = $request->input('updatedSince', Carbon::now()->subWeek());
-        $updatedRecords = Alcohol::query()->where('updated_at', '>', $updatedSince)->get();
-//        dd(['recordsUpdated' => $updatedRecords->toArray()]);
+        $updatedRecords = Alcohol::query()
+            ->where('updated_at', '>', $updatedSince)
+            ->orderBy('permanent_id')
+            ->get();
 
         return response()->json([
             'recordsUpdated' => $updatedRecords->toArray(),
