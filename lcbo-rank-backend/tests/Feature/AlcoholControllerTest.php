@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Alcohol;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use PHPUnit\Framework\SkippedTest;
 use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
@@ -159,7 +158,7 @@ class AlcoholControllerTest extends TestCase
 
         $this->assertNotEmpty($responseJson);
 
-        foreach($responseJson as $alcohol) {
+        foreach ($responseJson as $alcohol) {
             $this->assertEquals($alcohol->category, $category);
         }
     }
@@ -195,28 +194,32 @@ class AlcoholControllerTest extends TestCase
         $this->assertCount(25, $responseJson);
     }
 
-    public function test_it_returns_true_if_records_have_been_updated_recently(): void
+    public function test_it_returns_records_updated_after_specified_date()
     {
-        self::markTestSkipped();
-
-        Alcohol::factory()->create([
-            'updated_at' => Carbon::today()->subDays(3),
+        $updated_at = Carbon::now()->subDays(3);
+        $expectedAlcohols = Alcohol::factory(3)->create([
+            'updated_at' => $updated_at,
         ]);
 
-        $this->get('/api/alcohol/updated')
-            ->assertSuccessful()
-            ->assertJson([
-                'recordsUpdated' => true,
+        $updatedSince = Carbon::now()->subWeek();
+        $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
+
+        $response->assertOk()
+            ->assertJsonCount(3, 'recordsUpdated');
+
+        $expectedAlcohols->each(function ($alcohol) use ($response, $expectedAlcohols) {
+            $response->assertJsonFragment([
+                'permanent_id' => $alcohol->permanent_id,
             ]);
+        });
     }
 
-    public function test_it_returns_false_if_no_records_have_been_updated_recently(): void
+    public function test_it_doesnt_return_records_updated_before_specified_date()
     {
-        self::markTestSkipped();
-        $this->get('/api/alcohol/updated')
-            ->assertSuccessful()
-            ->assertJson([
-                'recordsUpdated' => false,
-            ]);
+        $updatedSince = Carbon::now()->subWeek();
+        $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
+
+        $response->assertOk()
+            ->assertJsonCount(0, 'recordsUpdated');
     }
 }

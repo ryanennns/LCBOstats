@@ -13,9 +13,9 @@ class AlcoholController extends Controller
 {
     public const DEFAULT_ALCOHOLS_RETURNED = 25;
 
-    public function show(Alcohol $alcohol): Alcohol
+    public function show(Alcohol $alcohol): JsonResponse
     {
-        return $alcohol;
+        return response()->json($alcohol);
     }
 
     public function getEfficient(
@@ -127,13 +127,16 @@ class AlcoholController extends Controller
     }
 
     // todo test this
-    public function updatedStatus(): JsonResponse
+    public function getUpdated(Request $request): JsonResponse
     {
-        $oneDayAgo = Carbon::today()->subDay();
-        $updatedRecords = Alcohol::query()->where('updated_at', '<', $oneDayAgo)->get();
+        $updatedSince = $request->input('updatedSince', Carbon::now()->subWeek());
+        $updatedRecords = Alcohol::query()
+            ->where('updated_at', '>', $updatedSince)
+            ->orderBy('permanent_id')
+            ->get();
 
         return response()->json([
-            'recordsUpdated' => $updatedRecords->toJson(),
+            'recordsUpdated' => $updatedRecords->toArray(),
         ]);
     }
 }
