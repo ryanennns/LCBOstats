@@ -131,7 +131,6 @@ class AlcoholController extends Controller
     {
         $updatedSince = $request->input('updatedSince', Carbon::now()->subWeek());
         $updatedRecords = Alcohol::query()->where('updated_at', '>', $updatedSince)->get();
-
 //        dd(['recordsUpdated' => $updatedRecords->toArray()]);
 
         return response()->json([
