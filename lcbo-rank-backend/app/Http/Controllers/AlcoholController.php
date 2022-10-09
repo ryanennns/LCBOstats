@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class AlcoholController extends Controller
 {
@@ -30,7 +29,7 @@ class AlcoholController extends Controller
 
         $numberOfResults = $request->input('numberOfResults', AlcoholController::DEFAULT_ALCOHOLS_RETURNED);
 
-        $query = DB::table('alcohols')->orderBy('price_index');
+        $query = Alcohol::query()->orderBy('price_index'); // todo refactor this trash
 
         if ($category)
             $query->where('category', '=', $category);
@@ -43,12 +42,13 @@ class AlcoholController extends Controller
             ->where('price_index', '<', $maxIndex)
             ->orderBy('price_index', $sortAscendingDescending)
             ->get()
-            ->take($numberOfResults);
+            ->take($numberOfResults)
+            ->toArray();
     }
 
     public function getDefault(Request $request): Collection
     {
-        $id = $request->input('id', '');
+        $permanent_id = $request->input('permanent_id', '');
         $title = $request->input('title', '');
         $brand = $request->input('brand', '');
         $category = $request->input('category', '');
@@ -74,13 +74,13 @@ class AlcoholController extends Controller
             AlcoholController::DEFAULT_ALCOHOLS_RETURNED
         );
 
-        $query = DB::table('alcohols');
+        $query = Alcohol::query();
 
         if ($sortAscendingDescending != 'asc' && $sortAscendingDescending != 'desc')
             $sortAscendingDescending = 'desc';
 
-        if ($id)
-            $query->where('id', '=', $id);
+        if ($permanent_id)
+            $query->where('permanent_id', '=', $permanent_id);
 
         if ($title)
             $query->where('title', '=', $title);
@@ -102,8 +102,6 @@ class AlcoholController extends Controller
 
         if ($sortCondition)
             $query->orderBy($sortCondition, $sortAscendingDescending);
-
-        // todo introduce conditions on these?
 
         // INDEX
         $query->where('price_index', '<=', $maxIndex);

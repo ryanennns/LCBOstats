@@ -7,9 +7,9 @@ use App\Models\Alcohol;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
 use Tests\Fixtures\FixtureLoader;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 
 class UpdateAlcoholDataTest extends TestCase
 {

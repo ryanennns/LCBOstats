@@ -66,11 +66,8 @@ class UpdateAlcoholData extends Command
         $subcategory = explode('|', $alcohol->ec_category_filter[0])[2] ?? null;
         $price = $alcohol->ec_price ?? -1;
         $volume = null;
-        // todo refactor this trash
-        if (!isset($alcohol->lcbo_total_volume)) {
-            if (isset($alcohol->lcbo_unit_volume)) {
-                $volume = self::truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
-            }
+        if (!isset($alcohol->lcbo_total_volume) && isset($alcohol->lcbo_unit_volume)) {
+            $volume = self::truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
         } else {
             $volume = $alcohol->lcbo_total_volume;
         }
@@ -203,9 +200,7 @@ class UpdateAlcoholData extends Command
                     if (!$alcoholModel->wasRecentlyCreated &&
                         !$this->areAlcoholsEqual(json_decode($alcoholModel->toJson()), $alcohol)
                     ) {
-                        $alcoholModel
-                            ->setRawAttributes(self::getProperties($alcohol))
-                            ->save();
+                        $alcoholModel->update(self::getProperties($alcohol));
                     }
                 }
             });

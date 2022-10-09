@@ -18,6 +18,55 @@ class AlcoholControllerTest extends TestCase
     }
 
     /**
+     * @return void
+     */
+    public function test_it_returns_alcohols_in_expected_shape()
+    {
+        /** @var Alcohol $alcohol */
+        $alcohol = Alcohol::factory()->create([
+            'permanent_id' => 1243567890,
+            'title' => "Ryan's World Famous",
+            'brand' => "Big Ry's",
+            'category' => 'Spirits',
+            'subcategory' => 'Gin',
+            'price' => 3.50,
+            'volume' => 69,
+            'alcohol_content' => 12,
+            'price_index' => 1,
+            'country' => 'Canuckland',
+            'url' => 'https://www.meme.com',
+            'thumbnail_url' => 'https://www.meme.com/thumbanil',
+            'image_url' => 'https://www.meme.com/image',
+            'rating' => 5.0,
+            'reviews' => 100,
+            'out_of_stock' => false,
+            'description' => 'it tastes so good :P',
+        ]);
+
+        $response = $this->get("api/alcohol/$alcohol->permanent_id")
+            ->assertOk()
+            ->assertJson([
+                'permanent_id' => $alcohol->permanent_id,
+                'title' => $alcohol->title,
+                'brand' => $alcohol->brand,
+                'category' => $alcohol->category,
+                'subcategory' => $alcohol->subcategory,
+                'price' => $alcohol->price,
+                'volume' => $alcohol->volume,
+                'alcohol_content' => $alcohol->alcohol_content,
+                'price_index' => $alcohol->price_index,
+                'country' => $alcohol->country,
+                'url' => $alcohol->url,
+                'thumbnail_url' => $alcohol->thumbnail_url,
+                'image_url' => $alcohol->image_url,
+                'rating' => $alcohol->rating,
+                'reviews' => $alcohol->reviews,
+                'out_of_stock' => $alcohol->out_of_stock,
+                'description' => $alcohol->description,
+            ]);
+    }
+
+    /**
      * @dataProvider alcoholSortProvider
      */
     public function test_it_can_sort_alcohols_by_field($sortField): void
@@ -44,6 +93,7 @@ class AlcoholControllerTest extends TestCase
             'sort by price_index' => ['sortField' => 'price_index'],
             'sort by country' => ['sortField' => 'country'],
             'sort by rating' => ['sortField' => 'rating'],
+            'sort by out_of_stock' => ['sortField' => 'out_of_stock'],
         ];
     }
 
@@ -221,5 +271,37 @@ class AlcoholControllerTest extends TestCase
 
         $response->assertOk()
             ->assertJsonCount(0, 'recordsUpdated');
+    }
+
+    public function test_it_can_get_efficient_alcohols()
+    {
+        self::markTestSkipped('TODO');
+    }
+
+    /**
+     * @return void
+     * @dataProvider provideAttributes
+     */
+    public function test_it_can_select_attributes($key, $attribute)
+    {
+        Alcohol::factory(1)->create([$key => $attribute]);
+
+        $response = $this->get("/api/alcohol?$key=$attribute")
+            ->assertOk()
+            ->assertJsonFragment([
+                $key => $attribute
+            ]);
+    }
+
+    public function provideAttributes()
+    {
+        return [
+            'permanent_id' => ['permanent_id', 25672],
+            'title' => ['title' ,"Ryan's testing booze"],
+            'brand' => ['brand' ,"Ryan's"],
+            'category' => ['category' ,'Spirits'],
+            'subcategory' => ['subcategory' ,'asdf-ghjkl'],
+            'country' => ['country' ,'the pacific ocean'],
+        ];
     }
 }
