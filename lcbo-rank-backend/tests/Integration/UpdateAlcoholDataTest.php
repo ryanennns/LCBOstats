@@ -35,15 +35,15 @@ class UpdateAlcoholDataTest extends TestCase
     public function provideAlcoholCategories(): array
     {
         return [
-            'Beer & Cider'=> [Alcohol::BEER_AND_CIDER],
+            'Beer & Cider' => [Alcohol::BEER_AND_CIDER],
             'Coolers' => [Alcohol::COOLER],
-            'Spirits'=> [Alcohol::SPIRITS],
+            'Spirits' => [Alcohol::SPIRITS],
             'Red Wine' => [Alcohol::RED_WINE],
-            'White Wine'=> [Alcohol::WHITE_WINE],
+            'White Wine' => [Alcohol::WHITE_WINE],
             'Rose Wine' => [Alcohol::ROSE_WINE],
-            'Fortified Wine'=> [Alcohol::FORTIFIED_WINE],
+            'Fortified Wine' => [Alcohol::FORTIFIED_WINE],
             'Sparkling Wine' => [Alcohol::SPARKLING_WINE],
-            'Champagne'=> [Alcohol::CHAMPAGNE],
+            'Champagne' => [Alcohol::CHAMPAGNE],
         ];
     }
 }
