@@ -297,11 +297,11 @@ class AlcoholControllerTest extends TestCase
     {
         return [
             'permanent_id' => ['permanent_id', 25672],
-            'title' => ['title' ,"Ryan's testing booze"],
-            'brand' => ['brand' ,"Ryan's"],
-            'category' => ['category' ,'Spirits'],
-            'subcategory' => ['subcategory' ,'asdf-ghjkl'],
-            'country' => ['country' ,'the pacific ocean'],
+            'title' => ['title', "Ryan's testing booze"],
+            'brand' => ['brand', "Ryan's"],
+            'category' => ['category', 'Spirits'],
+            'subcategory' => ['subcategory', 'asdf-ghjkl'],
+            'country' => ['country', 'the pacific ocean'],
         ];
     }
 }

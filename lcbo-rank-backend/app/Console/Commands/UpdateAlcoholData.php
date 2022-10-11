@@ -44,7 +44,7 @@ class UpdateAlcoholData extends Command
             $lowerCaseCategory != 'the big kahunas' &&
             $lowerCaseCategory != 'all'
         ) {
-            $this->error('Invalid category!');
+            $this->error('Invalid category!'); // todo test for error throwing
             return;
         }
 

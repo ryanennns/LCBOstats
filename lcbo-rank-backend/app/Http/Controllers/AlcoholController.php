@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 
 class AlcoholController extends Controller
 {
+    // todo create a function to always return expected format
     public const DEFAULT_ALCOHOLS_RETURNED = 25;
 
     public function show(Alcohol $alcohol): JsonResponse
@@ -17,7 +18,7 @@ class AlcoholController extends Controller
         return response()->json($alcohol);
     }
 
-    public function getEfficient(
+    public function getEfficient( // todo test this?
         Request $request,
         string  $category = '',
         string  $subcategory = ''

@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 class UpdateAlcoholDataHelpersTest extends TestCase
 {
     /**
+     * @param $truncatedValue
+     * @param $expectedResult
      * @return void
      * @dataProvider provideTruncatedValueStrings
      */
