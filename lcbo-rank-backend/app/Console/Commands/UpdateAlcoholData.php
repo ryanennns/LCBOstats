@@ -69,7 +69,7 @@ class UpdateAlcoholData extends Command
         if (!isset($alcohol->lcbo_total_volume) && isset($alcohol->lcbo_unit_volume)) {
             $volume = self::truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
         } else {
-            $volume = $alcohol->lcbo_total_volume;
+            $volume = $alcohol->lcbo_total_volume ?? 0.0;
         }
         $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
         $price_index = self::calculatePriceIndex($price, $alcohol_content, $volume);
