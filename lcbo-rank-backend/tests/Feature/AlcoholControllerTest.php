@@ -97,19 +97,6 @@ class AlcoholControllerTest extends TestCase
         ];
     }
 
-    public function test_it_can_choose_a_number_of_results(): void
-    {
-        Alcohol::factory(400)->create();
-        $numberOfResults = 420;
-
-        $response = $this->get("/api/alcohol?numberOfResults=$numberOfResults");
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertCount($numberOfResults, $responseJson);
-    }
-
     /**
      * @return void
      * @dataProvider filterMinConditionProvider
@@ -234,16 +221,6 @@ class AlcoholControllerTest extends TestCase
             $this->assertEquals(false, $res->out_of_stock);
     }
 
-    public function test_it_returns_default_number_of_results_if_no_parameter_specified(): void
-    {
-        $response = $this->get('/api/alcohol');
-
-        $responseJson = json_decode($response->getContent());
-
-        $response->assertSuccessful();
-        $this->assertCount(25, $responseJson);
-    }
-
     public function test_it_returns_records_updated_after_specified_date()
     {
         $updated_at = Carbon::now()->subDays(3);
@@ -271,11 +248,6 @@ class AlcoholControllerTest extends TestCase
 
         $response->assertOk()
             ->assertJsonCount(0, 'recordsUpdated');
-    }
-
-    public function test_it_can_get_efficient_alcohols()
-    {
-        self::markTestSkipped('TODO');
     }
 
     /**
