@@ -108,6 +108,8 @@
       <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/psr/http-client" />
       <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/psr/event-dispatcher" />
       <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/symfony/uid" />
+      <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/symfony/polyfill-uuid" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
