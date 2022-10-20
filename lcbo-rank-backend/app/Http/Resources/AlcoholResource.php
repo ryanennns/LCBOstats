@@ -13,7 +13,7 @@ class AlcoholResource extends JsonResource
      * @param  Request  $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'permanent_id' => $this->permanent_id,

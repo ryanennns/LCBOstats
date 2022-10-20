@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 
 class AlcoholController extends Controller
 {
-    // todo create a function to always return expected format
-    public const DEFAULT_ALCOHOLS_RETURNED = 25;
+    public const PAGINATE_BY = 25;
 
     public function show(Alcohol $alcohol): AlcoholResource
     {
@@ -20,16 +19,16 @@ class AlcoholController extends Controller
 
     public function getDefault(AlcoholFilters $filters)
     {
-        return AlcoholResource::collection(Alcohol::filter($filters)->paginate(25));
+        return AlcoholResource::collection(Alcohol::filter($filters)->paginate(self::PAGINATE_BY));
     }
 
-    public function getUpdated(Request $request) // todo delete this? test it?
+    public function getUpdated(Request $request)
     {
         $updatedSince = $request->input('updatedSince', Carbon::now()->subWeek());
         $updatedRecords = Alcohol::query()
             ->where('updated_at', '>', $updatedSince)
             ->orderBy('permanent_id')
-            ->paginate(25); // todo PAGINATE
+            ->paginate(self::PAGINATE_BY);
 
         return AlcoholResource::collection($updatedRecords);
     }
