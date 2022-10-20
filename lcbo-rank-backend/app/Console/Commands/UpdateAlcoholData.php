@@ -181,7 +181,7 @@ class UpdateAlcoholData extends Command
                     'firstResult' => $startIndex,
                 ]);
 
-            $alcoholsReturned = collect(json_decode($response->body())->results);
+            $alcoholsReturned = collect(json_decode($response->body())->results)->pluck('raw');
             $recordsScraped += $alcoholsReturned->count();
             $startIndex += $alcoholsReturned->count();
 
@@ -189,8 +189,6 @@ class UpdateAlcoholData extends Command
                 break;
 
             $alcoholsReturned->each(function ($alcohol) {
-                $alcohol = $alcohol->raw;
-
                 if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol)) {
                     $alcoholModel = Alcohol::query()->firstOrCreate(
                         ['permanent_id' => $alcohol->permanentid],
@@ -205,7 +203,6 @@ class UpdateAlcoholData extends Command
                 }
             });
             $progressBar->advance();
-            sleep(0.5);
         }
     }
 
