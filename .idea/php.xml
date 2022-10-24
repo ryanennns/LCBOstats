@@ -110,6 +110,9 @@
       <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/psr/container" />
       <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/symfony/uid" />
       <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/symfony/polyfill-uuid" />
+      <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/barryvdh/laravel-debugbar" />
+      <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/maximebf/debugbar" />
+      <path value="$PROJECT_DIR$/lcbo-rank-backend/vendor/laravel/telescope" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
