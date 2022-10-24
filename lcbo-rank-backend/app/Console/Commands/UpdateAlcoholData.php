@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\LCBOApiProduct;
 use App\Models\Alcohol;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use stdClass;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -53,99 +55,33 @@ class UpdateAlcoholData extends Command
             collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
                 $this->fetchDataForGivenCategory($category);
             });
-        } else {
-            $this->fetchDataForGivenCategory($category);
+            return;
         }
+
+        $this->fetchDataForGivenCategory($category);
     }
 
-    public static function getProperties(stdClass $alcohol): array
+    public static function getProperties(LCBOApiProduct $alcohol): array
     {
-        $title = trim($alcohol->title);
-        $brand = $alcohol->ec_brand ?? null;
-        $category = isset($alcohol->ec_category_filter) ? explode('|', $alcohol->ec_category_filter[0])[1] : '';
-        $subcategory = explode('|', $alcohol->ec_category_filter[0])[2] ?? null;
-        $price = $alcohol->ec_price ?? -1;
-        $volume = null;
-        if (!isset($alcohol->lcbo_total_volume) && isset($alcohol->lcbo_unit_volume)) {
-            $volume = self::truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
-        } else {
-            $volume = $alcohol->lcbo_total_volume ?? 0.0;
-        }
-        $alcohol_content = $alcohol->lcbo_alcohol_percent ?? 0.0;
-        $price_index = self::calculatePriceIndex($price, $alcohol_content, $volume);
-        $country = $alcohol->country_of_manufacture ?? '';
-        $url = $alcohol->sysuri;
-        $thumbnail_url = $alcohol->ec_thumbnails;
-        $image_url = str_replace('319.319', '1280.1280', $alcohol->ec_thumbnails);
-        $out_of_stock = isset($alcohol->out_of_stock) ? ($alcohol->out_of_stock === 'true') : null;
-        $description = isset($alcohol->ec_shortdesc) ? trim($alcohol->ec_shortdesc) : '';
-        $rating = $alcohol->ec_rating ?? 0.0;
-        $reviews = $alcohol->avg_reviews ?? 0;
-        $permanent_id = $alcohol->permanentid;
-
         return [
-            'permanent_id' => $permanent_id,
-            'title' => $title,
-            'brand' => $brand,
-            'category' => $category,
-            'subcategory' => $subcategory,
-            'price' => $price,
-            'volume' => $volume,
-            'alcohol_content' => $alcohol_content,
-            'price_index' => $price_index,
-            'country' => $country,
-            'url' => $url,
-            'thumbnail_url' => $thumbnail_url,
-            'image_url' => $image_url,
-            'out_of_stock' => $out_of_stock,
-            'description' => $description,
-            'rating' => $rating,
-            'reviews' => $reviews,
+            'permanent_id' => $alcohol->getPermanentId(),
+            'title' => $alcohol->getTitle(),
+            'brand' => $alcohol->getBrand(),
+            'category' => $alcohol->getCategory(),
+            'subcategory' => $alcohol->getSubcategory(),
+            'price' => $alcohol->getPrice(),
+            'volume' => $alcohol->getVolume(),
+            'alcohol_content' => $alcohol->getAlcoholContent(),
+            'price_index' => $alcohol->getPriceIndex(),
+            'country' => $alcohol->getCountry(),
+            'url' => $alcohol->getUrl(),
+            'thumbnail_url' => $alcohol->getThumbnailUrl(),
+            'image_url' => $alcohol->getImageUrl(),
+            'out_of_stock' => $alcohol->getOutOfStock(),
+            'description' => $alcohol->getDescription(),
+            'rating' => $alcohol->getRating(),
+            'reviews' => $alcohol->getReviews(),
         ];
-    }
-
-    public static function truncatedVolumeToInteger(string $truncatedValue): int
-    {
-        $volumes = collect(explode('x', $truncatedValue));
-
-        if ($volumes->count() == 1)
-            return $truncatedValue;
-
-        $totalVolume = 0;
-        $volumes->each(function ($volume) use (&$totalVolume, $volumes) {
-            if ($volumes->first() == $volume) {
-                $totalVolume = $volume;
-            } else {
-                $totalVolume *= $volume;
-            }
-        });
-
-        return $totalVolume;
-    }
-
-    public function isAlcoholAPromotion(stdClass $alcohol): bool
-    {
-        $returnValue = false;
-        collect($alcohol->ec_category)->each(function (string $categoryLayer) use (&$returnValue) {
-            if (str_contains('Promotion', $categoryLayer))
-                $returnValue = true;
-        });
-        return $returnValue;
-    }
-
-    public function isAlcoholBlacklisted(stdClass $alcohol): bool
-    {
-        if (collect(Alcohol::BLACKLISTED_IDS)->contains($alcohol->permanentid))
-            return true;
-        return false;
-    }
-
-    public static function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
-    {
-        if ($price == 0 || $alcoholContent == 0 || $volume == 0)
-            return null;
-        else
-            return $price / (($alcoholContent / 100) * $volume);
     }
 
     public function getExpectedNumberOfRecords(string $category): int
@@ -164,56 +100,57 @@ class UpdateAlcoholData extends Command
     {
         $startIndex = 0;
         $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
-        $recordsScraped = 0;
 
+        $progressBar = $this->createProgressBar($expectedNumberOfRecords, $category);
+
+        while ($startIndex < $expectedNumberOfRecords) {
+            $alcoholsReturned = $this->getDataForCategory($category, $startIndex);
+            $startIndex += $alcoholsReturned->count();
+
+            $data = $alcoholsReturned
+                ->filter(fn(LCBOApiProduct $alcohol) => !$alcohol->isAPromotion() && !$alcohol->isBlackListed())
+                ->map(fn(LCBOApiProduct $alcohol) => self::getProperties($alcohol));
+
+            Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
+
+            $progressBar->advance();
+        }
+    }
+
+    /**
+     * @param int $expectedNumberOfRecords
+     * @param string $category
+     * @return ProgressBar
+     */
+    public function createProgressBar(int $expectedNumberOfRecords, string $category): ProgressBar
+    {
         ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max%\t{%bar%}\n");
         $progressBar = $this->output->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
         $progressBar->setFormat('custom');
         $progressBar->setMessage($category);
         $progressBar->start();
-
-        while ($startIndex < $expectedNumberOfRecords) {
-            $response = Http::withHeaders(self::COPIED_HEADERS)
-                ->asForm()
-                ->post(self::SEARCH_REQ_URL, [
-                    'aq' => "@ec_category=${category}",
-                    'numberOfResults' => self::GET_IN_EACH_REQUEST,
-                    'firstResult' => $startIndex,
-                ]);
-
-            $alcoholsReturned = collect(json_decode($response->body())->results)->pluck('raw');
-            $recordsScraped += $alcoholsReturned->count();
-            $startIndex += $alcoholsReturned->count();
-
-            if ($recordsScraped == 0) // a failsafe from the old python script
-                break;
-
-            $alcoholsReturned->each(function ($alcohol) {
-                if (!$this->isAlcoholAPromotion($alcohol) && !$this->isAlcoholBlacklisted($alcohol)) {
-                    $alcoholModel = Alcohol::query()->firstOrCreate(
-                        ['permanent_id' => $alcohol->permanentid],
-                        self::getProperties($alcohol)
-                    );
-
-                    if (!$alcoholModel->wasRecentlyCreated &&
-                        !$this->areAlcoholsEqual(json_decode($alcoholModel->toJson()), $alcohol)
-                    ) {
-                        $alcoholModel->update(self::getProperties($alcohol));
-                    }
-                }
-            });
-            $progressBar->advance();
-        }
+        return $progressBar;
     }
 
-    public function areAlcoholsEqual(stdClass $alcoholModel, stdClass $alcohol): bool
+    /**
+     * @param string $category
+     * @param int $startIndex
+     * @return Collection
+     */
+    public function getDataForCategory(string $category, int $startIndex): Collection
     {
-        $equality = true;
-        collect(self::getProperties($alcohol))->each(function ($value, $key) use ($alcoholModel, &$equality) {
-            if ($key != 'price_index' && !($alcoholModel->$key == $value)) {
-                $equality = false;
-            }
-        });
-        return $equality;
+        $response = Http::withHeaders(self::COPIED_HEADERS)
+            ->asForm()
+            ->post(self::SEARCH_REQ_URL, [
+                'aq' => "@ec_category=${category}",
+                'numberOfResults' => self::GET_IN_EACH_REQUEST,
+                'firstResult' => $startIndex,
+            ]);
+
+        return collect(json_decode($response->body())->results)
+            ->pluck('raw')
+            ->map(function (stdClass $alcohol) {
+                return new LCBOApiProduct($alcohol);
+            });
     }
 }
