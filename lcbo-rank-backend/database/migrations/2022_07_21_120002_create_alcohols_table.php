@@ -25,7 +25,7 @@ return new class extends Migration {
                 ]
             );
             $table->string('subcategory')->nullable();
-            $table->double('price');
+            $table->double('price')->nullable();
             $table->double('volume')->nullable();
             $table->double('alcohol_content');
             $table->double('price_index')->default(0.00)->nullable();
