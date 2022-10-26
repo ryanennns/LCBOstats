@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\LCBOApiProduct;
 use App\Models\Alcohol;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -39,6 +40,7 @@ class UpdateAlcoholData extends Command
     // todo handle exceptions (undefined stdClass::$results)
     public function handle(): void
     {
+        $start = Carbon::now();
         $category = ($this->option('category'));
         $lowerCaseCategory = strtolower($category);
 
@@ -53,35 +55,14 @@ class UpdateAlcoholData extends Command
         if ($lowerCaseCategory === 'the big kahunas' || $lowerCaseCategory === 'all') {
             $this->info('it\'s big kahuna time!');
             collect(Alcohol::THE_BIG_KAHUNAS)->each(function ($category) {
-                $this->fetchDataForGivenCategory($category);
+                $this->fetchAllDataForGivenCategory($category);
             });
+
+            dump($start->diffInSeconds(Carbon::now()));
             return;
         }
 
-        $this->fetchDataForGivenCategory($category);
-    }
-
-    public static function getProperties(LCBOApiProduct $alcohol): array
-    {
-        return [
-            'permanent_id' => $alcohol->getPermanentId(),
-            'title' => $alcohol->getTitle(),
-            'brand' => $alcohol->getBrand(),
-            'category' => $alcohol->getCategory(),
-            'subcategory' => $alcohol->getSubcategory(),
-            'price' => $alcohol->getPrice(),
-            'volume' => $alcohol->getVolume(),
-            'alcohol_content' => $alcohol->getAlcoholContent(),
-            'price_index' => $alcohol->getPriceIndex(),
-            'country' => $alcohol->getCountry(),
-            'url' => $alcohol->getUrl(),
-            'thumbnail_url' => $alcohol->getThumbnailUrl(),
-            'image_url' => $alcohol->getImageUrl(),
-            'out_of_stock' => $alcohol->getOutOfStock(),
-            'description' => $alcohol->getDescription(),
-            'rating' => $alcohol->getRating(),
-            'reviews' => $alcohol->getReviews(),
-        ];
+        $this->fetchAllDataForGivenCategory($category);
     }
 
     public function getExpectedNumberOfRecords(string $category): int
@@ -96,7 +77,7 @@ class UpdateAlcoholData extends Command
         return min(json_decode($initResponse->body())->totalCount, 5000);
     }
 
-    public function fetchDataForGivenCategory(string $category): void
+    public function fetchAllDataForGivenCategory(string $category): void
     {
         $startIndex = 0;
         $expectedNumberOfRecords = $this->getExpectedNumberOfRecords($category);
@@ -104,12 +85,12 @@ class UpdateAlcoholData extends Command
         $progressBar = $this->createProgressBar($expectedNumberOfRecords, $category);
 
         while ($startIndex < $expectedNumberOfRecords) {
-            $alcoholsReturned = $this->getDataForCategory($category, $startIndex);
+            $alcoholsReturned = $this->fetchDataByCategory($category, $startIndex);
             $startIndex += $alcoholsReturned->count();
 
             $data = $alcoholsReturned
                 ->filter(fn(LCBOApiProduct $alcohol) => !$alcohol->isAPromotion() && !$alcohol->isBlackListed())
-                ->map(fn(LCBOApiProduct $alcohol) => self::getProperties($alcohol));
+                ->map(fn(LCBOApiProduct $alcohol) => $alcohol->toArray());
 
             Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
 
@@ -137,7 +118,7 @@ class UpdateAlcoholData extends Command
      * @param int $startIndex
      * @return Collection
      */
-    public function getDataForCategory(string $category, int $startIndex): Collection
+    public function fetchDataByCategory(string $category, int $startIndex): Collection
     {
         $response = Http::withHeaders(self::COPIED_HEADERS)
             ->asForm()
@@ -149,8 +130,6 @@ class UpdateAlcoholData extends Command
 
         return collect(json_decode($response->body())->results)
             ->pluck('raw')
-            ->map(function (stdClass $alcohol) {
-                return new LCBOApiProduct($alcohol);
-            });
+            ->map(fn(stdClass $alcohol) => new LCBOApiProduct($alcohol));
     }
 }

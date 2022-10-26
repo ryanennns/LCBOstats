@@ -148,4 +148,27 @@ class LCBOApiProduct
 
         return $price / (($alcoholContent / 100) * $volume);
     }
+
+    public function toArray(): array
+    {
+        return [
+            'permanent_id' => $this->getPermanentId(),
+            'title' => $this->getTitle(),
+            'brand' => $this->getBrand(),
+            'category' => $this->getCategory(),
+            'subcategory' => $this->getSubcategory(),
+            'price' => $this->getPrice(),
+            'volume' => $this->getVolume(),
+            'alcohol_content' => $this->getAlcoholContent(),
+            'price_index' => $this->getPriceIndex(),
+            'country' => $this->getCountry(),
+            'url' => $this->getUrl(),
+            'thumbnail_url' => $this->getThumbnailUrl(),
+            'image_url' => $this->getImageUrl(),
+            'out_of_stock' => $this->getOutOfStock(),
+            'description' => $this->getDescription(),
+            'rating' => $this->getRating(),
+            'reviews' => $this->getReviews(),
+        ];
+    }
 }
