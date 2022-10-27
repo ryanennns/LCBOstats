@@ -37,7 +37,6 @@ class UpdateAlcoholData extends Command
     protected $signature = 'alcohol:update {--category=Products}';
     protected $description = 'Updates the database with the latest information from the LCBO\'s API.';
 
-    // todo handle exceptions (undefined stdClass::$results)
     public function handle(): void
     {
         $start = Carbon::now();
@@ -59,10 +58,9 @@ class UpdateAlcoholData extends Command
             });
 
             dump($start->diffInSeconds(Carbon::now()));
-            return;
         }
-
-        $this->fetchAllDataForGivenCategory($category);
+        else
+            $this->fetchAllDataForGivenCategory($category);
     }
 
     public function getExpectedNumberOfRecords(string $category): int
@@ -98,26 +96,17 @@ class UpdateAlcoholData extends Command
         }
     }
 
-    /**
-     * @param int $expectedNumberOfRecords
-     * @param string $category
-     * @return ProgressBar
-     */
     public function createProgressBar(int $expectedNumberOfRecords, string $category): ProgressBar
     {
         ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max%\t{%bar%}\n");
-        $progressBar = $this->output->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
+        $progressBar = $this->output
+            ->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
         $progressBar->setFormat('custom');
         $progressBar->setMessage($category);
         $progressBar->start();
         return $progressBar;
     }
 
-    /**
-     * @param string $category
-     * @param int $startIndex
-     * @return Collection
-     */
     public function fetchDataByCategory(string $category, int $startIndex): Collection
     {
         $response = Http::withHeaders(self::COPIED_HEADERS)

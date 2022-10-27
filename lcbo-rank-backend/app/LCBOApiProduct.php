@@ -42,25 +42,6 @@ class LCBOApiProduct
         return $alcohol->lcbo_total_volume ?? 0.0;
     }
 
-    private function truncatedVolumeToInteger(string $truncatedValue): int
-    {
-        $volumes = collect(explode('x', $truncatedValue));
-
-        if ($volumes->count() == 1)
-            return $truncatedValue;
-
-        $totalVolume = 0;
-        $volumes->each(function ($volume) use (&$totalVolume, $volumes) {
-            if ($volumes->first() == $volume) {
-                $totalVolume = $volume;
-            } else {
-                $totalVolume *= $volume;
-            }
-        });
-
-        return $totalVolume;
-    }
-
     public function getTitle(): string
     {
         return trim($this->raw->title);
@@ -147,6 +128,25 @@ class LCBOApiProduct
             return null;
 
         return $price / (($alcoholContent / 100) * $volume);
+    }
+
+    private function truncatedVolumeToInteger(string $truncatedValue): int
+    {
+        $volumes = collect(explode('x', $truncatedValue));
+
+        if ($volumes->count() == 1)
+            return $truncatedValue;
+
+        $totalVolume = 0;
+        $volumes->each(function ($volume) use (&$totalVolume, $volumes) {
+            if ($volumes->first() == $volume) {
+                $totalVolume = $volume;
+            } else {
+                $totalVolume *= $volume;
+            }
+        });
+
+        return $totalVolume;
     }
 
     public function toArray(): array
