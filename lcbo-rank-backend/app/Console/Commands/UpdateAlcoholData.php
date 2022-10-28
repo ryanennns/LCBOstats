@@ -57,7 +57,7 @@ class UpdateAlcoholData extends Command
                 $this->fetchAllDataForGivenCategory($category);
             });
 
-            dump($start->diffInSeconds(Carbon::now()));
+            $this->info('Seconds elapsed: ', $start->diffInSeconds(Carbon::now()));
         }
         else
             $this->fetchAllDataForGivenCategory($category);
