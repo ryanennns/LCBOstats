@@ -80,4 +80,12 @@ class AlcoholFilters extends QueryFilter
     {
         return $this->builder->where('out_of_stock', $outOfStock);
     }
+
+    public function search($search): Builder // todo test this somehow
+    {
+        return $this->builder
+            ->where('title', 'like', '%'.$search.'%')
+            ->orWhere('description', 'like', '%'.$search.'%')
+            ->orWhere('brand', 'like', '%'.$search.'%');
+    }
 }
