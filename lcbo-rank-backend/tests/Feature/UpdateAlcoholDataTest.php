@@ -19,7 +19,7 @@ class UpdateAlcoholDataTest extends TestCase
         parent::setUp();
     }
 
-    public function test_it_creates_records_from_returned_data(): void
+    public function test_it_creates_records_from_returned_data(): void // todo test harder
     {
         Http::fake([
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
@@ -34,7 +34,9 @@ class UpdateAlcoholDataTest extends TestCase
                 )
         ]);
 
+
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
+        dd(Alcohol::all());
         $this->assertDatabaseCount('alcohols', 3);
     }
 

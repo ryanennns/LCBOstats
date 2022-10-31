@@ -36,10 +36,10 @@ class LCBOApiProduct
 
     public function getVolume(): float
     {
-        if (!isset($alcohol->lcbo_total_volume) && isset($alcohol->lcbo_unit_volume)) {
-            return $this->truncatedVolumeToInteger($alcohol->lcbo_unit_volume);
+        if (!isset($this->raw->lcbo_total_volume) && isset($this->raw->lcbo_unit_volume)) {
+            return $this->truncatedVolumeToInteger($this->raw->lcbo_unit_volume);
         }
-        return $alcohol->lcbo_total_volume ?? 0.0;
+        return $this->raw->lcbo_total_volume ?? 0.0;
     }
 
     public function getTitle(): string
@@ -124,8 +124,10 @@ class LCBOApiProduct
 
     private function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
     {
-        if ($price == 0 || $alcoholContent == 0 || $volume == 0)
+        if ($price == 0 || $alcoholContent == 0 || $volume == 0) {
+            dd($price, $alcoholContent, $volume);
             return null;
+        }
 
         return $price / (($alcoholContent / 100) * $volume);
     }
