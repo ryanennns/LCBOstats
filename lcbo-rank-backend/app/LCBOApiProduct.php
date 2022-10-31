@@ -125,12 +125,11 @@ class LCBOApiProduct
     private function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
     {
         if ($price == 0 || $alcoholContent == 0 || $volume == 0) {
-            dd($price, $alcoholContent, $volume);
             return null;
         }
 
         return $price / (($alcoholContent / 100) * $volume);
-    }
+    } // no dds
 
     private function truncatedVolumeToInteger(string $truncatedValue): int
     {
