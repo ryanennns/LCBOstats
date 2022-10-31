@@ -129,7 +129,7 @@ class LCBOApiProduct
         }
 
         return $price / (($alcoholContent / 100) * $volume);
-    } // no dds
+    }
 
     private function truncatedVolumeToInteger(string $truncatedValue): int
     {
