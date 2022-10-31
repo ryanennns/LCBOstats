@@ -19,9 +19,9 @@ abstract class QueryFilter
     {
         $this->builder = $builder;
 
-        foreach ($this->filters() as $name => $value) {
-            if (method_exists($this, $name)) {
-                $this->$name($value);
+        foreach ($this->filters() as $key => $value) {
+            if (method_exists($this, $key)) {
+                $this->$key($value);
             }
         }
 

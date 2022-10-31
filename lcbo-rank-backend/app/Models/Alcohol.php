@@ -58,24 +58,7 @@ class Alcohol extends Model
     public const SPIRITS = "Spirits";
     public const GIN = "Gin";
     public const VODKA = "Vodka";
-    public const TEQUILA = "Tequila";
     public const COOLER = "Coolers";
-
-    public const CATEGORIES = [
-        self::BEER_AND_CIDER,
-        self::RED_WINE,
-        self::WHITE_WINE,
-        self::ROSE_WINE,
-        self::FORTIFIED_WINE,
-        self::SPARKLING_WINE,
-        self::CHAMPAGNE,
-        self::SPIRITS,
-        self::SPIRITS,
-        self::GIN,
-        self::VODKA,
-        self::TEQUILA,
-        self::COOLER
-    ];
 
     protected $primaryKey = 'permanent_id';
     public $incrementing = false;
@@ -102,6 +85,6 @@ class Alcohol extends Model
 
     public function scopeFilter($query, QueryFilter $filters): Builder
     {
-        return $filters->apply($query);
+        return $filters->apply($query); // todo ask jacob about this cursed thing
     }
 }

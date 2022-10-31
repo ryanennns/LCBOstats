@@ -7,6 +7,7 @@ use App\Http\Resources\AlcoholResource;
 use App\Models\Alcohol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AlcoholController extends Controller
 {
@@ -17,12 +18,12 @@ class AlcoholController extends Controller
         return new AlcoholResource($alcohol);
     }
 
-    public function getDefault(AlcoholFilters $filters)
+    public function getDefault(AlcoholFilters $filters): AnonymousResourceCollection
     {
         return AlcoholResource::collection(Alcohol::filter($filters)->paginate(self::PAGINATE_BY));
     }
 
-    public function getUpdated(Request $request)
+    public function getUpdated(Request $request): AnonymousResourceCollection
     {
         $updatedSince = $request->input('updatedSince', Carbon::now()->subWeek());
         $updatedRecords = Alcohol::query()

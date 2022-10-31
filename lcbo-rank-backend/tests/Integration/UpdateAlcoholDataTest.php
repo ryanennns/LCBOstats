@@ -22,7 +22,7 @@ class UpdateAlcoholDataTest extends TestCase
         $initResponse = Http::withHeaders(UpdateAlcoholData::COPIED_HEADERS)
             ->asForm()
             ->post(UpdateAlcoholData::SEARCH_REQ_URL, [
-                'aq' => "@ec_category=Products|${category}",
+                'aq' => "@ec_category=Products|${category}", // todo refactor to big kahunas
                 'firstResult' => 0,
                 'numberOfResults' => 0,
             ]);
