@@ -30,13 +30,12 @@ class UpdateAlcoholDataTest extends TestCase
                 ->whenEmpty(Http::response(
                     FixtureLoader::loadRawFixture('beer-response-chunk'),
                     200,
-                    ['content-type' => 'application/json'])
-                )
+                    ['content-type' => 'application/json']
+                ))
         ]);
 
 
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-        dd(Alcohol::all());
         $this->assertDatabaseCount('alcohols', 3);
     }
 

@@ -84,8 +84,8 @@ class AlcoholFilters extends QueryFilter
     public function search($search): Builder // todo test this somehow
     {
         return $this->builder
-            ->where('title', 'like', '%'.$search.'%')
-            ->orWhere('description', 'like', '%'.$search.'%')
-            ->orWhere('brand', 'like', '%'.$search.'%');
+            ->where('title', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')
+            ->orWhere('brand', 'like', '%' . $search . '%');
     }
 }

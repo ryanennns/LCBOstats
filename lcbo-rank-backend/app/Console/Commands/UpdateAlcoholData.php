@@ -47,7 +47,7 @@ class UpdateAlcoholData extends Command
             $lowerCaseCategory != 'the big kahunas' &&
             $lowerCaseCategory != 'all'
         ) {
-            $this->error('Invalid category!'); // todo test for error throwing
+            $this->error('Invalid category!');
             return;
         }
 
@@ -58,9 +58,9 @@ class UpdateAlcoholData extends Command
             });
 
             $this->info('Seconds elapsed: ', $start->diffInSeconds(Carbon::now()));
-        }
-        else
+        } else {
             $this->fetchAllDataForGivenCategory($category);
+        }
     }
 
     public function getExpectedNumberOfRecords(string $category): int
@@ -83,7 +83,7 @@ class UpdateAlcoholData extends Command
         $progressBar = $this->createProgressBar($expectedNumberOfRecords, $category);
 
         while ($startIndex < $expectedNumberOfRecords) {
-            $alcoholsReturned = $this->fetchDataByCategory($category, $startIndex);
+            $alcoholsReturned = $this->fetchDataByCategoryAndIndex($category, $startIndex);
             $startIndex += $alcoholsReturned->count();
 
             $data = $alcoholsReturned
@@ -96,18 +96,7 @@ class UpdateAlcoholData extends Command
         }
     }
 
-    public function createProgressBar(int $expectedNumberOfRecords, string $category): ProgressBar
-    {
-        ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max%\t{%bar%}\n");
-        $progressBar = $this->output
-            ->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
-        $progressBar->setFormat('custom');
-        $progressBar->setMessage($category);
-        $progressBar->start();
-        return $progressBar;
-    }
-
-    public function fetchDataByCategory(string $category, int $startIndex): Collection
+    public function fetchDataByCategoryAndIndex(string $category, int $startIndex): Collection
     {
         $response = Http::withHeaders(self::COPIED_HEADERS)
             ->asForm()
@@ -120,5 +109,16 @@ class UpdateAlcoholData extends Command
         return collect(json_decode($response->body())->results)
             ->pluck('raw')
             ->map(fn(stdClass $alcohol) => new LCBOApiProduct($alcohol));
+    }
+
+    public function createProgressBar(int $expectedNumberOfRecords, string $category): ProgressBar
+    {
+        ProgressBar::setFormatDefinition('custom', "%message% -- %memory%\n%current%/%max%\t{%bar%}\n");
+        $progressBar = $this->output
+            ->createProgressBar(ceil($expectedNumberOfRecords / self::GET_IN_EACH_REQUEST));
+        $progressBar->setFormat('custom');
+        $progressBar->setMessage($category);
+        $progressBar->start();
+        return $progressBar;
     }
 }
