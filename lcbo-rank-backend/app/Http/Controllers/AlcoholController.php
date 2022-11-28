@@ -20,7 +20,8 @@ class AlcoholController extends Controller
 
     public function getDefault(AlcoholFilters $filters): AnonymousResourceCollection
     {
-        return AlcoholResource::collection(Alcohol::filter($filters)->paginate(self::PAGINATE_BY));
+        // todo refactor where to model level?
+        return AlcoholResource::collection(Alcohol::filter($filters)->where('price_index', '!=', 'null')->paginate(self::PAGINATE_BY));
     }
 
     public function getUpdated(Request $request): AnonymousResourceCollection
