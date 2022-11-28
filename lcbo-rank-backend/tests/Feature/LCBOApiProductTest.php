@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Tests\Fixtures\FixtureLoader;
 use Tests\TestCase;
 
-class AlcoholControllerTest extends TestCase
+class LCBOApiProductTest extends TestCase
 {
     public function test_it_returns_alcohol_in_expected_shape()
     {

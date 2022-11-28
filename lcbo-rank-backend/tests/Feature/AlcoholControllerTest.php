@@ -12,7 +12,6 @@ class AlcoholControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Alcohol::factory(100)->create();
     }
 
     /**
@@ -71,6 +70,7 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_sort_alcohols_by_field($sortField): void
     {
+        Alcohol::factory(100)->create();
         $response = $this->get("/api/alcohol?sortBy=$sortField");
 
         $responseArray = json_decode($response->getContent(), true)['data'];
@@ -103,6 +103,7 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_filter_by_min_values($filterValue, $queryParameter, $alcoholProperty)
     {
+        Alcohol::factory(25)->create();
         $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
         $responseJson = json_decode($response->getContent())->data;
 
@@ -143,6 +144,7 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_filter_by_max_values($filterValue, $queryParameter, $alcoholProperty): void
     {
+        Alcohol::factory(25)->create();
         $response = $this->get("/api/alcohol?$queryParameter=$filterValue");
         $responseJson = json_decode($response->getContent())->data;
 
@@ -182,6 +184,7 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_filter_by_category($category)
     {
+        Alcohol::factory(25)->create();
         $escapedCategory = str_replace('&', '%26', $category); // BOTCHED lol
 
         Alcohol::factory([
@@ -212,6 +215,7 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_can_filter_by_stock_status(): void
     {
+        Alcohol::factory(25)->create();
         $response = $this->get('/api/alcohol?outOfStock=false');
 
         $responseJson = json_decode($response->getContent())->data;
@@ -223,6 +227,7 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_returns_records_updated_after_specified_date()
     {
+        Alcohol::factory(25)->create();
         self::markTestSkipped('Delete this?');
         $updated_at = Carbon::now()->subDays(3);
         $expectedAlcohols = Alcohol::factory(3)->create([
@@ -244,6 +249,7 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_doesnt_return_records_updated_before_specified_date()
     {
+        Alcohol::factory(25)->create();
         self::markTestSkipped('Delete this?');
         $updatedSince = Carbon::now()->subWeek();
         $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
@@ -258,6 +264,7 @@ class AlcoholControllerTest extends TestCase
      */
     public function test_it_can_select_attributes($key, $attribute)
     {
+        Alcohol::factory(9)->create();
         Alcohol::factory(1)->create([$key => $attribute]);
 
         $response = $this->get("/api/alcohol?$key=$attribute")
@@ -276,5 +283,21 @@ class AlcoholControllerTest extends TestCase
             'subcategory' => ['subcategory', 'asdf-ghjkl'],
             'country' => ['country', 'the pacific ocean'],
         ];
+    }
+
+    public function test_it_doesnt_return_null_price_index()
+    {
+        Alcohol::factory(9)->create();
+        $alcohol = Alcohol::factory()->create([
+            'title' => 'meme',
+            'price_index' => null,
+        ]);
+
+        $response = $this->get('/api/alcohol');
+
+        $data = collect(json_decode($response->content())->data);
+        $data->each(function ($alcohol) {
+            $this->assertNotNull($alcohol->price_index);
+        });
     }
 }
