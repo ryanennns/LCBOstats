@@ -28,13 +28,13 @@ class UpdateAlcoholDataTest extends TestCase
         $initResponse = Http::withHeaders(UpdateAlcoholData::COPIED_HEADERS)
             ->asForm()
             ->post(UpdateAlcoholData::SEARCH_REQ_URL, [
-                'aq' => "@ec_category=Products|${category}", // todo refactor to big kahunas
+                'aq' => "@ec_category=Products|$category", // todo refactor to big kahunas
                 'firstResult' => 0,
                 'numberOfResults' => 0,
             ]);
         $expectedNumberOfRecords = min(json_decode($initResponse->body())->totalCount, 5000);
 
-        $this->artisan("alcohol:update --category=\"Products|${category}\"");
+        $this->artisan("alcohol:update --category=\"Products|$category\"");
         $this->assertDatabaseCount(Alcohol::class, $expectedNumberOfRecords);
     }
 

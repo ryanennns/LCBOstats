@@ -9,11 +9,6 @@ use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     /**
      * @return void
      */
@@ -227,8 +222,8 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_returns_records_updated_after_specified_date()
     {
-        Alcohol::factory(25)->create();
         self::markTestSkipped('Delete this?');
+        Alcohol::factory(25)->create();
         $updated_at = Carbon::now()->subDays(3);
         $expectedAlcohols = Alcohol::factory(3)->create([
             'updated_at' => $updated_at,
@@ -249,8 +244,8 @@ class AlcoholControllerTest extends TestCase
 
     public function test_it_doesnt_return_records_updated_before_specified_date()
     {
-        Alcohol::factory(25)->create();
         self::markTestSkipped('Delete this?');
+        Alcohol::factory(25)->create();
         $updatedSince = Carbon::now()->subWeek();
         $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
 
