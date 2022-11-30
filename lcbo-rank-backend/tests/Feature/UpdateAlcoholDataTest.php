@@ -43,19 +43,19 @@ class UpdateAlcoholDataTest extends TestCase
     {
         Http::fake([
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
-                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-empty-response'),
+                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures/paginated-empty-response'),
                     200,
                     ['content-type' => 'application/json']
                 )
-                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-chunk-a'),
+                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures/paginated-chunk-a'),
                     200,
                     ['content-type' => 'application/json']
                 )
-                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-chunk-b'),
+                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures/paginated-chunk-b'),
                     200,
                     ['content-type' => 'application/json']
                 )
-                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures\paginated-chunk-c'),
+                ->push(FixtureLoader::loadRawFixture('PaginatedTestFixtures/paginated-chunk-c'),
                     200,
                     ['content-type' => 'application/json']
                 )
