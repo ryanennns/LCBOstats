@@ -7,6 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/lcbo-rank-backend/vendor/barryvdh/laravel-debugbar" />
       <excludeFolder url="file://$MODULE_DIR$/lcbo-rank-backend/vendor/maximebf/debugbar" />
       <excludeFolder url="file://$MODULE_DIR$/lcbo-rank-backend/vendor/laravel/telescope" />
+      <excludeFolder url="file://$MODULE_DIR$/lcbo-rank-backend/vendor/algolia/algoliasearch-client-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

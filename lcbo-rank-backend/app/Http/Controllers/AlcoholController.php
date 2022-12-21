@@ -21,7 +21,11 @@ class AlcoholController extends Controller
     public function index(AlcoholFilters $filters): AnonymousResourceCollection
     {
         // todo refactor where to model level?
-        return AlcoholResource::collection(Alcohol::filter($filters)->where('price_index', '!=', 'null')->paginate(self::PAGINATE_BY));
+        return AlcoholResource::collection(
+            Alcohol::filter($filters)
+                ->where('price_index', '!=', 'null')
+                ->paginate(self::PAGINATE_BY)
+        );
     }
 
     public function getUpdated(Request $request): AnonymousResourceCollection
@@ -33,6 +37,15 @@ class AlcoholController extends Controller
             ->paginate(self::PAGINATE_BY);
 
         return AlcoholResource::collection($updatedRecords);
+    }
+
+    public function search(Request $request)
+    {
+        return AlcoholResource::collection(
+            Alcohol::search($request->input('query', ''))
+//                ->where('price_index', '!=', 'null') // todo: ask jacob!
+                ->get()
+        );
     }
 }
 
