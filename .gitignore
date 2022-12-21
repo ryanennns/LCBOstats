@@ -4,3 +4,4 @@ lcbo-rank-backend/.phpunit.result.cache
 lcbo-rank-backend/.env
 /.idea/misc.xml
 lcbo-rank-backend/tests/Fixtures/beer-response.json
+/lcbo-rank-backend/vendor/
