@@ -14,11 +14,6 @@ class UpdateAlcoholDataTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function test_it_creates_records_from_returned_data(): void // todo test harder
     {
         Http::fake([
@@ -186,5 +181,32 @@ class UpdateAlcoholDataTest extends TestCase
         $this->artisan('alcohol:update --category="Products|Beer & Cider"');
 
         $this->assertDatabaseCount('alcohols', 2);
+    }
+
+    public function test_price_changes_are_logged()
+    {
+        Alcohol::factory()->create([
+            'permanent_id' => 17289,
+            'price' => 100.0,
+        ]);
+
+        Http::fake([
+            UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
+                ->push(FixtureLoader::loadRawFixture('empty-response'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+                ->push(FixtureLoader::loadRawFixture('beer-response-chunk'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+                ->push(FixtureLoader::loadRawFixture('PriceChangeFixtures/beer-response-chunk-price-changes'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+        ]);
+
+        $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
+        $this->assertDatabaseCount('price_changes', 1);
     }
 }
