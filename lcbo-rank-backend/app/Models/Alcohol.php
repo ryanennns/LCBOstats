@@ -29,7 +29,7 @@ use Laravel\Scout\Searchable;
  */
 class Alcohol extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory;
 
     public const THE_BIG_KAHUNAS = [
         "Products|Beer & Cider",
