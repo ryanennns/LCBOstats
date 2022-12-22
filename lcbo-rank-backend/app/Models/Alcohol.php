@@ -6,6 +6,7 @@ use App\Http\Filters\QueryFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 /**
@@ -87,5 +88,13 @@ class Alcohol extends Model
     public function scopeFilter($query, QueryFilter $filters): Builder
     {
         return $filters->apply($query); // todo ask jacob about this cursed thing
+    }
+
+    public function priceChanges(): HasMany
+    {
+        return $this->hasMany(PriceChange::class,
+            'permanent_id',
+            'permanent_id'
+        );
     }
 }
