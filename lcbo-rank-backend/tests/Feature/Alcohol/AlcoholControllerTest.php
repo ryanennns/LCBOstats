@@ -220,39 +220,6 @@ class AlcoholControllerTest extends TestCase
             $this->assertEquals(false, $res->out_of_stock);
     }
 
-    public function test_it_returns_records_updated_after_specified_date()
-    {
-        self::markTestSkipped('Delete this?');
-        Alcohol::factory(25)->create();
-        $updated_at = Carbon::now()->subDays(3);
-        $expectedAlcohols = Alcohol::factory(3)->create([
-            'updated_at' => $updated_at,
-        ]);
-
-        $updatedSince = Carbon::now()->subWeek();
-        $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
-
-        $response->assertOk()
-            ->assertJsonCount(3, 'recordsUpdated');
-
-        $expectedAlcohols->each(function ($alcohol) use ($response, $expectedAlcohols) {
-            $response->assertJsonFragment([
-                'permanent_id' => $alcohol->permanent_id,
-            ]);
-        });
-    }
-
-    public function test_it_doesnt_return_records_updated_before_specified_date()
-    {
-        self::markTestSkipped('Delete this?');
-        Alcohol::factory(25)->create();
-        $updatedSince = Carbon::now()->subWeek();
-        $response = $this->get("/api/alcohol/updated?updatedSince=$updatedSince");
-
-        $response->assertOk()
-            ->assertJsonCount(0, 'data.recordsUpdated');
-    }
-
     /**
      * @return void
      * @dataProvider provideAttributes
