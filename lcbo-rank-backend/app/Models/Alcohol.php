@@ -87,14 +87,45 @@ class Alcohol extends Model
 
     public function scopeFilter($query, QueryFilter $filters): Builder
     {
-        return $filters->apply($query); // todo ask jacob about this cursed thing
+        return $filters->apply($query);
     }
 
     public function priceChanges(): HasMany
     {
-        return $this->hasMany(PriceChange::class,
-            'permanent_id',
-            'permanent_id'
-        );
+        return $this->hasMany(PriceChange::class, 'permanent_id', 'permanent_id');
+    }
+
+    public function getOldestKnownPriceAttribute()
+    {
+        return $this->priceChanges()
+            ->orderBy('created_at')
+            ->pluck('old_price')
+            ->first();
+    }
+
+    public function getHighestPriceAttribute()
+    {
+        $prices = $this->priceChanges()
+            ->pluck('old_price');
+
+        $this->priceChanges()
+            ->pluck('new_price')
+            ->each(function ($price) use ($prices) {
+                $prices->push($price);
+            });
+        return $prices->sortDesc()->first();
+    }
+
+    public function getLowestPriceAttribute()
+    {
+        $prices = $this->priceChanges()
+            ->pluck('old_price');
+
+        $this->priceChanges()
+            ->pluck('new_price')
+            ->each(function ($price) use ($prices) {
+                $prices->push($price);
+            });
+        return $prices->sort()->first();
     }
 }
