@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a71edf5f9c7d5a36c74ecfd8162358f",
+    "content-hash": "6402897309820f12ade795cfa6c60867",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -2981,6 +2981,64 @@
                 }
             ],
             "time": "2022-09-16T03:22:46+00:00"
+        },
+        {
+            "name": "snoeren-development/laravel-currency-casting",
+            "version": "v1.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/snoeren-development/laravel-currency-casting.git",
+                "reference": "6f880084aa6a23d07c84a043ee944371f804ab7a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/snoeren-development/laravel-currency-casting/zipball/6f880084aa6a23d07c84a043ee944371f804ab7a",
+                "reference": "6f880084aa6a23d07c84a043ee944371f804ab7a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8.0|^9.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "illuminate/database": "^8.14",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SnoerenDevelopment\\CurrencyCasting\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Snoeren",
+                    "email": "info@snoerendevelopment.nl"
+                }
+            ],
+            "description": "Cast currency attributes, stored as integer, to floats automatically.",
+            "homepage": "https://github.com/snoeren-development/laravel-currency-casting",
+            "keywords": [
+                "casting",
+                "currency",
+                "laravel",
+                "snoeren"
+            ],
+            "support": {
+                "issues": "https://github.com/snoeren-development/laravel-currency-casting/issues",
+                "source": "https://github.com/snoeren-development/laravel-currency-casting/tree/v1.5.3"
+            },
+            "funding": [
+                {
+                    "url": "https://useplink.com/payment/WS4WRCfCULr1tFHkVklT2/",
+                    "type": "custom"
+                }
+            ],
+            "time": "2022-08-19T12:00:51+00:00"
         },
         {
             "name": "symfony/console",

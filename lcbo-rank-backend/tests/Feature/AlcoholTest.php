@@ -43,9 +43,4 @@ class AlcoholTest extends TestCase
         $alc->update(['price' => 11.55]);
         return $alc;
     }
-
-    public function test_it_returns_price_for_helper_attributes_when_no_price_changes_exist()
-    {
-        self::markTestSkipped('TODO');
-    }
 }
