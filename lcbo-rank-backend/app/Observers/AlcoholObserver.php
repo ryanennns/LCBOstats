@@ -16,9 +16,20 @@ class AlcoholObserver
         if(collect($alcohol->getDirty())->has('price')) {
             PriceChange::create([
                 'permanent_id' => $alcohol->permanent_id,
-                'old_price' => $alcohol->getOriginal('price'),
-                'new_price' => $alcohol->price,
+                'price' => $alcohol->price,
             ]);
         }
+    }
+
+    /**
+     * @param Alcohol $alcohol
+     * @return void
+     */
+    public function created(Alcohol $alcohol): void
+    {
+        PriceChange::create([
+            'permanent_id' => $alcohol->permanent_id,
+            'price' => $alcohol->price,
+        ]);
     }
 }

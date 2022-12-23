@@ -14,8 +14,7 @@ class PriceChangeResource extends JsonResource
             'price_changes' => $this->priceChanges->count(),
             'price_change_history' => $this->priceChanges
                 ->map(fn($priceChange) => [
-                    'old_price' => $priceChange->old_price,
-                    'new_price' => $priceChange->new_price,
+                    'price' => $priceChange->price,
                     'created_at' => $priceChange->created_at->toISO8601String(),
                 ])->toArray(),
             'current_price' => $this->price,

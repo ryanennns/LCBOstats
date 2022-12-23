@@ -185,8 +185,9 @@ class UpdateAlcoholDataTest extends TestCase
 
     public function test_price_changes_are_logged()
     {
+        $id = 17289;
         Alcohol::factory()->create([
-            'permanent_id' => 17289,
+            'permanent_id' => $id,
             'price' => 100.0,
         ]);
 
@@ -207,6 +208,9 @@ class UpdateAlcoholDataTest extends TestCase
         ]);
 
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
-        $this->assertDatabaseCount('price_changes', 1);
+        $this->assertDatabaseHas('price_changes', [
+            'permanent_id' => $id,
+            'price' => 100,
+        ]);
     }
 }

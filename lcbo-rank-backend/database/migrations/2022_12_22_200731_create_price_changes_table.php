@@ -13,12 +13,12 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('price_changes', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('permanent_id');
             $table->foreign('permanent_id')
                 ->references('permanent_id')
                 ->on('alcohols');
-            $table->double('old_price');
-            $table->double('new_price');
+            $table->double('price');
             $table->timestamps();
         });
     }

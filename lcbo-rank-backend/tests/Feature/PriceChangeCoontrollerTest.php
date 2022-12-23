@@ -28,8 +28,7 @@ class PriceChangeCoontrollerTest extends TestCase
                 'title' => $alc->title,
                 'price_changes' => $alc->priceChanges->count(),
                 'price_change_history' => $alc->priceChanges->map(fn($priceChange) => [
-                    'old_price' => $priceChange->old_price,
-                    'new_price' => $priceChange->new_price,
+                    'price' => $priceChange->price,
                     'created_at' => $priceChange->created_at->toISO8601String(),
                 ])->toArray(),
                 'current_price' => $alc->price,

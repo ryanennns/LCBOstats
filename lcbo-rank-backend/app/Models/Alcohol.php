@@ -98,34 +98,22 @@ class Alcohol extends Model
     public function getOldestKnownPriceAttribute()
     {
         return $this->priceChanges()
-            ->orderBy('created_at')
-            ->pluck('old_price')
+            ->orderBy('id')
+            ->pluck('price')
             ->first();
     }
 
     public function getHighestPriceAttribute()
     {
-        $prices = $this->priceChanges()
-            ->pluck('old_price');
-
-        $this->priceChanges()
-            ->pluck('new_price')
-            ->each(function ($price) use ($prices) {
-                $prices->push($price);
-            });
+        $prices = $this->priceChanges
+            ->pluck('price');
         return $prices->sortDesc()->first();
     }
 
     public function getLowestPriceAttribute()
     {
-        $prices = $this->priceChanges()
-            ->pluck('old_price');
-
-        $this->priceChanges()
-            ->pluck('new_price')
-            ->each(function ($price) use ($prices) {
-                $prices->push($price);
-            });
+        $prices = $this->priceChanges
+            ->pluck('price');
         return $prices->sort()->first();
     }
 }
