@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class PriceChangeCoontrollerTest extends TestCase
+class PriceChangeControllerTest extends TestCase
 {
     public function test_it_returns_price_changes_in_expected_shape()
     {
