@@ -16,7 +16,7 @@ class AlcoholObserver
         if(collect($alcohol->getDirty())->has('price')) {
             PriceChange::create([
                 'permanent_id' => $alcohol->permanent_id,
-                'old_price' => Alcohol::findOrFail($alcohol->permanent_id)->price,
+                'old_price' => $alcohol->getOriginal('price'),
                 'new_price' => $alcohol->price,
             ]);
         }
