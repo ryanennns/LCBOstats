@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
+use App\Models\PriceChange;
 use Tests\TestCase;
 
 class FindPriceChangesTest extends TestCase

@@ -98,6 +98,7 @@ class Alcohol extends Model
 
     public function getNewestPriceChangeAttribute()
     {
+//        dd($this->priceChanges->where('permanent_id' , $this->permanent_id));
         return $this->priceChanges()
             ->where(['permanent_id' => $this->permanent_id])
             ->orderBy('id', 'desc')

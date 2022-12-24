@@ -7,7 +7,14 @@ use Tests\TestCase;
 
 class AlcoholTest extends TestCase
 {
-    public function test_it_can_get_its_earliest_price()
+    public function test_it_can_get_its_latest_price_change()
+    {
+        $newestPrice = 69;
+        $alc = $this->createAlcoholWithPriceChanges(9.0, $newestPrice);
+        $this->assertEquals($newestPrice, $alc->newest_price_change);
+    }
+
+    public function test_it_can_get_its_oldest_price()
     {
         $oldestPrice = 10;
         $alc = $this->createAlcoholWithPriceChanges($oldestPrice);
@@ -32,7 +39,7 @@ class AlcoholTest extends TestCase
         $this->assertEquals($lowestPrice, $alc->lowest_price);
     }
 
-    public function createAlcoholWithPriceChanges(float $initPrice = 10.00)
+    public function createAlcoholWithPriceChanges(float $initPrice = 10.00, float $latestPrice = 12.0)
     {
         $alc = Alcohol::factory()->create([
             'price' => $initPrice,
@@ -40,7 +47,7 @@ class AlcoholTest extends TestCase
         $alc->update(['price' => 13.50]);
         $alc->update(['price' => 12.45]);
         $alc->update(['price' => 14.25]);
-        $alc->update(['price' => 11.55]);
+        $alc->update(['price' => $latestPrice]);
         return $alc;
     }
 }
