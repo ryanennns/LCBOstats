@@ -93,7 +93,7 @@ class UpdateAlcoholData extends Command
                 ->filter(fn(LCBOApiProduct $alcohol) => !$alcohol->isAPromotion() && !$alcohol->isBlackListed())
                 ->map(fn(LCBOApiProduct $alcohol) => $alcohol->toArray());
 
-            Alcohol::query()->upsert($data->toArray(), ['permanent_id']); // TODO: use upsert if at all possible
+            Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
 
             $progressBar->advance();
         }
