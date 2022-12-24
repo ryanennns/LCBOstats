@@ -96,6 +96,15 @@ class Alcohol extends Model
         return $this->hasMany(PriceChange::class, 'permanent_id', 'permanent_id');
     }
 
+    public function getNewestPriceChangeAttribute()
+    {
+        return $this->priceChanges()
+            ->where(['permanent_id' => $this->permanent_id])
+            ->orderBy('id')
+            ->pluck('price')
+            ->first();
+    }
+
     public function getOldestKnownPriceAttribute()
     {
         return $this->priceChanges()

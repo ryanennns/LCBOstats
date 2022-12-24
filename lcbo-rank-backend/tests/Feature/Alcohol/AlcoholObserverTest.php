@@ -9,16 +9,17 @@ class AlcoholObserverTest extends TestCase
 {
     public function test_it_tracks_price_changes()
     {
+        $updatePrice = 3.50;
         $alc = Alcohol::factory()->create([
             'permanent_id' => 1,
             'price' => 10.0,
         ]);
 
-        $alc->update(['price' => 3.50]);
+        $alc->update(['price' => $updatePrice]);
 
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => 1,
-            'price' => 3.50,
+            'price' => $updatePrice * 100,
         ]);
     }
 
@@ -43,7 +44,7 @@ class AlcoholObserverTest extends TestCase
 
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => 1,
-            'price' => $alc->price
+            'price' => $alc->price * 100
         ]);
     }
 }
