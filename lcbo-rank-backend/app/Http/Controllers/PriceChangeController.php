@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class PriceChangeController extends Controller
 {
+    public function index()
+    {
+        return PriceChangeResource::collection(
+            Alcohol::has('priceChanges', '>', 1)
+                ->paginate(25)
+        );
+    }
+
     public function show(Alcohol $alcohol, Request $request)
     {
         return (new PriceChangeResource($alcohol))->toArray($request);

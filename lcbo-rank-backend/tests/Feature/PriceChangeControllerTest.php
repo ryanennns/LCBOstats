@@ -37,4 +37,34 @@ class PriceChangeControllerTest extends TestCase
                 'oldest_price' => $alc->oldest_known_price,
             ]);
     }
+
+    public function test_it_can_get_alcohols_with_price_changes()
+    {
+        // todo make not fugly
+        $alc = Alcohol::factory()->create([
+            'permanent_id' => 1,
+            'price' => 10.0,
+        ]);
+
+        $alc->update(['price' => 12.0]);
+        $alc->update(['price' => 15.0]);
+        $alc->update(['price' => 17.0]);
+        $alc->update(['price' => 8.00]);
+
+        $alc = Alcohol::factory()->create([
+            'permanent_id' => 2,
+            'price' => 10.0,
+        ]);
+
+        $alc->update(['price' => 12.0]);
+        $alc->update(['price' => 15.0]);
+        $alc->update(['price' => 17.0]);
+        $alc->update(['price' => 8.00]);
+
+        $r = $this->get(route('api.history.index'))
+            ->assertSuccessful();
+        $r = json_decode($r->content());
+
+        $this->assertCount(2, $r->data);
+    }
 }

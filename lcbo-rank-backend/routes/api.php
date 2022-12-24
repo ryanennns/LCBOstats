@@ -16,5 +16,7 @@ Route::prefix('alcohol')->group(function () {
 Route::prefix('history')->group(function () {
     Route::get('/{alcohol}', 'App\Http\Controllers\PriceChangeController@show')
         ->name('api.history.show');
+    Route::get('/', 'App\Http\Controllers\PriceChangeController@index')
+        ->name('api.history.index');
 });
 
