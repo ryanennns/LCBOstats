@@ -7,6 +7,7 @@ use App\Models\Alcohol;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use stdClass;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -61,6 +62,8 @@ class UpdateAlcoholData extends Command
         } else {
             $this->fetchAllDataForGivenCategory($category);
         }
+
+        Artisan::call('price-change:find');
     }
 
     public function getExpectedNumberOfRecords(string $category): int
@@ -90,10 +93,7 @@ class UpdateAlcoholData extends Command
                 ->filter(fn(LCBOApiProduct $alcohol) => !$alcohol->isAPromotion() && !$alcohol->isBlackListed())
                 ->map(fn(LCBOApiProduct $alcohol) => $alcohol->toArray());
 
-//            Alcohol::query()->upsert($data->toArray(), ['permanent_id']); // TODO: use upsert if at all possible
-            $data->each(function ($alcohol) {
-                Alcohol::updateOrCreate(['permanent_id' => $alcohol['permanent_id']], $alcohol);
-            });
+            Alcohol::query()->upsert($data->toArray(), ['permanent_id']); // TODO: use upsert if at all possible
 
             $progressBar->advance();
         }

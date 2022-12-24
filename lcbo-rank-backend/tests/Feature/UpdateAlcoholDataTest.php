@@ -185,10 +185,11 @@ class UpdateAlcoholDataTest extends TestCase
 
     public function test_price_changes_are_logged()
     {
+        $initPrice = 100;
         $id = 17289;
         Alcohol::factory()->create([
             'permanent_id' => $id,
-            'price' => 100.0,
+            'price' => $initPrice,
         ]);
 
         Http::fake([
@@ -210,7 +211,7 @@ class UpdateAlcoholDataTest extends TestCase
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $id,
-            'price' => 100,
+            'price' => $initPrice * 100,
         ]);
     }
 }
