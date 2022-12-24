@@ -17,7 +17,7 @@ class PriceChangeTest extends TestCase
         $this->assertDatabaseCount('price_changes', 5);
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alc->permanent_id,
-            'price' => $initPrice * 100,
+            'price' => $initPrice,
         ]);
 
         $priceChange = 15.0;
@@ -29,7 +29,7 @@ class PriceChangeTest extends TestCase
         $this->assertDatabaseCount('price_changes', 5); // therefore we should have 5 changes still...
         $this->assertDatabaseMissing('price_changes', [ // and no PriceChange record documenting a change
             'permanent_id' => $alc->permanent_id,
-            'price' => $priceChange * 100,
+            'price' => $priceChange,
         ]);
         // price-change:find is called within alcohol:update -- the above assertions hypothetically occur "within" the
         // runtime of alcohol:update. not actually, but suspend disbelief for the purposes of this test.
@@ -40,7 +40,7 @@ class PriceChangeTest extends TestCase
         $this->assertDatabaseCount('price_changes', 6);
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alc->permanent_id,
-            'price' => $priceChange * 100,
+            'price' => $priceChange,
         ]);
 
         $priceChange = 9.0;
@@ -49,7 +49,7 @@ class PriceChangeTest extends TestCase
         $this->assertDatabaseCount('price_changes', 7); // change assertion as expected
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alc->permanent_id,
-            'price' => $priceChange * 100,
+            'price' => $priceChange,
         ]);
     }
 

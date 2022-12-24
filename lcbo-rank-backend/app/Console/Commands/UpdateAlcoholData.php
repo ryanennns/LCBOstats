@@ -45,6 +45,7 @@ class UpdateAlcoholData extends Command
         $category = ($this->option('category'));
         $lowerCaseCategory = strtolower($category);
 
+
         if (!in_array($category, Alcohol::THE_BIG_KAHUNAS) &&
             $lowerCaseCategory != 'the big kahunas' &&
             $lowerCaseCategory != 'all'

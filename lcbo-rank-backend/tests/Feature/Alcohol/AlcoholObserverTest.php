@@ -19,7 +19,7 @@ class AlcoholObserverTest extends TestCase
 
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => 1,
-            'price' => $updatePrice * 100,
+            'price' => $updatePrice,
         ]);
     }
 
@@ -44,7 +44,7 @@ class AlcoholObserverTest extends TestCase
 
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => 1,
-            'price' => $alc->price * 100
+            'price' => $alc->price
         ]);
     }
 }

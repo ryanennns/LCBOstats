@@ -21,7 +21,7 @@ class FindPriceChangesTest extends TestCase
 
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alcoholId,
-            'price' => $initPrice * 100,
+            'price' => $initPrice,
         ]);
     }
 
@@ -48,11 +48,11 @@ class FindPriceChangesTest extends TestCase
         $this->assertDatabaseCount('price_changes', 2); // command should have logged the init and update
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alcoholId,
-            'price' => $initPrice * 100, // todo jacob pls justify this bigint awfulness
+            'price' => $initPrice, // todo jacob pls justify this bigint awfulness
         ]);
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alcoholId,
-            'price' => $updatePrice * 100,
+            'price' => $updatePrice,
         ]);
     }
 
