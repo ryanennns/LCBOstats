@@ -100,7 +100,7 @@ class Alcohol extends Model
     {
         return $this->priceChanges()
             ->where(['permanent_id' => $this->permanent_id])
-            ->orderBy('id')
+            ->orderBy('id', 'desc')
             ->pluck('price')
             ->first();
     }
