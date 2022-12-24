@@ -76,4 +76,27 @@ class FindPriceChangesTest extends TestCase
             'permanent_id' => $permanentId,
         ]);
     }
+
+    public function test_it_doesnt_trample_its_own_init()
+    {
+        $alcoholId = 1;
+        $initPrice = 6.90;
+
+        Alcohol::query()->upsert(Alcohol::factory()->raw([ // first upsert simulates initial creation of a record
+            'permanent_id' => $alcoholId,
+            'price' => $initPrice,
+        ]), ['permanent_id']);
+
+        $this->artisan('price-change:find');
+
+        $this->assertDatabaseCount('price_changes', 1);
+
+        $this->artisan('price-change:find');
+
+        $this->assertDatabaseCount('price_changes', 1);
+
+        $this->artisan('price-change:find');
+
+        $this->assertDatabaseCount('price_changes', 1);
+    }
 }

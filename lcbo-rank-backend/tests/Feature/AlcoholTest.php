@@ -9,6 +9,7 @@ class AlcoholTest extends TestCase
 {
     public function test_it_can_get_its_latest_price_change()
     {
+        $this->withoutExceptionHandling();
         $newestPrice = 69;
         $alc = $this->createAlcoholWithPriceChanges(9.0, $newestPrice);
         $this->assertEquals($newestPrice, $alc->newest_price_change);

@@ -11,9 +11,9 @@ class PriceChange extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $casts = [
-        'price' => Currency::class,
-    ];
+//    protected $casts = [
+//        'price' => Currency::class,
+//    ];
 
     public function alcohol()
     {
