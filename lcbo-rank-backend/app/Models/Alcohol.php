@@ -98,8 +98,7 @@ class Alcohol extends Model
 
     public function getNewestPriceChangeAttribute()
     {
-//        dd($this->priceChanges->where('permanent_id' , $this->permanent_id));
-        return $this->priceChanges()
+        return $this->priceChanges
             ->where(['permanent_id' => $this->permanent_id])
             ->orderBy('id', 'desc')
             ->pluck('price')
@@ -108,7 +107,7 @@ class Alcohol extends Model
 
     public function getOldestKnownPriceAttribute()
     {
-        return $this->priceChanges()
+        return $this->priceChanges
             ->orderBy('id')
             ->pluck('price')
             ->first();
