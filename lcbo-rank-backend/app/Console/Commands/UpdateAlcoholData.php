@@ -6,6 +6,7 @@ use App\LCBOApiProduct;
 use App\Models\Alcohol;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
@@ -63,7 +64,9 @@ class UpdateAlcoholData extends Command
             $this->fetchAllDataForGivenCategory($category);
         }
 
-        Artisan::call('price-change:find');
+        if(Artisan::call('price-change:find') == Command::SUCCESS){
+            $this->info('Successfully logged PriceChanges.');
+        };
     }
 
     public function getExpectedNumberOfRecords(string $category): int
@@ -93,7 +96,12 @@ class UpdateAlcoholData extends Command
                 ->filter(fn(LCBOApiProduct $alcohol) => !$alcohol->isAPromotion() && !$alcohol->isBlackListed())
                 ->map(fn(LCBOApiProduct $alcohol) => $alcohol->toArray());
 
-            Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
+            try {
+                Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
+            } catch (QueryException $e) {
+                $this->info('An error occurred while mass inserting records. Trying again...');
+                Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
+            }
 
             $progressBar->advance();
         }
