@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Console\Commands\UpdateAlcoholData;
 use App\Models\Alcohol;
+use App\Models\PriceChange;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;

@@ -65,9 +65,11 @@ class UpdateAlcoholData extends Command
             $this->fetchAllDataForGivenCategory($category);
         }
 
+        sleep(1);
+
         if(Artisan::call('price-change:find') == Command::SUCCESS){
             $this->info('Successfully logged PriceChanges.');
-        };
+        }
     }
 
     public function getExpectedNumberOfRecords(string $category): int
