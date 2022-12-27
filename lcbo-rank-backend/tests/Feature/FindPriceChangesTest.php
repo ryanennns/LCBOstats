@@ -77,7 +77,7 @@ class FindPriceChangesTest extends TestCase
         ]);
     }
 
-    public function test_it_doesnt_trample_its_own_init()
+    public function test_it_doesnt_trample_its_own_init() // todo  what?
     {
         $alcoholId = 1;
         $initPrice = 6.90;
@@ -97,6 +97,20 @@ class FindPriceChangesTest extends TestCase
 
         $this->artisan('price-change:find');
 
+        $this->assertDatabaseCount('price_changes', 1);
+    }
+
+    public function test_it_detects_if_price_hasnt_changed()
+    {
+        $alc = Alcohol::factory()->create([
+            'price' => 3.95,
+        ]);
+
+        $this->artisan('price-change:find');
+        $this->assertDatabaseCount('price_changes', 1);
+        $this->artisan('price-change:find');
+        $this->assertDatabaseCount('price_changes', 1);
+        $this->artisan('price-change:find');
         $this->assertDatabaseCount('price_changes', 1);
     }
 }
