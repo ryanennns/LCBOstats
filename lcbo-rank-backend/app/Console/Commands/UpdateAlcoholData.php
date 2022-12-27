@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use stdClass;
 use Symfony\Component\Console\Helper\ProgressBar;

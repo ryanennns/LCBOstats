@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Scout\Searchable;
 
 /**
  * @property int permanent_id
@@ -114,15 +113,17 @@ class Alcohol extends Model
 
     public function getHighestPriceAttribute()
     {
-        $prices = $this->priceChanges
-            ->pluck('price');
-        return $prices->sortDesc()->first();
+        return $prices = $this->priceChanges
+            ->pluck('price')
+            ->sortDesc()
+            ->first();
     }
 
     public function getLowestPriceAttribute()
     {
-        $prices = $this->priceChanges
-            ->pluck('price');
-        return $prices->sort()->first();
+        return $prices = $this->priceChanges
+            ->pluck('price')
+            ->sort()
+            ->first();
     }
 }
