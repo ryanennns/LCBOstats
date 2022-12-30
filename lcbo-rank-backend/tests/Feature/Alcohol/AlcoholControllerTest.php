@@ -1202,4 +1202,23 @@ class AlcoholControllerTest extends TestCase
             "description" => "Bubbly light pink colour; aromas of fresh pink grapefruit dusted with sugar, rose petals and orange zest; on the palate it is refreshingly sweet and tart with flavours of ruby red grapefruit and ginger ale."
         ]);
     }
+
+    public function test_it_can_return_multiple_categories()
+    {
+        Alcohol::factory()->create([
+            'category' => 'Wine'
+        ]);
+        Alcohol::factory()->create([
+            'category' => 'Coolers'
+        ]);
+
+        $request = $this->get('api/alcohol?category[]=Wine&category[]=Coolers');
+
+        $request->assertJsonFragment([
+            'category' => 'Wine'
+        ]);
+        $request->assertJsonFragment([
+            'category' => 'Coolers'
+        ]);
+    }
 }

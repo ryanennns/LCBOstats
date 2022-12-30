@@ -61,9 +61,12 @@ class AlcoholFilters extends QueryFilter
         return $this->builder->where('brand', $brand);
     }
 
-    public function category($category): Builder
+    public function category($categories): Builder
     {
-        return $this->builder->where('category', $category);
+        collect($categories)->each(function($category) {
+            $this->builder->orWhere('category', $category);
+        });
+        return $this->builder;
     }
 
     public function subcategory($subcategory): Builder
