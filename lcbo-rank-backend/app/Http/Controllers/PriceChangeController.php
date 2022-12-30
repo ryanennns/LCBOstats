@@ -10,7 +10,7 @@ class PriceChangeController extends Controller
 {
     public function index()
     {
-        return PriceChangeResource::collection(
+        return PriceChangeResource::collection( // todo sort
             Alcohol::has('priceChanges', '>', 1)
                 ->paginate(25)
         );
