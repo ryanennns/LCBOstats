@@ -23,6 +23,7 @@ class AlcoholController extends Controller
         // todo refactor where to model level?
         return AlcoholResource::collection(
             Alcohol::filter($filters)
+                ->orderBy('permanent_id')
                 ->where('price_index', '!=', 'null')
                 ->paginate(self::PAGINATE_BY)
         );
