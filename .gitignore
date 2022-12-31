@@ -8,3 +8,6 @@ lcbo-rank-backend/tests/Fixtures/beer-response.json
 /lcbo-rank-backend/storage/debugbar/
 /lcbo-rank-backend/.env.testing
 /lcbo-rank-backend/node_modules/
+/lcbo-rank-backend/phpunit.xml
+/.idea/LCBO-Rank-App.iml
+/.idea/php.xml

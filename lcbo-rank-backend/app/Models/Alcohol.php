@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 /**
  * @property int permanent_id
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Alcohol extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     public const THE_BIG_KAHUNAS = [
         "Products|Beer & Cider",

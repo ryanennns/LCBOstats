@@ -71,7 +71,7 @@ class AlcoholControllerTest extends TestCase
         $responseArray = json_decode($response->getContent(), true)['data'];
 
         $response->assertSuccessful();
-        $this->assertLessThanOrEqual($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]);
+        $this->assertLessThanOrEqual($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]); // todo what
         $this->assertLessThanOrEqual($responseArray[2]["$sortField"], $responseArray[1]["$sortField"]);
     }
 
