@@ -2,21 +2,23 @@
 
 namespace Tests\Feature;
 
+use App\Events\PricesUpdated;
 use App\Models\Alcohol;
 use Tests\TestCase;
 
-class FindPriceChangesTest extends TestCase
+class CheckForPriceChangesTest extends TestCase
 {
     public function test_it_finds_init_price_changes()
     {
         $alcoholId = 1;
         $initPrice = 6.90;
+
         Alcohol::query()->upsert(Alcohol::factory()->raw([
             'permanent_id' => $alcoholId,
             'price' => $initPrice,
         ]), ['permanent_id']);
 
-        $this->artisan('price-change:find');
+        PricesUpdated::dispatch();
 
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alcoholId,
@@ -35,19 +37,19 @@ class FindPriceChangesTest extends TestCase
             'price' => $initPrice,
         ]), ['permanent_id']);
 
-        $this->artisan('price-change:find'); // command is run, creates first price change record
+        PricesUpdated::dispatch();
 
         Alcohol::query()->upsert(Alcohol::factory()->raw([ // second upset simulates updating of an existing record
             'permanent_id' => $alcoholId,
             'price' => $updatePrice,
         ]), ['permanent_id']);
 
-        $this->artisan('price-change:find'); // command is run, finds a changed  price
+        PricesUpdated::dispatch();
 
         $this->assertDatabaseCount('price_changes', 2); // command should have logged the init and update
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alcoholId,
-            'price' => $initPrice, // todo jacob pls justify this bigint awfulness
+            'price' => $initPrice,
         ]);
         $this->assertDatabaseHas('price_changes', [
             'permanent_id' => $alcoholId,
@@ -68,7 +70,7 @@ class FindPriceChangesTest extends TestCase
             'permanent_id' => $permanentId,
         ]);
 
-        $this->artisan('price-change:find');
+        PricesUpdated::dispatch();
 
         $this->assertDatabaseCount('price_changes', 1);
         $this->assertDatabaseHas('price_changes', [
@@ -76,7 +78,7 @@ class FindPriceChangesTest extends TestCase
         ]);
     }
 
-    public function test_it_doesnt_trample_its_own_init() // todo  what?
+    public function test_it_doesnt_create_multiple_init_price_changes()
     {
         $alcoholId = 1;
         $initPrice = 6.90;
@@ -86,30 +88,25 @@ class FindPriceChangesTest extends TestCase
             'price' => $initPrice,
         ]), ['permanent_id']);
 
-        $this->artisan('price-change:find');
-
+        PricesUpdated::dispatch();
         $this->assertDatabaseCount('price_changes', 1);
-
-        $this->artisan('price-change:find');
-
+        PricesUpdated::dispatch();
         $this->assertDatabaseCount('price_changes', 1);
-
-        $this->artisan('price-change:find');
-
+        PricesUpdated::dispatch();
         $this->assertDatabaseCount('price_changes', 1);
     }
 
-    public function test_it_detects_if_price_hasnt_changed()
+    public function test_it_detects_if_price_has_not_changed()
     {
-        $alc = Alcohol::factory()->create([
+        Alcohol::factory()->create([
             'price' => 3.95,
         ]);
 
-        $this->artisan('price-change:find');
+        PricesUpdated::dispatch();
         $this->assertDatabaseCount('price_changes', 1);
-        $this->artisan('price-change:find');
+        PricesUpdated::dispatch();
         $this->assertDatabaseCount('price_changes', 1);
-        $this->artisan('price-change:find');
+        PricesUpdated::dispatch();
         $this->assertDatabaseCount('price_changes', 1);
     }
 }
