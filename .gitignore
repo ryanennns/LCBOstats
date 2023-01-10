@@ -11,3 +11,4 @@ lcbo-rank-backend/tests/Fixtures/beer-response.json
 /lcbo-rank-backend/phpunit.xml
 /.idea/LCBO-Rank-App.iml
 /.idea/php.xml
+/lcbo-rank-backend/composer.lock
