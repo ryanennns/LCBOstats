@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Filters\AlcoholFilters;
 use App\Http\Resources\AlcoholResource;
 use App\Models\Alcohol;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -29,24 +28,13 @@ class AlcoholController extends Controller
         );
     }
 
-    public function getUpdated(Request $request): AnonymousResourceCollection
+    public function search(AlcoholFilters $filters, Request $request)
     {
-        $updatedSince = $request->input('updatedSince', Carbon::now()->subWeek());
-        $updatedRecords = Alcohol::query()
-            ->where('updated_at', '>', $updatedSince)
-            ->orderBy('permanent_id')
-            ->paginate(self::PAGINATE_BY);
+        $filteredIds = Alcohol::filter($filters)->select('permanent_id')->get()->pluck('permanent_id');
+        $searchedAlcohols = Alcohol::search($request->input('query', ''))
+            ->whereIn('permanent_id', $filteredIds->toArray());
 
-        return AlcoholResource::collection($updatedRecords);
-    }
-
-    public function search(Request $request)
-    {
-        return AlcoholResource::collection(
-            Alcohol::search($request->input('query', ''))
-//                ->where('price_index', '!=', 'null') // todo: ask jacob!
-                ->get()
-        );
+        return AlcoholResource::collection($searchedAlcohols->paginate(self::PAGINATE_BY));
     }
 }
 
