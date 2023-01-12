@@ -65,6 +65,7 @@ class UpdateAlcoholData extends Command
             $this->fetchAllDataForGivenCategory($category);
         }
 
+        $this->info('Finished gathering new data; dispatching PricesUpdated event.');
         PricesUpdated::dispatch();
     }
 
