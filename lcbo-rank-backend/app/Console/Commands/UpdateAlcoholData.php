@@ -12,10 +12,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use stdClass;
 use Symfony\Component\Console\Helper\ProgressBar;
-
+// todo don't bulk insert unless you've got money to spend lol
 class UpdateAlcoholData extends Command
 {
-    public const GET_IN_EACH_REQUEST = 250;
+    public const GET_IN_EACH_REQUEST = 50;
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
@@ -107,7 +107,7 @@ class UpdateAlcoholData extends Command
         }
     }
 
-    public function fetchDataByCategoryAndIndex(string $category, int $startIndex): Collection
+    public function fetchDataByCategoryAndIndex(string $category, int $startIndex, string $sortBy = "@title Ascending"): Collection
     {
         $response = Http::withHeaders(self::COPIED_HEADERS)
             ->asForm()
@@ -115,6 +115,7 @@ class UpdateAlcoholData extends Command
                 'aq' => "@ec_category=${category}",
                 'numberOfResults' => self::GET_IN_EACH_REQUEST,
                 'firstResult' => $startIndex,
+                'sortCriteria' => $sortBy,
             ]);
 
         return collect(json_decode($response->body())->results)
