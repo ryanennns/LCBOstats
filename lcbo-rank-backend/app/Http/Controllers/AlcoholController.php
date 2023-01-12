@@ -19,7 +19,6 @@ class AlcoholController extends Controller
 
     public function index(AlcoholFilters $filters): AnonymousResourceCollection
     {
-        // todo refactor where to model level?
         return AlcoholResource::collection(
             Alcohol::filter($filters)
                 ->orderBy('permanent_id')

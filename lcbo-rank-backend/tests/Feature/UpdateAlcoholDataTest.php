@@ -239,4 +239,28 @@ class UpdateAlcoholDataTest extends TestCase
         $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
         Event::assertDispatched(PricesUpdated::class);
     }
+
+    public function test_it_snickerss()
+    {
+        Alcohol::factory(500)->create();
+        Http::fake([
+            UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()
+                ->push(FixtureLoader::loadRawFixture('empty-response'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+                ->push(FixtureLoader::loadRawFixture('beer-response-chunk'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+                ->push(FixtureLoader::loadRawFixture('PriceChangeFixtures/beer-response-chunk-price-changes'),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+        ]);
+
+
+        $this->artisan("alcohol:update --category=\"Products|Beer & Cider\"");
+        $this->assertTrue(true);
+    }
 }
