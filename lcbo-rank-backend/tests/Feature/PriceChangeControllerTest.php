@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
+use App\Models\PriceChange;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -23,7 +24,7 @@ class PriceChangeControllerTest extends TestCase
 
         $this->get(route('api.history.show', [1]))
             ->assertSuccessful()
-            ->assertJsonFragment([ // todo fragment or no ? /shrug
+            ->assertJsonFragment([
                 'permanent_id' => $alc->permanent_id,
                 'title' => $alc->title,
                 'price_changes' => $alc->priceChanges->count(),
@@ -61,10 +62,35 @@ class PriceChangeControllerTest extends TestCase
         $alc->update(['price' => 17.0]);
         $alc->update(['price' => 8.00]);
 
-        $r = $this->get(route('api.history.index'))
+        $response = $this->get(route('api.history.index'))
             ->assertSuccessful();
-        $r = json_decode($r->content());
+        $response = json_decode($response->content());
 
-        $this->assertCount(2, $r->data);
+        $this->assertCount(2, $response->data);
+    }
+
+    public function test_it_sorts_by_created_at()
+    {
+        $alcohol = Alcohol::factory()->create([
+            'price' => 10,
+        ]);
+
+        Carbon::setTestNow(Carbon::now()->addHour());
+        $alcohol->update([
+            'price' => 12,
+        ]);
+
+        Carbon::setTestNow(Carbon::now()->addHour());
+        $alcohol->update([
+            'price' => 14,
+        ]);
+
+        $response = $this->get("api/history/$alcohol->permanent_id");
+        $priceChangeHistory = json_decode($response->content())->price_change_history;
+        collect($priceChangeHistory)->each(function ($array, $index) use ($priceChangeHistory) {
+            if (($index) >= (sizeof($priceChangeHistory) - 1))
+                return;
+            $this->assertLessThanOrEqual($array->created_at, $priceChangeHistory[$index + 1]->created_at);
+        });
     }
 }

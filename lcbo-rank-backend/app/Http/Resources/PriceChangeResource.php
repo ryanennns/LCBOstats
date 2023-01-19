@@ -12,7 +12,9 @@ class PriceChangeResource extends JsonResource
             'permanent_id' => $this->permanent_id,
             'title' => $this->title,
             'price_changes' => $this->priceChanges->count(),
-            'price_change_history' => $this->priceChanges
+            'price_change_history' => $this->priceChanges()
+                ->orderBy('created_at', 'desc')
+                ->get()
                 ->map(fn($priceChange) => [
                     'price' => $priceChange->price,
                     'created_at' => $priceChange->created_at->toISO8601String(),
