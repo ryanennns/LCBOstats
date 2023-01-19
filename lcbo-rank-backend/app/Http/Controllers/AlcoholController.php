@@ -33,6 +33,10 @@ class AlcoholController extends Controller
         $searchedAlcohols = Alcohol::search($request->input('query', ''))
             ->whereIn('permanent_id', $filteredIds->toArray());
 
+        if ($request->exists('sortBy')) {
+            $searchedAlcohols->orderBy($request->input('sortBy'));
+        }
+
         return AlcoholResource::collection($searchedAlcohols->paginate(self::PAGINATE_BY));
     }
 }
