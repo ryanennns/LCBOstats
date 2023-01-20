@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Filters\AlcoholFilters;
+use App\Http\Requests\AlcoholRequest;
 use App\Http\Resources\AlcoholResource;
 use App\Models\Alcohol;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Nette\Schema\ValidationException;
 
 class AlcoholController extends Controller
 {
@@ -17,7 +21,7 @@ class AlcoholController extends Controller
         return new AlcoholResource($alcohol);
     }
 
-    public function index(AlcoholFilters $filters): AnonymousResourceCollection
+    public function index(AlcoholFilters $filters, AlcoholRequest $request)
     {
         return AlcoholResource::collection(
             Alcohol::filter($filters)
@@ -27,19 +31,21 @@ class AlcoholController extends Controller
         );
     }
 
-    public function search(AlcoholFilters $filters, Request $request)
+    public function search(AlcoholFilters $filters, AlcoholRequest $request)
     {
         $filteredIds = Alcohol::filter($filters)->select('permanent_id')->get()->pluck('permanent_id');
-        $searchedAlcohols = Alcohol::search($request->input('query', ''))
-            ->whereIn('permanent_id', $filteredIds->toArray());
+        $searchedAlcohols = Alcohol::search($request->input('query', ''));
+
+        // todo unghetto this
+        if ($filteredIds === []) {
+            $searchedAlcohols->whereIn('permanent_id', $filteredIds->toArray());
+        }
 
         if ($request->exists('sortBy')) {
             $searchedAlcohols->orderBy($request->input('sortBy'));
-        }
-        if ($request->exists('sortAsc')) {
-            $searchedAlcohols->orderBy($request->input('sortAsc'), 'asc');
-        }
-        if ($request->exists('sortDesc')) {
+        } else if ($request->exists('sortAsc')) {
+            $searchedAlcohols->orderBy($request->input('sortAsc'));
+        } else if ($request->exists('sortDesc')) {
             $searchedAlcohols->orderBy($request->input('sortDesc'), 'desc');
         }
 

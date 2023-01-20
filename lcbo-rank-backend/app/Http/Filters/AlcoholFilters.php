@@ -9,7 +9,6 @@ class AlcoholFilters extends QueryFilter
     public function sortBy($column): Builder
     {
         return $this->builder->orderBy($column);
-//        return $this->sortBy($column);
     }
 
     public function sortAsc($column): Builder
