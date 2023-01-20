@@ -6,9 +6,20 @@ use Illuminate\Database\Eloquent\Builder;
 
 class AlcoholFilters extends QueryFilter
 {
-    public function sortBy($order, $sortAscendingDescending = 'asc'): Builder
+    public function sortBy($column): Builder
     {
-        return $this->builder->orderBy($order, $sortAscendingDescending);
+        return $this->builder->orderBy($column);
+//        return $this->sortBy($column);
+    }
+
+    public function sortAsc($column): Builder
+    {
+        return $this->builder->orderBy($column, 'asc');
+    }
+
+    public function sortDesc($column): Builder
+    {
+        return $this->builder->orderBy($column, 'desc');
     }
 
     public function minPriceIndex($minPriceIndex): Builder

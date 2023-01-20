@@ -133,9 +133,15 @@ return [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
         'key' => env('MEILISEARCH_KEY', null),
         'index-settings' => [
-             \App\Models\Alcohol::class => [
-                 'filterableAttributes'=> ['permanent_id'],
-             ],
+            \App\Models\Alcohol::class => [
+                'filterableAttributes' => ['permanent_id'],
+                'sortableAttributes' => [
+                    'permanent_id',
+                    'price_index',
+                    'price',
+                    'rating',
+                ]
+            ],
         ],
     ],
 

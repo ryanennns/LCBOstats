@@ -15,8 +15,6 @@ class AlcoholTest extends TestCase
         $alc->update(['price' => 4.45]);
         $alc->update(['price' => 3.95]);
 
-        dump($alc->priceChanges->toArray());
-
         $this->assertEquals(3.95, $alc->newest_price_change);
     }
 
@@ -28,8 +26,6 @@ class AlcoholTest extends TestCase
         $alc->update(['price' => 4.45]);
         $alc->update(['price' => 3.95]);
         $alc->update(['price' => 4.45]);
-
-        dump($alc->priceChanges->toArray());
 
         $this->assertEquals(3.50, $alc->oldest_known_price);
     }
