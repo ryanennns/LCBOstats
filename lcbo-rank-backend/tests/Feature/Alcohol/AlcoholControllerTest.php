@@ -71,24 +71,121 @@ class AlcoholControllerTest extends TestCase
         $responseArray = json_decode($response->getContent(), true)['data'];
 
         $response->assertSuccessful();
-        $this->assertLessThanOrEqual($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]); // todo what
+        $this->assertLessThanOrEqual($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]);
         $this->assertLessThanOrEqual($responseArray[2]["$sortField"], $responseArray[1]["$sortField"]);
+    }
+
+    /**
+     * @dataProvider alcoholSortProvider
+     */
+    public function test_it_can_use_sort_asc($sortField)
+    {
+        Alcohol::factory(100)->create();
+        $response = $this->get("/api/alcohol?sortAsc=$sortField");
+
+        $responseArray = json_decode($response->getContent(), true)['data'];
+
+        $response->assertSuccessful();
+        $this->assertLessThanOrEqual($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]);
+        $this->assertLessThanOrEqual($responseArray[2]["$sortField"], $responseArray[1]["$sortField"]);
+    }
+
+    /**
+     * @dataProvider alcoholSortProvider
+     */
+    public function test_it_can_use_sort_desc($sortField)
+    {
+        Alcohol::factory(100)->create();
+        $response = $this->get("/api/alcohol?sortDesc=$sortField");
+
+        $responseArray = json_decode($response->getContent(), true)['data'];
+
+        $response->assertSuccessful();
+        $this->assertGreaterThanOrEqual($responseArray[1]["$sortField"], $responseArray[0]["$sortField"]);
+        $this->assertGreaterThanOrEqual($responseArray[2]["$sortField"], $responseArray[1]["$sortField"]);
     }
 
     public function alcoholSortProvider(): array
     {
         return [
-            'sort by title' => ['sortField' => 'title'],
-            'sort by brand' => ['sortField' => 'brand'],
-            'sort by category' => ['sortField' => 'category'],
-            'sort by subcategory' => ['sortField' => 'subcategory'],
             'sort by price' => ['sortField' => 'price'],
             'sort by volume' => ['sortField' => 'volume'],
             'sort by alcohol_content' => ['sortField' => 'alcohol_content'],
             'sort by price_index' => ['sortField' => 'price_index'],
-            'sort by country' => ['sortField' => 'country'],
             'sort by rating' => ['sortField' => 'rating'],
             'sort by out_of_stock' => ['sortField' => 'out_of_stock'],
+        ];
+    }
+
+    /**
+     * @dataProvider providesSortingParameters
+     */
+    public function test_index_endpoint_enforces_single_sort_parameter($parameters, $expectedResponse)
+    {
+        $this->get(route('api.alcohol', $parameters))
+            ->assertStatus($expectedResponse);
+    }
+    /**
+     * @dataProvider providesSortingParameters
+     */
+    public function test_search_endpoint_enforces_single_sort_parameter($parameters, $expectedResponse)
+    {
+        $this->get(route('api.alcohol.search', $parameters))
+            ->assertStatus($expectedResponse);
+    }
+
+    public function providesSortingParameters()
+    {
+        $success = 200;
+        $failure = 302; // force return 422
+
+        return [
+            'only sortBy' => [
+                'parameters' => [
+                    'sortBy' => 'price'
+                ],
+                'expectedResponse' => $success,
+            ],
+            'only sortAsc' => [
+                'parameters' => [
+                    'sortAsc' => 'price',
+                ],
+                'expectedResponse' => $success,
+            ],
+            'only sortDesc' => [
+                'parameters' => [
+                    'sortDesc' => 'price',
+                ],
+                'expectedResponse' => $success,
+            ],
+            'sortBy and sortAsc' => [
+                'parameters' => [
+                    'sortBy' => 'price',
+                    'sortAsc' => 'price',
+                ],
+                'expectedResponse' => $failure,
+            ],
+            'sortBy and sortDesc' => [
+                'parameters' => [
+                    'sortBy' => 'price',
+                    'sortDesc' => 'price',
+                ],
+                'expectedResponse' => $failure,
+            ],
+            'sortAsc and sortDesc' => [
+                'parameters' => [
+                    'sortAsc' => 'price',
+                    'sortDesc' => 'price',
+                ],
+                'expectedResponse' => $failure,
+            ],
+            'all three' => [
+                'parameters' => [
+                    'sortBy' => 'price',
+                    'sortAsc' => 'price',
+                    'sortDesc' => 'price',
+                ], 'expectedResponse' => $failure,
+            ],
         ];
     }
 

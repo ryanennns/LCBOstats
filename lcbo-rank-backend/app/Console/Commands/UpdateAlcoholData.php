@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use stdClass;
 use Symfony\Component\Console\Helper\ProgressBar;
-// todo don't bulk insert unless you've got money to spend lol
+
 class UpdateAlcoholData extends Command
 {
     public const GET_IN_EACH_REQUEST = 50;
