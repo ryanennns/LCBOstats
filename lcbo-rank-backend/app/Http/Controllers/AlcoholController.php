@@ -33,13 +33,13 @@ class AlcoholController extends Controller
 
     public function search(AlcoholFilters $filters, AlcoholRequest $request)
     {
-        $filteredIds = Alcohol::filter($filters)->select('permanent_id')->get()->pluck('permanent_id');
-        $searchedAlcohols = Alcohol::search($request->input('query', ''));
-
-        // todo unghetto this
-        if ($filteredIds === []) {
-            $searchedAlcohols->whereIn('permanent_id', $filteredIds->toArray());
+        if (!$request->has('query')) {
+            return $this->index($filters, $request);
         }
+
+        $filteredIds = Alcohol::filter($filters)->select('permanent_id')->get()->pluck('permanent_id');
+        $searchedAlcohols = Alcohol::search($request->input('query', ''))
+            ->whereIn('permanent_id', $filteredIds->toArray());
 
         if ($request->exists('sortBy')) {
             $searchedAlcohols->orderBy($request->input('sortBy'));
