@@ -20,8 +20,8 @@ class AlcoholFactory extends Factory
 
         return [
             'permanent_id' => $this->faker->unique()->numberBetween(0, 10000),
-            'created_at' => Carbon::today()->subMonth()->toDateTimeString(),
-            'updated_at' => Carbon::today()->subMonth()->toDateTimeString(),
+            'created_at' => now()->toDateTimeString(),
+            'updated_at' => now()->toDateTimeString(),
             'title' => $this->faker->unique()->words(3, true),
             'brand' => $this->faker->company(),
             'category' => $this->faker->randomElement(

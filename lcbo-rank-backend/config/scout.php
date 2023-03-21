@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Alcohol;
+
 return [
 
     /*
@@ -15,7 +17,7 @@ return [
     |
     */
 
-    'driver' => env('SCOUT_DRIVER', 'meilisearch'),
+    'driver' => env('SCOUT_DRIVER', 'collection'),
 
     /*
     |--------------------------------------------------------------------------
@@ -133,7 +135,7 @@ return [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
         'key' => env('MEILISEARCH_KEY', null),
         'index-settings' => [
-            \App\Models\Alcohol::class => [
+            Alcohol::class => [
                 'filterableAttributes' => ['permanent_id'],
                 'sortableAttributes' => [
                     'permanent_id',
