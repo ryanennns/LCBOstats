@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Console\Commands\UpdateAlcoholData;
+use App\Jobs\CheckProductUrlsValid;
 use App\LCBOApiProduct;
 use App\Models\Alcohol;
 use Carbon\Carbon;
@@ -13,33 +14,47 @@ use Tests\TestCase;
 
 class CheckProductUrlsValidTest extends TestCase
 {
-    public function test_it_returns_alcohol_in_expected_shape()
+    public function test_it_updates_column_if_404_returned()
     {
-        $response = FixtureLoader::loadFixture('beer-response-chunk');
-        $collectedResults = collect($response->results);
-        $collectedResults = $collectedResults->map(fn($alcohol) => (new LCBOApiProduct($alcohol->raw)));
-        $collectedResults->each(function ($alcohol, $index) use ($response) {
-            $rawResponseData = $response->results[$index]->raw;
-            $this->assertIsArray($alcohol->toArray());
-            $this->assertEquals([
-                'permanent_id' => $alcohol->getPermanentId(),
-                'title' => $alcohol->getTitle(),
-                'brand' => $alcohol->getBrand(),
-                'category' => $alcohol->getCategory(),
-                'subcategory' => $alcohol->getSubcategory(),
-                'price' => $alcohol->getPrice(),
-                'volume' => $alcohol->getVolume(),
-                'alcohol_content' => $alcohol->getAlcoholContent(),
-                'price_index' => $alcohol->getPriceIndex(),
-                'country' => $alcohol->getCountry(),
-                'url' => $alcohol->getUrl(),
-                'thumbnail_url' => $alcohol->getThumbnailUrl(),
-                'image_url' => $alcohol->getImageUrl(),
-                'out_of_stock' => $alcohol->getOutOfStock(),
-                'description' => $alcohol->getDescription(),
-                'rating' => $alcohol->getRating(),
-                'reviews' => $alcohol->getReviews(),
-            ], $alcohol->toArray());
-        });
+        $alcohol = Alcohol::factory()->create([
+            'url' => 'snickers.org',
+            'valid_url' => true,
+        ]);
+
+        $this->assertDatabaseHas('alcohols', [
+            'permanent_id' => $alcohol->getKey(),
+            'valid_url' => true,
+        ]);
+
+        Http::fake([
+            'snickers.org' => Http::sequence()
+                ->push('oof', 404)
+        ]);
+
+        (new CheckProductUrlsValid())->handle();
+
+        $this->assertDatabaseHas('alcohols', [
+            'permanent_id' => $alcohol->getKey(),
+            'valid_url' => false,
+        ]);
+    }
+
+    public function test_it_creates_an_invalid_urls_entry()
+    {
+        $alcohol = Alcohol::factory()->create([
+            'url' => 'snickers.org',
+            'valid_url' => true,
+        ]);
+
+        Http::fake([
+            'snickers.org' => Http::sequence()
+                ->push('oof', 404)
+        ]);
+
+        (new CheckProductUrlsValid())->handle();
+
+        $this->assertDatabaseHas('invalid_urls', [
+            'alcohol_id' => $alcohol->getKey(),
+        ]);
     }
 }

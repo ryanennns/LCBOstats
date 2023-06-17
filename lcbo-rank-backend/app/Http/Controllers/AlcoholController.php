@@ -26,6 +26,7 @@ class AlcoholController extends Controller
         return AlcoholResource::collection(
             Alcohol::filter($filters)
                 ->orderBy('permanent_id')
+                ->where('valid_url', '=', true)
                 ->where('price_index', '!=', 'null')
                 ->paginate(self::PAGINATE_BY)
         );

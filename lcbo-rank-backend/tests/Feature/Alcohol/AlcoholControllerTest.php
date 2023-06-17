@@ -9,9 +9,6 @@ use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function test_it_returns_alcohols_in_expected_shape()
     {
         /** @var Alcohol $alcohol */
@@ -125,6 +122,7 @@ class AlcoholControllerTest extends TestCase
         $this->get(route('api.alcohol', $parameters))
             ->assertStatus($expectedResponse);
     }
+
     /**
      * @dataProvider providesSortingParameters
      */
@@ -1317,5 +1315,13 @@ class AlcoholControllerTest extends TestCase
         $request->assertJsonFragment([
             'category' => 'Coolers'
         ]);
+    }
+
+    public function test_it_does_not_return_invalid_urls()
+    {
+        $alcohol = Alcohol::factory()->create(['valid_url' => false]);
+
+        $request = $this->get('api/alcohol')
+            ->assertJsonMissing(['permanent_id' => $alcohol->getKey()]);
     }
 }

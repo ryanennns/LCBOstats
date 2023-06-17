@@ -66,25 +66,7 @@ class Alcohol extends Model
     protected $primaryKey = 'permanent_id';
     public $incrementing = false;
 
-    protected $fillable = [
-        'title',
-        'brand',
-        'category',
-        'subcategory',
-        'price',
-        'volume',
-        'alcohol_content',
-        'price_index',
-        'country',
-        'url',
-        'thumbnail_url',
-        'image_url',
-        'rating',
-        'out_of_stock',
-        'description',
-        'reviews',
-        'permanent_id'
-    ];
+    protected $guarded = [];
 
     public function scopeFilter($query, QueryFilter $filters): Builder
     {
