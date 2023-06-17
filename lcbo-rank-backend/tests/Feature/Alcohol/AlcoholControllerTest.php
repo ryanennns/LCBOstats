@@ -54,6 +54,7 @@ class AlcoholControllerTest extends TestCase
                     'reviews' => $alcohol->reviews,
                     'out_of_stock' => $alcohol->out_of_stock,
                     'description' => $alcohol->description,
+                    'is_buyable' => (int)$alcohol->is_buyable, // todo cast is_buyable to bool? :/
                 ]
             ]);
     }
