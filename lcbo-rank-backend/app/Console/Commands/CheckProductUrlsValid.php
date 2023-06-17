@@ -28,7 +28,7 @@ class CheckProductUrlsValid extends Command
             $alcohols->each(function (Alcohol $alcohol) use ($progressBar) {
                 $this->info($alcohol->url);
                 $status = Http::withHeaders([
-                    'UA' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36'
+                    'UA' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
                 ])->get($alcohol->url)->status();
                 $this->info($status);
                 if ($status === 404) {
