@@ -26,24 +26,14 @@ class AlcoholFilters extends QueryFilter
         return $this->builder->where('price_index', '>=', $minPriceIndex);
     }
 
-    public function minPrice($minPrice): Builder
-    {
-        return $this->builder->where('price', '>=', $minPrice);
-    }
-
-    public function minVolume($minVolume): Builder
-    {
-        return $this->builder->where('volume', '>=', $minVolume);
-    }
-
-    public function minAlcoholContent($minAlcoholContent): Builder
-    {
-        return $this->builder->where('alcohol_content', '>=', $minAlcoholContent);
-    }
-
     public function maxPriceIndex($maxPriceIndex): Builder
     {
         return $this->builder->where('price_index', '<=', $maxPriceIndex);
+    }
+
+    public function minPrice($minPrice): Builder
+    {
+        return $this->builder->where('price', '>=', $minPrice);
     }
 
     public function maxPrice($maxPrice): Builder
@@ -51,9 +41,19 @@ class AlcoholFilters extends QueryFilter
         return $this->builder->where('price', '<=', $maxPrice);
     }
 
+    public function minVolume($minVolume): Builder
+    {
+        return $this->builder->where('volume', '>=', $minVolume);
+    }
+
     public function maxVolume($maxVolume): Builder
     {
         return $this->builder->where('volume', '<=', $maxVolume);
+    }
+
+    public function minAlcoholContent($minAlcoholContent): Builder
+    {
+        return $this->builder->where('alcohol_content', '>=', $minAlcoholContent);
     }
 
     public function maxAlcoholContent($maxAlcoholContent): Builder

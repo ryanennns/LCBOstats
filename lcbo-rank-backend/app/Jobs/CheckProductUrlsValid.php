@@ -25,6 +25,7 @@ class CheckProductUrlsValid implements ShouldQueue
                     InvalidUrl::query()->create(['alcohol_id' => $alcohol->getKey()]);
                     $alcohol->update(['valid_url' => false]);
                 }
+                sleep(0.5);
             });
         });
     }
