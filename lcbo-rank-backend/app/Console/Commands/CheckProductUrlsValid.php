@@ -21,18 +21,22 @@ class CheckProductUrlsValid extends Command
         $progressBar = $this->output
             ->createProgressBar(Alcohol::query()->count());
         $progressBar->setFormat('custom');
+        $progressBar->setMessage('snickers');
         $progressBar->start();
 
         Alcohol::query()->chunk(20, function (Collection $alcohols) use ($progressBar) {
             $alcohols->each(function (Alcohol $alcohol) use ($progressBar) {
+                $this->info($alcohol->url);
                 $status = Http::get($alcohol->url)->status();
+                $this->info($status);
                 if ($status === 404) {
                     InvalidUrl::query()->create(['alcohol_id' => $alcohol->getKey()]);
+                    $this->info($status);
 //                    $alcohol->update(['valid_url' => false]);
                 }
-                $progressBar->advance();
                 sleep(0.5);
             });
+        $progressBar->advance();
         });
 
         return 0;
