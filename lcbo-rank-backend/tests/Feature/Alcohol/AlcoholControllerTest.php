@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
-use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
@@ -125,6 +123,7 @@ class AlcoholControllerTest extends TestCase
         $this->get(route('api.alcohol', $parameters))
             ->assertStatus($expectedResponse);
     }
+
     /**
      * @dataProvider providesSortingParameters
      */
@@ -1317,5 +1316,21 @@ class AlcoholControllerTest extends TestCase
         $request->assertJsonFragment([
             'category' => 'Coolers'
         ]);
+    }
+
+    public function test_it_returns_buyable_items()
+    {
+        $alcohol = Alcohol::factory()->create(['is_buyable' => true]);
+
+        $request = $this->get('api/alcohol')
+            ->assertJsonFragment(['permanent_id' => $alcohol->getKey()]);
+    }
+
+    public function test_it_does_not_return_not_buyable_items()
+    {
+        $alcohol = Alcohol::factory()->create(['is_buyable' => false]);
+
+        $request = $this->get('api/alcohol')
+            ->assertJsonMissing(['permanent_id' => $alcohol->getKey()]);
     }
 }

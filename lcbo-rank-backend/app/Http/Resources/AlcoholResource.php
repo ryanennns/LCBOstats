@@ -2,17 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AlcoholResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  Request  $request
-     * @return array
-     */
     public function toArray($request): array
     {
         return [
@@ -33,6 +26,7 @@ class AlcoholResource extends JsonResource
             'reviews' => $this->reviews,
             'out_of_stock' => (bool)$this->out_of_stock,
             'description' => $this->description,
+            'is_buyable' => $this->is_buyable,
         ];
     }
 }
