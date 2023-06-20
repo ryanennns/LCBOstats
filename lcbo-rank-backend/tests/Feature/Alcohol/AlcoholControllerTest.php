@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
-use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Helpers\MiscHelpers;
 use Tests\TestCase;
 
@@ -34,6 +32,7 @@ class AlcoholControllerTest extends TestCase
             'reviews' => 100,
             'out_of_stock' => false,
             'description' => 'it tastes so good :P',
+            'is_buyable' => false,
         ]);
 
         $response = $this->get("api/alcohol/$alcohol->permanent_id")
@@ -489,7 +488,7 @@ class AlcoholControllerTest extends TestCase
                 return;
             }
             $this->assertGreaterThanOrEqual($returnedRecords->get($index + 1)->price, $record->price);
-        }); 
+        });
     }
 
     public function test_it_returns_buyable_items()
