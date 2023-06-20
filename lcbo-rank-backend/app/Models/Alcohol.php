@@ -86,6 +86,15 @@ class Alcohol extends Model
         'permanent_id'
     ];
 
+    public static function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
+    {
+        if ($price == 0 || $alcoholContent == 0 || $volume == 0) {
+            return null;
+        }
+
+        return $price / (($alcoholContent / 100) * $volume);
+    }
+
     public function scopeFilter($query, QueryFilter $filters): Builder
     {
         return $filters->apply($query);

@@ -21,6 +21,13 @@ class AlcoholObserver
         }
     }
 
+    public function creating(Alcohol $alcohol): void
+    {
+        if(is_null($alcohol->price_index)) {
+            $alcohol->price_index = Alcohol::calculatePriceIndex($alcohol->price, $alcohol->alcohol_content, $alcohol->volume);
+        }
+    }
+
     /**
      * @param Alcohol $alcohol
      * @return void

@@ -127,7 +127,7 @@ class LCBOApiProduct
         return $this->raw->is_buyable === 'true';
     }
 
-    private function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
+    public function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
     {
         if ($price == 0 || $alcoholContent == 0 || $volume == 0) {
             return null;

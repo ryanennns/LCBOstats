@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\LCBOApiProduct;
 use App\Models\Alcohol;
 use Tests\TestCase;
 
@@ -58,5 +59,20 @@ class AlcoholTest extends TestCase
         $alc->update(['price' => 14.25]);
         $alc->update(['price' => $latestPrice]);
         return $alc;
+    }
+
+    public function test_it_auto_populates_price_index_if_none_given()
+    {
+        $alcohol = Alcohol::factory()->create([
+            'price_index' => null,
+            'price' => 10,
+            'alcohol_content' => 4,
+            'volume'  => 500,
+        ]);
+
+        $this->assertEquals(
+            Alcohol::calculatePriceIndex($alcohol->price, $alcohol->alcohol_content, $alcohol->volume),
+            $alcohol->price_index
+        );
     }
 }
