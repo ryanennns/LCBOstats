@@ -57,6 +57,7 @@ class AlcoholControllerTest extends TestCase
                     'reviews' => $alcohol->reviews,
                     'out_of_stock' => $alcohol->out_of_stock,
                     'description' => $alcohol->description,
+                    'is_buyable' => (int)$alcohol->is_buyable, // todo cast is_buyable to bool? :/
                 ]
             ]);
     }
@@ -488,6 +489,22 @@ class AlcoholControllerTest extends TestCase
                 return;
             }
             $this->assertGreaterThanOrEqual($returnedRecords->get($index + 1)->price, $record->price);
-        });
+        }); 
+    }
+
+    public function test_it_returns_buyable_items()
+    {
+        $alcohol = Alcohol::factory()->create(['is_buyable' => true]);
+
+        $request = $this->get('api/alcohol')
+            ->assertJsonFragment(['permanent_id' => $alcohol->getKey()]);
+    }
+
+    public function test_it_does_not_return_not_buyable_items()
+    {
+        $alcohol = Alcohol::factory()->create(['is_buyable' => false]);
+
+        $request = $this->get('api/alcohol')
+            ->assertJsonMissing(['permanent_id' => $alcohol->getKey()]);
     }
 }

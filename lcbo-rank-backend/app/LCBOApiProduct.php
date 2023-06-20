@@ -122,6 +122,11 @@ class LCBOApiProduct
         return $this->raw->permanentid;
     }
 
+    public function getIsBuyable(): bool
+    {
+        return $this->raw->is_buyable === 'true';
+    }
+
     private function calculatePriceIndex(?float $price, ?float $alcoholContent, ?int $volume): ?float
     {
         if ($price == 0 || $alcoholContent == 0 || $volume == 0) {
@@ -170,6 +175,7 @@ class LCBOApiProduct
             'description' => $this->getDescription(),
             'rating' => $this->getRating(),
             'reviews' => $this->getReviews(),
+            'is_buyable' => $this->getIsBuyable(),
         ];
     }
 }

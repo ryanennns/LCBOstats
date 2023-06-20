@@ -43,6 +43,7 @@ class AlcoholFactory extends Factory
             'description' => $this->faker->words(3, true),
             'rating' => $this->faker->numberBetween(0, 5),
             'reviews' => $this->faker->randomNumber(),
+            'is_buyable' => true,
         ];
     }
 }

@@ -6,11 +6,6 @@ use App\Http\Filters\AlcoholFilters;
 use App\Http\Requests\AlcoholRequest;
 use App\Http\Resources\AlcoholResource;
 use App\Models\Alcohol;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Nette\Schema\ValidationException;
 
 class AlcoholController extends Controller
 {
@@ -26,6 +21,7 @@ class AlcoholController extends Controller
         return AlcoholResource::collection(
             Alcohol::filter($filters)
                 ->orderBy('permanent_id')
+                ->where('is_buyable', true)
                 ->where('price_index', '!=', 'null')
                 ->paginate(self::PAGINATE_BY)
         );
