@@ -11,7 +11,7 @@
         "guzzlehttp/guzzle": "^7.5",
         "http-interop/http-factory-guzzle": "^1.2",
         "laravel/framework": "^9.19",
-        "laravel/sanctum": "^2.14.1",
+        "laravel/sanctum": "^3.2",
         "laravel/scout": "^9.6",
         "laravel/tinker": "^2.7",
         "laravel/vonage-notification-channel": "^3.0",
