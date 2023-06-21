@@ -4,8 +4,7 @@ Currently available at www.lcbostats.com/api/alcohol.
 
 ## Hitting the API
 
-The root URL for accessing the LCBOstats database is `http://lcbostats.com/api/alcohol`.
-You can make a `GET` request with the following parameters:
+The root URL for accessing the LCBOstats alcohol database is `http://lcbostats.com/api/alcohol`.
 
 ### Fetching by ID
 
