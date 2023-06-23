@@ -6,6 +6,7 @@ use App\Http\Filters\AlcoholFilters;
 use App\Http\Requests\AlcoholRequest;
 use App\Http\Resources\AlcoholResource;
 use App\Models\Alcohol;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AlcoholController extends Controller
 {
@@ -16,7 +17,7 @@ class AlcoholController extends Controller
         return new AlcoholResource($alcohol);
     }
 
-    public function index(AlcoholFilters $filters, AlcoholRequest $request)
+    public function index(AlcoholFilters $filters, AlcoholRequest $request): AnonymousResourceCollection
     {
         return AlcoholResource::collection(
             Alcohol::filter($filters)
@@ -27,7 +28,7 @@ class AlcoholController extends Controller
         );
     }
 
-    public function search(AlcoholFilters $filters, AlcoholRequest $request)
+    public function search(AlcoholFilters $filters, AlcoholRequest $request): AnonymousResourceCollection
     {
         if (!$request->has('query')) {
             return $this->index($filters, $request);
@@ -48,4 +49,3 @@ class AlcoholController extends Controller
         return AlcoholResource::collection($searchedAlcohols->paginate(self::PAGINATE_BY));
     }
 }
-

@@ -15,8 +15,8 @@ use Symfony\Component\Console\Helper\ProgressBar;
 
 class UpdateAlcoholData extends Command
 {
-    public const GET_IN_EACH_REQUEST = 50;
     private const AUTH_TOKEN = 'Bearer xx883b5583-07fb-416b-874b-77cce565d927';
+    public const GET_IN_EACH_REQUEST = 50;
     public const SEARCH_REQ_URL = 'https://platform.cloud.coveo.com/rest/search/v2?organizationId=lcboproductionx2kwygnc';
     public const COPIED_HEADERS = [
         'accept' => '*/*',
