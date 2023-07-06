@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Middleware\LogRequest;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('log-requests')->group(function() {
+Route::middleware(['log-requests', 'auth:sanctum'])->group(function() {
     Route::prefix('alcohol')->group(function () {
         Route::get('/updated', 'App\Http\Controllers\AlcoholController@getUpdated')
             ->name('api.alcohol.updated');
