@@ -1,19 +1,24 @@
-<?php /** @noinspection ALL */
+<?php
 
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
+use App\Models\User;
 use Tests\Helpers\MiscHelpers;
 use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        auth()->login(User::factory()->create());
+    }
+
     /**
-     * @return void
      */
     public function test_it_returns_alcohols_in_expected_shape()
     {
-        /** @var Alcohol $alcohol */
         $alcohol = Alcohol::factory()->create([
             'permanent_id' => 1243567890,
             'title' => "Ryan's World Famous",
@@ -35,7 +40,7 @@ class AlcoholControllerTest extends TestCase
             'is_buyable' => false,
         ]);
 
-        $response = $this->get("api/alcohol/$alcohol->permanent_id")
+        $this->get("api/alcohol/$alcohol->permanent_id")
             ->assertOk()
             ->assertJsonFragment([
                 'data' => [
@@ -192,7 +197,6 @@ class AlcoholControllerTest extends TestCase
     }
 
     /**
-     * @return void
      * @dataProvider filterMinConditionProvider
      */
     public function test_it_can_filter_by_min_values($filterValue, $queryParameter, $alcoholProperty)
@@ -233,7 +237,6 @@ class AlcoholControllerTest extends TestCase
     }
 
     /**
-     * @return void
      * @dataProvider filterMaxConditionProvider
      */
     public function test_it_can_filter_by_max_values($filterValue, $queryParameter, $alcoholProperty): void
@@ -320,7 +323,6 @@ class AlcoholControllerTest extends TestCase
     }
 
     /**
-     * @return void
      * @dataProvider provideAttributes
      */
     public function test_it_can_select_attributes($key, $attribute)
@@ -349,7 +351,7 @@ class AlcoholControllerTest extends TestCase
     public function test_it_doesnt_return_null_price_index()
     {
         Alcohol::factory(9)->create();
-        $alcohol = Alcohol::factory()->create([
+        Alcohol::factory()->create([
             'title' => 'meme',
             'price_index' => null,
         ]);
@@ -366,23 +368,23 @@ class AlcoholControllerTest extends TestCase
     {
         MiscHelpers::imitateSahilsFailingConditions();
 
-        $r1 = $this->get(route('api.alcohol', [
+        $response1 = $this->get(route('api.alcohol', [
             'category' => 'Coolers',
             'sortBy' => 'price_index',
             'page' => 1,
         ]));
-        $r2 = $this->get(route('api.alcohol', [
+        $response2 = $this->get(route('api.alcohol', [
             'category' => 'Coolers',
             'sortBy' => 'price_index',
             'page' => 2,
         ]));
 
 
-        $r2 = collect(json_decode($r2->content())->data)->map(fn($data) => $data->permanent_id);
-        $r1 = collect(json_decode($r1->content())->data)->map(fn($data) => $data->permanent_id);
+        $response2 = collect(json_decode($response2->content())->data)->map(fn($data) => $data->permanent_id);
+        $response1 = collect(json_decode($response1->content())->data)->map(fn($data) => $data->permanent_id);
 
-        $r1->each(function ($id) use ($r2) {
-            $this->assertNotContains($id, $r2);
+        $response1->each(function ($id) use ($response2) {
+            $this->assertNotContains($id, $response2);
         });
     }
 
@@ -495,15 +497,13 @@ class AlcoholControllerTest extends TestCase
     {
         $alcohol = Alcohol::factory()->create(['is_buyable' => true]);
 
-        $request = $this->get('api/alcohol')
-            ->assertJsonFragment(['permanent_id' => $alcohol->getKey()]);
+        $this->get('api/alcohol')->assertJsonFragment(['permanent_id' => $alcohol->getKey()]);
     }
 
     public function test_it_does_not_return_not_buyable_items()
     {
         $alcohol = Alcohol::factory()->create(['is_buyable' => false]);
 
-        $request = $this->get('api/alcohol')
-            ->assertJsonMissing(['permanent_id' => $alcohol->getKey()]);
+        $this->get('api/alcohol')->assertJsonMissing(['permanent_id' => $alcohol->getKey()]);
     }
 }

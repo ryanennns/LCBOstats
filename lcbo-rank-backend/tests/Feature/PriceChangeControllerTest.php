@@ -1,15 +1,22 @@
-<?php /** @noinspection ALL */
+<?php
 
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
 use App\Models\PriceChange;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class PriceChangeControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        auth()->login(User::factory()->create());
+    }
+
     public function test_it_returns_price_changes_in_expected_shape()
     {
         $alc = Alcohol::factory()->create([

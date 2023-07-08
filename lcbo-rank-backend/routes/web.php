@@ -5,33 +5,22 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return 'documentation coming soon :)';
 });
 
-Route::any('/tokens/create', function (Request $request) {
-//    $token = $request->user()->createToken($request->token_name);
-    $user = User::factory()->create([
-        'password' => 'mars'
-    ]);
+Route::prefix('users')->name('users.')->group(function () {
+    Route::post('store', '\App\Http\Controllers\UserController@store')
+        ->name('store');
+    Route::post('login', '\App\Http\Controllers\UserController@login')
+        ->name('login');
+});
 
-    auth()->login($user);
+Route::prefix('tokens')->name('tokens')->group(function () {
+    Route::get('create', '\App\Http\Controllers\TokensController@create')
+        ->name('create');
+});
 
-    $token = $user->createToken('meme');
-
-    return ['token' => $token->plainTextToken];
-})->withoutMiddleware(VerifyCsrfToken::class);
 
 Route::get('/login', function (Request $request) {
     $credentials = $request->validate([
