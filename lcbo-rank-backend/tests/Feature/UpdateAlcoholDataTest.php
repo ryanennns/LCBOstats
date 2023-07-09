@@ -16,7 +16,7 @@ class UpdateAlcoholDataTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_creates_records_from_returned_data(): void // todo test harder
+    public function test_it_creates_records_from_returned_data(): void // TODO test harder
     {
         Http::fake([
             UpdateAlcoholData::SEARCH_REQ_URL => Http::sequence()

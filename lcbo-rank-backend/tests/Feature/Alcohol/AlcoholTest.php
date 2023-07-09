@@ -9,54 +9,54 @@ class AlcoholTest extends TestCase
 {
     public function test_it_can_get_its_newest_price_change()
     {
-        $alc = Alcohol::factory()->create([
+        $alcohol = Alcohol::factory()->create([
             'price' => 3.95,
         ]);
-        $alc->update(['price' => 4.45]);
-        $alc->update(['price' => 3.95]);
+        $alcohol->update(['price' => 4.45]);
+        $alcohol->update(['price' => 3.95]);
 
-        $this->assertEquals(3.95, $alc->newest_price_change);
+        $this->assertEquals(3.95, $alcohol->newest_price_change);
     }
 
     public function test_it_can_get_its_oldest_price()
     {
-        $alc = Alcohol::factory()->create([
+        $alcohollc = Alcohol::factory()->create([
             'price' => 3.50,
         ]);
-        $alc->update(['price' => 4.45]);
-        $alc->update(['price' => 3.95]);
-        $alc->update(['price' => 4.45]);
+        $alcohollc->update(['price' => 4.45]);
+        $alcohollc->update(['price' => 3.95]);
+        $alcohollc->update(['price' => 4.45]);
 
-        $this->assertEquals(3.50, $alc->oldest_known_price);
+        $this->assertEquals(3.50, $alcohollc->oldest_known_price);
     }
 
     public function test_it_can_get_its_highest_price()
     {
         $highestPrice = 10000;
-        $alc = $this->createAlcoholWithPriceChanges();
-        $alc->update(['price' => $highestPrice]);
+        $alcohol = $this->createAlcoholWithPriceChanges();
+        $alcohol->update(['price' => $highestPrice]);
 
-        $this->assertEquals($highestPrice, $alc->highest_price);
+        $this->assertEquals($highestPrice, $alcohol->highest_price);
     }
 
     public function test_it_can_get_its_lowest_price()
     {
         $lowestPrice = 0.50;
-        $alc = $this->createAlcoholWithPriceChanges();
-        $alc->update(['price' => $lowestPrice]);
+        $alcohol = $this->createAlcoholWithPriceChanges();
+        $alcohol->update(['price' => $lowestPrice]);
 
-        $this->assertEquals($lowestPrice, $alc->lowest_price);
+        $this->assertEquals($lowestPrice, $alcohol->lowest_price);
     }
 
     public function createAlcoholWithPriceChanges(float $initPrice = 10.00, float $latestPrice = 12.0)
     {
-        $alc = Alcohol::factory()->create([
+        $alcohol = Alcohol::factory()->create([
             'price' => $initPrice,
         ]);
-        $alc->update(['price' => 13.50]);
-        $alc->update(['price' => 12.45]);
-        $alc->update(['price' => 14.25]);
-        $alc->update(['price' => $latestPrice]);
-        return $alc;
+        $alcohol->update(['price' => 13.50]);
+        $alcohol->update(['price' => 12.45]);
+        $alcohol->update(['price' => 14.25]);
+        $alcohol->update(['price' => $latestPrice]);
+        return $alcohol;
     }
 }
