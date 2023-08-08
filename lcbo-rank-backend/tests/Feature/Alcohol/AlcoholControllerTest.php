@@ -133,7 +133,7 @@ class AlcoholControllerTest extends TestCase
             ->assertStatus($expectedResponse);
     }
 
-    public function providesSortingParameters()
+    public function providesSortingParameters(): array
     {
         $success = 200;
         $failure = 302;
@@ -329,7 +329,7 @@ class AlcoholControllerTest extends TestCase
             ]);
     }
 
-    public function provideAttributes()
+    public function provideAttributes(): array
     {
         return [
             'title' => ['title', "Ryan's testing booze"],
