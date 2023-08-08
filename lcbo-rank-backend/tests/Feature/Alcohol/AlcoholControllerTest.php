@@ -3,11 +3,25 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use Tests\Helpers\MiscHelpers;
 use Tests\TestCase;
 
 class AlcoholControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $user = User::factory()->create();
+        $user->createToken()->plaintextToken;
+
+        Sanctum::actingAs(
+            User::factory()->create(),
+            ['query-alcohol']
+        );
+    }
+
     public function test_it_returns_alcohols_in_expected_shape()
     {
         /** @var Alcohol $alcohol */

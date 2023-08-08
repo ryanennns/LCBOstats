@@ -16,3 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return 'documentation coming soon :)';
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('snickers', function () {
+        return 'hello';
+    });
+});
+
