@@ -9,24 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
-/**
- * @property int permanent_id
- * @property String title
- * @property String brand
- * @property String category
- * @property String subcategory
- * @property double price
- * @property double volume
- * @property double alcohol_content
- * @property double price_index
- * @property String url
- * @property String thumbnail_url
- * @property String image_url
- * @property double rating
- * @property integer reviews
- * @property boolean out_of_stock
- * @property String description
- */
 class Alcohol extends Model
 {
     use HasFactory, Searchable;
