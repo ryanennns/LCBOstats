@@ -19,11 +19,12 @@ class AlcoholController extends Controller
 
     public function index(AlcoholFilters $filters, AlcoholRequest $request): AnonymousResourceCollection
     {
+
         return AlcoholResource::collection(
             Alcohol::filter($filters)
                 ->orderBy('permanent_id')
                 ->where('is_buyable', true)
-                ->where('price_index', '!=', 'null')
+                ->whereNotNull('price_index')
                 ->paginate(self::PAGINATE_BY)
         );
     }

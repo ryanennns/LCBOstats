@@ -23,7 +23,7 @@ class AlcoholFilters extends QueryFilter
 
     public function minPriceIndex($minPriceIndex): Builder
     {
-        return $this->builder->where('price_index', '>=', $minPriceIndex);
+        return $this->builder->where('price_index', '>=', (float)$minPriceIndex);
     }
 
     public function minPrice($minPrice): Builder
@@ -43,7 +43,7 @@ class AlcoholFilters extends QueryFilter
 
     public function maxPriceIndex($maxPriceIndex): Builder
     {
-        return $this->builder->where('price_index', '<=', $maxPriceIndex);
+        return $this->builder->where('price_index', '<=', (float)$maxPriceIndex);
     }
 
     public function maxPrice($maxPrice): Builder
@@ -73,10 +73,7 @@ class AlcoholFilters extends QueryFilter
 
     public function category($categories): Builder
     {
-        collect($categories)->each(function($category) {
-            $this->builder->orWhere('category', $category);
-        });
-        return $this->builder;
+        return $this->builder->whereIn('category', $categories);
     }
 
     public function subcategory($subcategory): Builder
