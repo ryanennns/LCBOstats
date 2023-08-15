@@ -38,6 +38,7 @@ class AlcoholController extends Controller
         $searchedAlcohols = Alcohol::search($request->input('query', ''))
             ->whereIn('permanent_id', $filteredIds->toArray());
 
+        // god is not proud of this
         if ($request->exists('sortBy')) {
             $searchedAlcohols->orderBy($request->input('sortBy'));
         } else if ($request->exists('sortAsc')) {
