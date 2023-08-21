@@ -23,7 +23,7 @@ class AlcoholController extends Controller
             Alcohol::filter($filters)
                 ->orderBy('permanent_id')
                 ->where('is_buyable', true)
-                ->where('price_index', '!=', 'null')
+                ->whereNotNull('price_index')
                 ->paginate(self::PAGINATE_BY)
         );
     }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Alcohol;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\Helpers\MiscHelpers;
 use Tests\TestCase;
 
@@ -56,6 +57,29 @@ class AlcoholControllerTest extends TestCase
                     'is_buyable' => (int)$alcohol->is_buyable, // todo cast is_buyable to bool? :/
                 ]
             ]);
+    }
+
+    public function test_it_does_not_die_when_this_is_hit()
+    {
+        self::markTestSkipped();
+        Alcohol::factory(7)->sequence(
+            ['category' => 'Wine', 'price_index' => 7.38],
+            ['category' => 'Wine', 'price_index' => 37.38],
+            ['category' => 'Beer & Cider', 'price_index' => 7.38],
+            ['category' => 'Beer & Cider', 'price_index' => 0.38],//
+            ['category' => 'Spirits', 'price_index' => 7.38],
+            ['category' => 'Coolers', 'price_index' => 0.9],
+            ['category' => 'Coolers', 'price_index' => 7.38],
+        )->create();
+
+        $url = '/api/alcohol?sortAsc=price_index&category[]=Wine&category[]=Beer%20%26%20Cider&category[]=Spirits&category[]=Coolers&minPriceIndex=3.0&maxPriceIndex=30.0';
+
+        $response = $this->get($url);
+
+
+        $response->assertOk()->dd();
+
+        $response->assertJsonCount(4, 'data');
     }
 
     /**
