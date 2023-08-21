@@ -73,7 +73,11 @@ class AlcoholFilters extends QueryFilter
 
     public function category($categories): Builder
     {
-        return $this->builder->whereIn('category', $categories);
+        if(gettype($categories) === 'string') {
+            return $this->builder->where('category', $categories);
+        } else {
+            return $this->builder->whereIn('category', $categories);
+        }
     }
 
     public function subcategory($subcategory): Builder

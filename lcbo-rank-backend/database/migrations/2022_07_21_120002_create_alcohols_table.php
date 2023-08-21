@@ -12,14 +12,13 @@ return new class extends Migration {
             $table->timestamps();
             $table->string('title');
             $table->string('brand')->nullable();
-            $table->string('category');
-//            $table->enum('category', [ todo rip this
-//                    'Beer & Cider',
-//                    'Spirits',
-//                    'Coolers',
-//                    'Wine'
-//                ]
-//            );
+            $table->enum('category', [
+                    'Beer & Cider',
+                    'Spirits',
+                    'Coolers',
+                    'Wine'
+                ]
+            );
             $table->string('subcategory')->nullable();
             $table->double('price')->nullable();
             $table->double('volume')->nullable();
