@@ -59,29 +59,6 @@ class AlcoholControllerTest extends TestCase
             ]);
     }
 
-    public function test_it_does_not_die_when_this_is_hit()
-    {
-        self::markTestSkipped();
-        Alcohol::factory(7)->sequence(
-            ['category' => 'Wine', 'price_index' => 7.38],
-            ['category' => 'Wine', 'price_index' => 37.38],
-            ['category' => 'Beer & Cider', 'price_index' => 7.38],
-            ['category' => 'Beer & Cider', 'price_index' => 0.38],//
-            ['category' => 'Spirits', 'price_index' => 7.38],
-            ['category' => 'Coolers', 'price_index' => 0.9],
-            ['category' => 'Coolers', 'price_index' => 7.38],
-        )->create();
-
-        $url = '/api/alcohol?sortAsc=price_index&category[]=Wine&category[]=Beer%20%26%20Cider&category[]=Spirits&category[]=Coolers&minPriceIndex=3.0&maxPriceIndex=30.0';
-
-        $response = $this->get($url);
-
-
-        $response->assertOk()->dd();
-
-        $response->assertJsonCount(4, 'data');
-    }
-
     /**
      * @dataProvider alcoholSortProvider
      */
@@ -433,79 +410,6 @@ class AlcoholControllerTest extends TestCase
         $returnedRecords = collect(json_decode($response->content())->data);
 
         $this->assertCount(25, $returnedRecords);
-    }
-
-    public function test_search_returns_expected_number_of_records_when_given_query()
-    {
-        self::markTestSkipped();
-        for ($i = 0; $i < 50; $i++) {
-            Alcohol::factory()->create([
-                'title' => "snickers-$i"
-            ]);
-        }
-
-        $response = $this->get(route('api.alcohol.search', [
-            'sortAsc' => 'price_index',
-            'query' => 'snickers',
-        ]));
-
-        $returnedRecords = collect(json_decode($response->content())->data);
-
-        $this->assertCount(25, $returnedRecords);
-    }
-
-    public function test_search_returns_expected_number_of_records_when_given_query_and_sorting_ascending()
-    {
-        self::markTestSkipped();
-
-        for ($i = 0; $i < 50; $i++) {
-            Alcohol::factory()->create([
-                'title' => "snickers-$i",
-            ]);
-        }
-
-        $response = $this->get(route('api.alcohol.search', [
-            'sortAsc' => 'price',
-            'query' => 'snickers',
-        ]));
-
-        $returnedRecords = collect(json_decode($response->content())->data);
-
-        $this->assertCount(25, $returnedRecords);
-        $returnedRecords->each(function ($record, $index) use ($returnedRecords) {
-            if ($index + 1 === $returnedRecords->count()) {
-                return;
-            }
-            $this->assertLessThanOrEqual($returnedRecords->get($index + 1)->price, $record->price);
-        });
-    }
-
-    public function test_search_returns_expected_number_of_records_when_given_query_and_sorting_descending()
-    {
-        self::markTestSkipped();
-
-        for ($i = 0; $i < 50; $i++) {
-            Alcohol::factory()->create([
-                'title' => "snickers-$i",
-                'price' => $i,
-            ]);
-        }
-
-        $response = $this->get(route('api.alcohol.search', [
-            'sortDesc' => 'price',
-            'query' => 'snickers',
-        ]));
-
-        $returnedRecords = collect(json_decode($response->content())->data);
-
-        $this->assertCount(25, $returnedRecords);
-
-        $returnedRecords->each(function ($record, $index) use ($returnedRecords) {
-            if ($index + 1 === $returnedRecords->count()) {
-                return;
-            }
-            $this->assertGreaterThanOrEqual($returnedRecords->get($index + 1)->price, $record->price);
-        });
     }
 
     public function test_it_returns_buyable_items()

@@ -23,8 +23,9 @@ class LCBOApiProduct
     {
         $returnValue = false;
         collect($this->raw->ec_category)->each(function (string $categoryLayer) use (&$returnValue) {
-            if (str_contains('Promotion', $categoryLayer))
+            if (str_contains('Promotion', $categoryLayer)) {
                 $returnValue = true;
+            }
         });
         return $returnValue;
     }
@@ -54,7 +55,9 @@ class LCBOApiProduct
 
     public function getCategory(): string
     {
-        return isset($this->raw->ec_category_filter) ? explode('|', $this->raw->ec_category_filter[0])[1] : '';
+        return isset($this->raw->ec_category_filter)
+            ? explode('|', $this->raw->ec_category_filter[0])[1]
+            : 'Beer & Cider';
     }
 
     public function getSubcategory(): ?string

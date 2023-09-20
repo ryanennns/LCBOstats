@@ -12,15 +12,9 @@ class UpdateAlcoholDataTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @param $category
-     * @return void
-     * @dataProvider provideAlcoholCategories
-     */
-    public function test_it_can_scrape_entire_categories($category): void
+    /** @dataProvider provideAlcoholCategories */
+    public function it_can_scrape_entire_categories($category): void
     {
-        self::markTestSkipped();
-
         $initResponse = Http::withHeaders(UpdateAlcoholData::COPIED_HEADERS)
             ->asForm()
             ->post(UpdateAlcoholData::SEARCH_REQ_URL, [
