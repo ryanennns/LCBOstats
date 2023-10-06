@@ -10,6 +10,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 use Symfony\Component\Console\Helper\ProgressBar;
 
@@ -100,7 +101,13 @@ class UpdateAlcoholData extends Command
                 Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
             } catch (QueryException $e) {
                 $this->info('An error occurred while mass inserting records. Trying again...');
-                Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
+                $data->each(function ($thing) {
+                    try {
+                        Alcohol::query()->insert($thing);
+                    } catch (\Exception $e) {
+                        Log::error("Error inserting\nException:\n{$e->getMessage()}", $thing);
+                    }
+                });
             }
 
             $progressBar->advance();
