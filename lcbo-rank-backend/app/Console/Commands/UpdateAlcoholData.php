@@ -42,6 +42,8 @@ class UpdateAlcoholData extends Command
 
     public function handle(): void
     {
+        Log::info('Running UpdateAlcoholData', ['ooga' => 'booga']);
+
         $start = Carbon::now();
         $category = ($this->option('category'));
         $lowerCaseCategory = strtolower($category);
