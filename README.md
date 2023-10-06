@@ -121,7 +121,7 @@ change in price, but rather the creation of the item itself.
 
 #### Response Content
 
-Each price change request will return a JSON object that returns the following:
+Each price change request will return a JSON object structured as follows:
 
 - An outer array `data`, an array wrapper for the multiple price changes that are being
   returned
