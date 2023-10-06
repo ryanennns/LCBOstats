@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Alcohol;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class LCBOApiProduct
@@ -54,7 +55,26 @@ class LCBOApiProduct
 
     public function getCategory(): string
     {
-        return isset($this->raw->ec_category_filter) ? explode('|', $this->raw->ec_category_filter[0])[1] : '';
+        $category = isset($this->raw->ec_category_filter) ? explode('|', $this->raw->ec_category_filter[0])[1] : '';
+
+        if (!in_array($category, [
+            'Beer & Cider',
+            'Spirits',
+            'Coolers',
+            'Wine'
+        ])) {
+            if($category === 'LCBO') {
+                return explode('|', $this->raw->ec_category_filter[0])[3];
+            }
+
+            Log::info("LCBOApiProduct::getCategory found a bad value!\nYou should probably refactor that code, you know...\n", [
+                'category' => $category,
+                'explode statement' => explode('|', $this->raw->ec_category_filter[0])[1],
+                'ec_category_filter' => $this->raw->ec_category_filter,
+            ]);
+        }
+
+        return $category;
     }
 
     public function getSubcategory(): ?string
