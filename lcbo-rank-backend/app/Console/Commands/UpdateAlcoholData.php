@@ -101,11 +101,11 @@ class UpdateAlcoholData extends Command
                 Alcohol::query()->upsert($data->toArray(), ['permanent_id']);
             } catch (QueryException $e) {
                 $this->info('An error occurred while mass inserting records. Trying again...');
-                $data->each(function ($thing) {
+                $data->each(function ($alcohol) {
                     try {
-                        Alcohol::query()->insert($thing);
+                        Alcohol::query()->updateOrCreate(['permanent_id' => $alcohol['permanent_id']], $alcohol);
                     } catch (\Exception $e) {
-                        Log::error("Error inserting\nException:\n{$e->getMessage()}", $thing);
+                        Log::error("Error inserting\nException:\n{$e->getMessage()}", $alcohol);
                     }
                 });
             }
