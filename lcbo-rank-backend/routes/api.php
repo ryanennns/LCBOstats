@@ -21,4 +21,9 @@ Route::middleware('log-requests')->group(function() {
         Route::get('/', 'App\Http\Controllers\PriceChangeController@index')
             ->name('api.history.index');
     });
+
+    Route::prefix('sales')->group(function () {
+        Route::get('/', 'App\Http\Controllers\SaleController@index')
+            ->name('api.sales.index');
+    });
 });
