@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\LogRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('log-requests')->group(function() {
