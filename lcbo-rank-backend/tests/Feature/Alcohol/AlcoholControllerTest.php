@@ -11,7 +11,6 @@ class AlcoholControllerTest extends TestCase
 {
     public function test_it_returns_alcohols_in_expected_shape()
     {
-        /** @var Alcohol $alcohol */
         $alcohol = Alcohol::factory()->create([
             'permanent_id' => 1243567890,
             'title' => "Ryan's World Famous",

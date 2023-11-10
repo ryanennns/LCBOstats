@@ -7,17 +7,13 @@ use App\Models\PriceChange;
 
 class AlcoholObserver
 {
-    public function creating(Alcohol $alcohol)
+    public function creating(Alcohol $alcohol): void
     {
         if($alcohol->category === 'Beer and Cider') {
             $alcohol->category = 'Beer & Cider';
         }
     }
 
-    /**
-     * @param Alcohol $alcohol
-     * @return void
-     */
     public function updating(Alcohol $alcohol): void
     {
         if(collect($alcohol->getDirty())->has('price')) {
@@ -28,10 +24,6 @@ class AlcoholObserver
         }
     }
 
-    /**
-     * @param Alcohol $alcohol
-     * @return void
-     */
     public function created(Alcohol $alcohol): void
     {
         PriceChange::create([
