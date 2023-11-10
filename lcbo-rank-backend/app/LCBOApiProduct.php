@@ -63,6 +63,7 @@ class LCBOApiProduct
             'Coolers',
             'Wine'
         ])) {
+            // todo document what caused this
             if($category === 'LCBO') {
                 return explode('|', $this->raw->ec_category_filter[0])[3];
             }

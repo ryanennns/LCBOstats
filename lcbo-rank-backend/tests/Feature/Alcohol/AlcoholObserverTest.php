@@ -47,4 +47,16 @@ class AlcoholObserverTest extends TestCase
             'price' => $alcohol->price
         ]);
     }
+
+    public function test_it_changes_beer_and_cider_to_ampersand()
+    {
+        $alcohol = Alcohol::factory()->create([
+            'category' => 'Beer and Cider'
+        ]);
+
+        $this->assertDatabaseHas('alcohols', [
+            'permanent_id' => $alcohol->getKey(),
+            'category' => Alcohol::BEER_AND_CIDER
+        ]);
+    }
 }

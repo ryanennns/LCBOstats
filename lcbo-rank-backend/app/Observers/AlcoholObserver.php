@@ -7,6 +7,13 @@ use App\Models\PriceChange;
 
 class AlcoholObserver
 {
+    public function creating(Alcohol $alcohol)
+    {
+        if($alcohol->category === 'Beer and Cider') {
+            $alcohol->category = 'Beer & Cider';
+        }
+    }
+
     /**
      * @param Alcohol $alcohol
      * @return void
