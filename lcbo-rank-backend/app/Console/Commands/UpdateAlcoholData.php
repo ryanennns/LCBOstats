@@ -77,7 +77,7 @@ class UpdateAlcoholData extends Command
         $initResponse = Http::withHeaders(self::COPIED_HEADERS)
             ->asForm()
             ->post(self::SEARCH_REQ_URL, [
-                'aq' => "@ec_category=${category}",
+                'aq' => "@ec_category=$category",
                 'firstResult' => 0,
                 'numberOfResults' => 0,
             ]);
@@ -121,7 +121,7 @@ class UpdateAlcoholData extends Command
         $response = Http::withHeaders(self::COPIED_HEADERS)
             ->asForm()
             ->post(self::SEARCH_REQ_URL, [
-                'aq' => "@ec_category=${category}",
+                'aq' => "@ec_category=$category",
                 'numberOfResults' => self::GET_IN_EACH_REQUEST,
                 'firstResult' => $startIndex,
                 'sortCriteria' => $sortBy,
