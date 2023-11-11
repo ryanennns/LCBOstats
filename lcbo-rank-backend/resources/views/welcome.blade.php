@@ -460,28 +460,28 @@
         <ul>
             <li><span class="font-mono">sortAsc=</span> - sorts results ascending by the data field specified.</li>
             <li><span class="font-mono">sortDesc=</span> - sorts results descending by the data field specified.</li>
-            <li><span class="font-mono">minPriceIndex=</span> - sets the minimum `priceIndex` returned by the api to the
+            <li><span class="font-mono">minPriceIndex=</span> - sets the minimum <span class="font-mono">priceIndex</span> returned by the api to the
                 value you've specified.
             </li>
-            <li><span class="font-mono">maxPriceIndex=</span> - sets the maximum `priceIndex` returned by the api to the
+            <li><span class="font-mono">maxPriceIndex=</span> - sets the maximum <span class="font-mono">priceIndex</span> returned by the api to the
                 value you've specified.
             </li>
-            <li><span class="font-mono">minPrice=</span> - sets the minimum `price` returned by the api to the value
+            <li><span class="font-mono">minPrice=</span> - sets the minimum <span class="font-mono">price</span> returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">maxPrice=</span> - sets the maximum `price` returned by the api to the value
+            <li><span class="font-mono">maxPrice=</span> - sets the maximum <span class="font-mono">price</span> returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">minVolume=</span> - sets the minimum `volume` returned by the api to the value
+            <li><span class="font-mono">minVolume=</span> - sets the minimum <span class="font-mono">volume</span> returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">maxVolume=</span> - sets the maximum `volume` returned by the api to the value
+            <li><span class="font-mono">maxVolume=</span> - sets the maximum <span class="font-mono">volume</span> returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">minAlcoholContent=</span> - sets the minimum `alcoholContent` returned by the
+            <li><span class="font-mono">minAlcoholContent=</span> - sets the minimum <span class="font-mono">alcoholContent</span> returned by the
                 api to the value you've specified.
             </li>
-            <li><span class="font-mono">maxAlcoholContent=</span> - sets the maximum `alcoholContent` returned by the
+            <li><span class="font-mono">maxAlcoholContent=</span> - sets the maximum <span class="font-mono">alcoholContent</span> returned by the
                 api to the value you've specified.
             </li>
             <li><span class="font-mono">search=</span> - performs an exact search on titles with the value given.</li>
@@ -552,8 +552,8 @@
         Each price change request will return a JSON object structured as follows:
 
         <ul>
-            <li>An outer array `data`, an array wrapper for the multiple price changes that are being returned</li>
-            <li>Within `data`, a series of objects can be found. Each object contains:</li>
+            <li>An outer array <span class="font-mono">data</span>, an array wrapper for the multiple price changes that are being returned</li>
+            <li>Within <span class="font-mono">data</span>, a series of objects can be found. Each object contains:</li>
             <li><span class="font-mono">permanent_id</span> - the unique identifier of the product.</li>
             <li><span class="font-mono">title</span> - the title of the product</li>
             <li><span class="font-mono">price_changes</span> - a count of the number of price changes stored for the
