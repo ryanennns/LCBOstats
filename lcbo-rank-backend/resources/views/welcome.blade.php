@@ -446,7 +446,7 @@
         <p>...where <span class="font-mono">{id}</span> is the primary key of the product in question. The primary key
             of each data object is <span class="font-mono">permanent_id</span>.</p>
 
-        <h3>Querying LCBOStats</h3>
+        <h3>Querying LCBOstats</h3>
 
         <p>
             LCBOstats returns paginated responses with 25 records per page. The JSON object returned
@@ -536,6 +536,8 @@
 
         <p>LCBOstats.com has been tracking the price changes of LCBO products since late December of 2022. This means
             that, whenever a price is changed on a product, LCBOstats.com will:</p>
+
+        <p>The root URL to query for price changes is <span class="font-mono">lcbostats.com/api/history</span></p>
 
         <ul>
             <li>Update the database with the new price</li>
