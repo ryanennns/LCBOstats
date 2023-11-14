@@ -460,28 +460,36 @@
         <ul>
             <li><span class="font-mono">sortAsc=</span> - sorts results ascending by the data field specified.</li>
             <li><span class="font-mono">sortDesc=</span> - sorts results descending by the data field specified.</li>
-            <li><span class="font-mono">minPriceIndex=</span> - sets the minimum <span class="font-mono">priceIndex</span> returned by the api to the
+            <li><span class="font-mono">minPriceIndex=</span> - sets the minimum <span
+                    class="font-mono">priceIndex</span> returned by the api to the
                 value you've specified.
             </li>
-            <li><span class="font-mono">maxPriceIndex=</span> - sets the maximum <span class="font-mono">priceIndex</span> returned by the api to the
+            <li><span class="font-mono">maxPriceIndex=</span> - sets the maximum <span
+                    class="font-mono">priceIndex</span> returned by the api to the
                 value you've specified.
             </li>
-            <li><span class="font-mono">minPrice=</span> - sets the minimum <span class="font-mono">price</span> returned by the api to the value
+            <li><span class="font-mono">minPrice=</span> - sets the minimum <span class="font-mono">price</span>
+                returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">maxPrice=</span> - sets the maximum <span class="font-mono">price</span> returned by the api to the value
+            <li><span class="font-mono">maxPrice=</span> - sets the maximum <span class="font-mono">price</span>
+                returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">minVolume=</span> - sets the minimum <span class="font-mono">volume</span> returned by the api to the value
+            <li><span class="font-mono">minVolume=</span> - sets the minimum <span class="font-mono">volume</span>
+                returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">maxVolume=</span> - sets the maximum <span class="font-mono">volume</span> returned by the api to the value
+            <li><span class="font-mono">maxVolume=</span> - sets the maximum <span class="font-mono">volume</span>
+                returned by the api to the value
                 you've specified.
             </li>
-            <li><span class="font-mono">minAlcoholContent=</span> - sets the minimum <span class="font-mono">alcoholContent</span> returned by the
+            <li><span class="font-mono">minAlcoholContent=</span> - sets the minimum <span class="font-mono">alcoholContent</span>
+                returned by the
                 api to the value you've specified.
             </li>
-            <li><span class="font-mono">maxAlcoholContent=</span> - sets the maximum <span class="font-mono">alcoholContent</span> returned by the
+            <li><span class="font-mono">maxAlcoholContent=</span> - sets the maximum <span class="font-mono">alcoholContent</span>
+                returned by the
                 api to the value you've specified.
             </li>
             <li><span class="font-mono">search=</span> - performs an exact search on titles with the value given.</li>
@@ -534,10 +542,14 @@
 
         <h3>Querying Price Changes</h3>
 
+        <p>The root URL to query for price changes is <span class="font-mono">lcbostats.com/api/history</span>.</p>
+
+        <p><span class="font-mono">lcbostats.com/api/history/{id}</span>where <span class="font-mono">id</span> is the
+            <span class="font-mono">permanent_id</span> of the alcohol you're querying for will return the price history
+            for that item.</p>
+
         <p>LCBOstats.com has been tracking the price changes of LCBO products since late December of 2022. This means
             that, whenever a price is changed on a product, LCBOstats.com will:</p>
-
-        <p>The root URL to query for price changes is <span class="font-mono">lcbostats.com/api/history</span></p>
 
         <ul>
             <li>Update the database with the new price</li>
@@ -554,7 +566,9 @@
         Each price change request will return a JSON object structured as follows:
 
         <ul>
-            <li>An outer array <span class="font-mono">data</span>, an array wrapper for the multiple price changes that are being returned</li>
+            <li>An outer array <span class="font-mono">data</span>, an array wrapper for the multiple price changes that
+                are being returned
+            </li>
             <li>Within <span class="font-mono">data</span>, a series of objects can be found. Each object contains:</li>
             <li><span class="font-mono">permanent_id</span> - the unique identifier of the product.</li>
             <li><span class="font-mono">title</span> - the title of the product</li>
