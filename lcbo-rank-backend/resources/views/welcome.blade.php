@@ -544,7 +544,7 @@
 
         <p>The root URL to query for price changes is <span class="font-mono">lcbostats.com/api/history</span>.</p>
 
-        <p><span class="font-mono">lcbostats.com/api/history/{id}</span>where <span class="font-mono">id</span> is the
+        <p><span class="font-mono">lcbostats.com/api/history/{id}</span> where <span class="font-mono">id</span> is the
             <span class="font-mono">permanent_id</span> of the alcohol you're querying for will return the price history
             for that item.</p>
 
