@@ -404,7 +404,9 @@
 
         <h2>Using the API</h2>
 
-        <p>The root URL for accessing the LCBOstats alcohol database is <span class="font-mono">http://lcbostats.com/api/alcohol</span>.
+        <p>
+            The root URL for accessing the LCBOstats alcohol database is
+            <span class="font-mono">http://lcbostats.com/api/alcohol</span>.
         </p>
 
         <h3>Fetching by ID</h3>
@@ -422,7 +424,8 @@
             of the query you've ran.
         </p>
 
-        <p>All query parameters should be appended to <span class="font-mono">http://lcbostats.com/api/alcohol</span>.
+        <p>
+            All query parameters should be appended to <span class="font-mono">http://lcbostats.com/api/alcohol</span>.
         </p>
 
         <ul>
@@ -467,13 +470,18 @@
 
         <p>Each response to <span class="font-mono">/api/alcohol</span> is a JSON object with three fields:</p>
 
-        <p><span class="font-mono">data</span> - an array of Alcohol data objects,</p>
-        <p>
-            <span class="font-mono">links</span> - an object with useful pagination links for the previous and next
-            pages,
-        </p>
-        <p><span class="font-mono">meta</span> - metadata, including what page you're on, how many pages there are, page
-            links, and more.</p>
+        <ul>
+            <li><span class="font-mono">data</span> - an array of Alcohol data objects,</li>
+            <li>
+                <span class="font-mono">links</span> - an object with useful pagination links for the previous and next
+                pages,
+            </li>
+            <li>
+                <span class="font-mono">meta</span> - metadata, including what page you're on, how many pages there are,
+                page links, and more.
+            </li>
+        </ul>
+
         <p>The outer structure of the JSON response looks like this:</p>
 
         <div class="json-block font-mono" style="white-space: pre">{{$meta}}</div>
@@ -527,9 +535,11 @@
             <li>Time the price changed</li>
         </ul>
 
-        <p><b>LCBOstats stores an initial price change when a new product is saved to the database.</b>
+        <p>
+            <b>LCBOstats stores an initial price change when a new product is saved to the database.</b>
             This means that the earliest price change record for a given product is not actually a
-            change in price, but rather the creation of the item itself.</p>
+            change in price, but rather the creation of the item itself.
+        </p>
 
         Each price change request will return a JSON object structured as follows:
 
