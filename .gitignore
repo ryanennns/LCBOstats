@@ -10,4 +10,3 @@ node_modules/
 phpunit.xml
 .idea/LCBO-Rank-App.iml
 .idea/php.xml
-composer.lock
