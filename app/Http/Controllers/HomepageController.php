@@ -11,7 +11,10 @@ class HomepageController extends Controller
 {
     public function index()
     {
-        return Inertia::render('App', ['alcohol' => AlcoholResource::collection(Alcohol::query()->limit(10)->get())]);
+        return Inertia::render(
+            'App',
+            ['alcohol' => AlcoholResource::collection(Alcohol::query()->limit(20)->get())]
+        );
 
         $alcohol = Alcohol::first();
 

@@ -31,6 +31,8 @@ class Alcohol extends Model
 {
     use HasFactory, Searchable;
 
+    protected $with = ['priceChanges'];
+
     public const THE_BIG_KAHUNAS = [
         "Products|Beer & Cider",
         "Products|Spirits",

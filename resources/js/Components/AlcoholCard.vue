@@ -2,6 +2,8 @@
 import {Link} from '@inertiajs/vue3';
 import {onMounted} from "vue";
 
+const emit = defineEmits(['click']);
+
 const props = defineProps({
     alcohol: {
         type: Object,
@@ -18,7 +20,7 @@ const formatPrice = (price) => {
 </script>
 
 <template>
-    <div class="card-container">
+    <div class="card-container" @click="emit('click', alcohol)">
         <div class="image-container">
             <img
                 :src="alcohol.image_url"
@@ -64,6 +66,7 @@ const formatPrice = (price) => {
 
 .card-container:hover {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
 }
 
 .image-container {
