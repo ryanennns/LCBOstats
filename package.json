@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "@inertiajs/vue3": "^2.0.0"
+    "@inertiajs/inertia-vue3": "^0.6.0",
+    "@inertiajs/vue3": "^2.0.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "laravel-vite-plugin": "^1.1.1",
+    "vite-plugin-pages": "^0.32.4"
   }
 }
