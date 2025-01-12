@@ -2,20 +2,24 @@
 
 namespace Database\Seeders;
 
+use App\Models\Alcohol;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
-        (new BeerSeeder())->run();
-        (new SpiritSeeder())->run();
-        (new CoolerSeeder())->run();
-        (new WineSeeder())->run();
+        $testBooze = Alcohol::factory()->create([
+            'title'    => 'Ryan\'s OogaBooga Lager',
+            'category' => Alcohol::BEER_AND_CIDER,
+        ]);
+
+        for ($i = 0; $i < 10; $i++) {
+            $testBooze->priceChanges()->create([
+                'price'      => rand(10.00, 100.0),
+                'created_at' => now()->addDays(rand(1, 100)),
+                'updated_at' => now()->addDays(rand(1, 100)),
+            ]);
+        }
     }
 }
