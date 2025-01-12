@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue';
+import {onMounted, onUnmounted, ref, watch, useTemplateRef} from 'vue';
+import {Chart, registerables} from 'chart.js';
 
 const props = defineProps({
     alcohol: {
@@ -13,6 +14,13 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+const priceHistoryChart = ref(null);
+const canvas = useTemplateRef('canvas');
+watch(() => props.alcohol, (changed) => {
+    createPriceChart()
+})
+
+Chart.register(...registerables);
 
 const handleEscape = (event) => {
     if (event.key === 'Escape') {
@@ -26,7 +34,40 @@ onMounted(() => {
 
 onUnmounted(() => {
     document.removeEventListener('keydown', handleEscape);
+    if (priceHistoryChart.value) {
+        priceHistoryChart.value.destroy();
+    }
 });
+
+const createPriceChart = () => {
+    return;
+    const ctx = document.getElementById('canvas').getContext('2d');
+    if (priceHistoryChart.value) {
+        priceHistoryChart.value.destroy();
+    }
+    priceHistoryChart.value = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: props.alcohol.price_changes.map(change => new Date(change.created_at).toLocaleDateString()),
+            datasets: [{
+                label: 'Price Over Time',
+                data: props.alcohol.price_changes.map(change => change.price),
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+};
 
 const formatPrice = (price) => {
     return new Intl.NumberFormat('en-CA', {
@@ -35,6 +76,7 @@ const formatPrice = (price) => {
     }).format(price);
 };
 </script>
+
 
 <template>
     <Transition name="modal">
@@ -61,6 +103,9 @@ const formatPrice = (price) => {
                             <p v-if="alcohol.out_of_stock" class="out-of-stock">Currently Out of Stock</p>
                         </div>
                     </div>
+<!--                    <div class="chart-container">-->
+<!--                        <canvas id="canvas" ref="canvas"></canvas>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -147,6 +192,11 @@ const formatPrice = (price) => {
 .out-of-stock {
     color: red;
     font-weight: bold;
+}
+
+.chart-container {
+    width: 100%;
+    height: 300px; /* Adjust height as needed */
 }
 
 /* Modal transitions */

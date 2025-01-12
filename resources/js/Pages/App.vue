@@ -1,6 +1,5 @@
 <script setup>
 import AlcoholCard from '@/Components/AlcoholCard.vue';
-import AlcoholModal from '@/Components/AlcoholModal.vue';
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -29,12 +28,12 @@ const handleCardClick = (alcohol) => {
                 @click="handleCardClick"
             />
         </div>
-        <AlcoholModal
-            v-if="selectedAlcohol"
-            :alcohol="selectedAlcohol"
-            :show="showModal"
-            @close="showModal = false"
-        />
+<!--        <AlcoholModal-->
+<!--            v-if="selectedAlcohol"-->
+<!--            :alcohol="selectedAlcohol"-->
+<!--            :show="showModal"-->
+<!--            @close="showModal = false"-->
+<!--        />-->
     </div>
 </template>
 

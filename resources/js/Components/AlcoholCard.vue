@@ -1,7 +1,4 @@
 <script setup>
-import {Link} from '@inertiajs/vue3';
-import {onMounted} from "vue";
-
 const emit = defineEmits(['click']);
 
 const props = defineProps({
