@@ -8,3 +8,4 @@ storage/debugbar/
 .env.testing
 node_modules/
 phpunit.xml
+public/hot
