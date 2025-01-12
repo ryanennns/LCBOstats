@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AlcoholResource;
 use App\Models\Alcohol;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,7 +11,7 @@ class HomepageController extends Controller
 {
     public function index()
     {
-        return Inertia::render('App');
+        return Inertia::render('App', ['alcohol' => AlcoholResource::collection(Alcohol::query()->limit(10)->get())]);
 
         $alcohol = Alcohol::first();
 
