@@ -9,3 +9,4 @@ storage/debugbar/
 node_modules/
 phpunit.xml
 public/hot
+.codebuddy/
