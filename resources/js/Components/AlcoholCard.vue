@@ -61,7 +61,7 @@ const formatPrice = (price) => {
     max-width: 300px;
     min-width: 300px;
     margin: 1rem;
-    font-family: 'Roboto',sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .card-container:hover {
@@ -69,10 +69,14 @@ const formatPrice = (price) => {
     cursor: pointer;
 }
 
+.card-container:hover .alcohol-image {
+    transform: scale(1.1);
+}
+
 .image-container {
     position: relative;
     width: 100%;
-    height: 0;
+    height: auto;
     padding-top: 75%;
     max-height: 225px;
 }
@@ -83,8 +87,8 @@ const formatPrice = (price) => {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    max-height: 225px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
 .out-of-stock-badge {
