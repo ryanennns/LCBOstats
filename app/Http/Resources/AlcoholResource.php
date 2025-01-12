@@ -27,6 +27,7 @@ class AlcoholResource extends JsonResource
             'out_of_stock' => (bool)$this->out_of_stock,
             'description' => $this->description,
             'is_buyable' => $this->is_buyable,
+            'price_changes' => $this->priceChanges
         ];
     }
 }

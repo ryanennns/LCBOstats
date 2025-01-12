@@ -13,7 +13,7 @@ class HomepageController extends Controller
     {
         return Inertia::render(
             'App',
-            ['alcohol' => AlcoholResource::collection(Alcohol::query()->limit(20)->get())]
+            ['alcohol' => AlcoholResource::collection(Alcohol::query()->with('priceChanges')->limit(20)->get())]
         );
 
         $alcohol = Alcohol::first();
