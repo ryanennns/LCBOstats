@@ -91,7 +91,6 @@ const formatPrice = (price) => {
 .out-of-stock-badge {
     position: absolute;
     top: 0;
-    right: 0;
     background-color: rgba(255, 0, 0, 0.8);
     color: white;
     padding: 4px 8px;

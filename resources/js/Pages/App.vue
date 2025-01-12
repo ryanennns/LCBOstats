@@ -1,6 +1,7 @@
 <script setup>
 import AlcoholCard from '@/Components/AlcoholCard.vue';
-import { ref } from 'vue';
+import {ref} from 'vue';
+import SearchBar from "../Components/SearchBar.vue";
 
 const props = defineProps({
     alcohol: {
@@ -20,6 +21,7 @@ const handleCardClick = (alcohol) => {
 
 <template>
     <div class="container">
+        <SearchBar />
         <div class="alcohol-card-group">
             <AlcoholCard
                 v-for="alcohol in props.alcohol.data"
@@ -28,12 +30,12 @@ const handleCardClick = (alcohol) => {
                 @click="handleCardClick"
             />
         </div>
-<!--        <AlcoholModal-->
-<!--            v-if="selectedAlcohol"-->
-<!--            :alcohol="selectedAlcohol"-->
-<!--            :show="showModal"-->
-<!--            @close="showModal = false"-->
-<!--        />-->
+        <!--        <AlcoholModal-->
+        <!--            v-if="selectedAlcohol"-->
+        <!--            :alcohol="selectedAlcohol"-->
+        <!--            :show="showModal"-->
+        <!--            @close="showModal = false"-->
+        <!--        />-->
     </div>
 </template>
 

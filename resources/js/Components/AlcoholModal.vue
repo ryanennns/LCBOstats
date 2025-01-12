@@ -194,19 +194,4 @@ const formatPrice = (price) => {
     font-weight: bold;
 }
 
-.chart-container {
-    width: 100%;
-    height: 300px; /* Adjust height as needed */
-}
-
-/* Modal transitions */
-.modal-enter-active,
-.modal-leave-active {
-    transition: opacity 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-    opacity: 0;
-}
 </style>
