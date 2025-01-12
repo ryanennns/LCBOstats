@@ -53,28 +53,28 @@ Each response to `/api/alcohol` adheres to the following structure:
 
 - An outer array `data`, a wrapper for the multiple products being returned.
 - WIthin data, a series of JSON objects, each containing the following fields:
-  - `permanent_id` - the unique identifier of the product
-  - `title` - the title of the product
-  - `brand` - the brand of the product
-  - `category` - an enum value that is strictly one of the following four options:
-    - `Beer & Cider`
-    - `Spirits`
-    - `Coolers`
-    - `Wine`
-  - `subcategory` - a "second layer" category that is a child of the category; for
-  example, *Vodka* would be a subcategory of *Spirits*; *IPA* of *Beer & Cider*; etc.
-  - `price` - the price of the product, in CAD
-  - `volume` - the liquid volume of the product, in mL
-  - `price_index` - the cost efficiency of the product, calculate as dollar per unit alcohol content
-  - `alcohol_content` - the alcohol content of the product
-  - `country` - the country of origin of the product
-  - `url` - the URL to the LCBO.com webpage where the product can be purchased
-  - `thumbnail_url` - the URL to a low resolution thumbnail image of the product
-  - `image_url` - the URL to a high resolution image of the product
-  - `rating` - a floating point average rating, out of 5, given by LCBO.com customers 
-  - `reviews` - the number of reviews given that resulted in the above rating
-  - `out_of_stock` - a boolean representing whether the product is in stock
-  - `description` - a long form description of the product, as found on LCBO.com
+    - `permanent_id` - the unique identifier of the product
+    - `title` - the title of the product
+    - `brand` - the brand of the product
+    - `category` - an enum value that is strictly one of the following four options:
+        - `Beer & Cider`
+        - `Spirits`
+        - `Coolers`
+        - `Wine`
+    - `subcategory` - a "second layer" category that is a child of the category; for
+      example, *Vodka* would be a subcategory of *Spirits*; *IPA* of *Beer & Cider*; etc.
+    - `price` - the price of the product, in CAD
+    - `volume` - the liquid volume of the product, in mL
+    - `price_index` - the cost efficiency of the product, calculate as dollar per unit alcohol content
+    - `alcohol_content` - the alcohol content of the product
+    - `country` - the country of origin of the product
+    - `url` - the URL to the LCBO.com webpage where the product can be purchased
+    - `thumbnail_url` - the URL to a low resolution thumbnail image of the product
+    - `image_url` - the URL to a high resolution image of the product
+    - `rating` - a floating point average rating, out of 5, given by LCBO.com customers
+    - `reviews` - the number of reviews given that resulted in the above rating
+    - `out_of_stock` - a boolean representing whether the product is in stock
+    - `description` - a long form description of the product, as found on LCBO.com
 
 ##### Example Response
 
