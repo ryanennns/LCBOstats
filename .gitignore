@@ -1,12 +1,10 @@
 .phpunit.result.cache
 *.cache
 .env
-.idea/misc.xml
+.idea/
 lcbo-rank-backend/tests/Fixtures/beer-response.json
 vendor/
 storage/debugbar/
 .env.testing
 node_modules/
 phpunit.xml
-.idea/LCBO-Rank-App.iml
-.idea/php.xml
