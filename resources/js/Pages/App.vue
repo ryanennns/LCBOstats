@@ -2,6 +2,7 @@
 import AlcoholCard from '@/Components/AlcoholCard.vue';
 import {ref} from 'vue';
 import SearchBar from "../Components/SearchBar.vue";
+import PageHeader from "../Components/PageHeader.vue";
 
 const props = defineProps({
     alcohol: {
@@ -21,7 +22,8 @@ const handleCardClick = (alcohol) => {
 
 <template>
     <div class="container">
-        <SearchBar />
+        <PageHeader text="lcbostats"/>
+        <SearchBar/>
         <div class="alcohol-card-group">
             <AlcoholCard
                 v-for="alcohol in props.alcohol.data"
@@ -40,6 +42,11 @@ const handleCardClick = (alcohol) => {
 </template>
 
 <style scoped>
+
+body {
+    margin: 0;
+    padding: 0;
+}
 
 .alcohol-card-group {
     display: flex;

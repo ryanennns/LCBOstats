@@ -25,15 +25,15 @@ const onInput = (data) => {
 }
 
 #searchQuery {
-    padding: 1rem 1.5rem; /* Increased horizontal padding */
+    padding: 1rem 1.5rem;
     width: 33vw;
     border-radius: 2rem;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
     color: dimgrey;
-    border: 1px solid transparent; /* Ensure there is a border to change on focus */
+    border: 1px solid transparent;
     outline: none;
-    box-shadow: 0 0 5px lightgray; /* Optional: adds a subtle shadow for better focus indication */
+    box-shadow: 0 0 5px lightgray;
 }
 
 #searchQuery:focus {
