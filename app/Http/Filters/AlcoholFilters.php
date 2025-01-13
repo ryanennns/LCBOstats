@@ -63,7 +63,7 @@ class AlcoholFilters extends QueryFilter
 
     public function title($title): Builder
     {
-        return $this->builder->where('title', $title);
+        return $this->builder->where('title', 'like', $title);
     }
 
     public function brand($brand): Builder
