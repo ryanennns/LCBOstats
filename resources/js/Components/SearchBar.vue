@@ -5,8 +5,7 @@ const emit = defineEmits(['searchQuery'])
 const searchQuery = ref('')
 
 const onInput = (data) => {
-    console.log(data.target.value)
-    emit('searchQuery', data)
+    emit('searchQuery', data.target.value)
 }
 </script>
 
