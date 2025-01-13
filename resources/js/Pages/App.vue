@@ -1,6 +1,6 @@
 <script setup>
 import AlcoholCard from '@/Components/AlcoholCard.vue';
-import {onMounted, ref, computed} from 'vue';
+import {onMounted, ref, computed, watchEffect} from 'vue';
 import SearchBar from "../Components/SearchBar.vue";
 import PageHeader from "../Components/PageHeader.vue";
 
@@ -21,31 +21,29 @@ const handleCardClick = (alcohol) => {
 const searchQueryRef = ref('')
 const filterResults = (searchQuery) => searchQueryRef.value = searchQuery
 
-const hittingApi = ref(false);
-const filteredAlcohol = computed(() => {
-    let filtered = props
-        .alcohol
-        .data
-        .filter(
-            a => a.title.toLowerCase().includes(searchQueryRef.value.toLowerCase())
-        );
+let lastApiQuery = null;
+const filteredAlcohol = ref([]);
 
-    if (filtered.length < 1) {
-        hittingApi.value = true;
-        searchApi(searchQueryRef.value)
+watchEffect(async () => {
+    console.log('Fetching data');
+    let filtered = props.alcohol.data.filter(a => a.title.toLowerCase().includes(searchQueryRef.value.toLowerCase()));
+
+    if (filtered.length < 1 && lastApiQuery !== searchQueryRef.value) {
+        lastApiQuery = searchQueryRef.value;
+        filtered = await queryApi(searchQueryRef.value);
     }
 
-    return filtered;
+    filteredAlcohol.value = filtered; // Update the reactive property
 });
-const searchApi = (searchQuery) => {
-    console.log(hittingApi.value)
+const queryApi = async (searchQuery) => {
+    const response = await fetch('/api/alcohol?' + new URLSearchParams({
+        thing: 'thing',
+    }).toString(), {
+        method: 'GET',
+    })
 
-    setTimeout(() => 1, 3000)
-
-    console.log(hittingApi.value)
-    hittingApi.value = false;
-
-    return [];
+    const thing = await response.json();
+    return thing.data;
 }
 
 </script>
