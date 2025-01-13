@@ -39,6 +39,11 @@ const formatPrice = (price) => {
             </div>
             <div class="details">
                 <span>{{ alcohol.alcohol_content }}% alc</span>
+                |
+                <span>{{ formatPrice(alcohol.price_index) }}/mL alc</span>
+                |
+                <span>{{ alcohol.country }}</span>
+                |
                 <div class="rating">
                     <span class="star">★</span>
                     {{ alcohol.rating ?? 'N/A' }}
