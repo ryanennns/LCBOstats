@@ -4,9 +4,20 @@ import {ref, defineEmits} from "vue";
 const emit = defineEmits(['searchQuery'])
 const searchQuery = ref('')
 
-const onInput = (data) => {
-    emit('searchQuery', data.target.value)
+function debounce(func, delay) {
+    let debounceTimer;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
 }
+
+const onInput = debounce((event) => {
+    console.log('input', event)
+}, 250)
+
 </script>
 
 <template>
