@@ -1,8 +1,9 @@
 <script setup>
 import AlcoholCard from '@/Components/AlcoholCard.vue';
-import {onMounted, ref, computed, watchEffect} from 'vue';
+import {ref, watchEffect} from 'vue';
 import SearchBar from "../Components/SearchBar.vue";
 import PageHeader from "../Components/PageHeader.vue";
+import NavBar from "../Components/NavBar.vue";
 
 const props = defineProps({
     alcohol: {
@@ -50,8 +51,7 @@ const queryApi = async (searchQuery) => {
 
 <template>
     <div class="container">
-        <PageHeader text="lcbostats"/>
-        <SearchBar @search-query="filterResults"/>
+        <NavBar />
         <div class="alcohol-card-group">
             <AlcoholCard
                 v-for="alcohol in filteredAlcohol"
@@ -77,6 +77,4 @@ body {
     justify-content: center;
     min-width: 98vw;
 }
-
-/* ...rest of the code... */
 </style>

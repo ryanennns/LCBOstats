@@ -49,4 +49,11 @@ const onInput = debounce(() => {
 #searchQuery:focus {
     border: 1px solid transparent;
 }
+
+@media (max-width: 1000px) {
+    #searchQuery {
+        width: 50vw;
+        flex-grow: 1;
+    }
+}
 </style>
