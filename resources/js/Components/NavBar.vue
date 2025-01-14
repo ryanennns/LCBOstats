@@ -23,28 +23,28 @@ import SearchBar from "./SearchBar.vue";
     display: flex;
     flex-direction: row;
     align-content: center;
-    @media (max-width: 1000px) {
-        justify-content: center;
-    }
     justify-content: space-between;
     margin-left: 2rem;
     margin-right: 2rem;
 }
 
-.start {
-    @media (max-width: 1000px) {
-        display: none;
-    }
+
+.start, .end {
     width: 15rem;
 }
 
 .end {
-    @media (max-width: 1000px) {
-        display: none;
-    }
-    width: 15rem;
     background-color: darkblue;
 }
 
+@media (max-width: 1000px) {
+    .start, .end {
+        display: none;
+    }
+
+    .navbar-container {
+        justify-content: center;
+    }
+}
 
 </style>
