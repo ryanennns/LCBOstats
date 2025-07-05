@@ -6,6 +6,8 @@ As of 2025-06-03 I've decided to sunset this project. I have historical price da
 from December 2022 --> May 2025. If that data set interests you, or you want to take over hosting responsibilities
 for this application and wish to have a copy of the data, feel free to reach out to me at ryanennns (((at))) gmail dot com.
 
+<hr/>
+
 LCBOstats is a web app dedicated to:
 
 - Scraping LCBO product data
